@@ -1,0 +1,6 @@
+import "D:\Jenkins\workspace\mirth\XML\QS1_API.xml" Force
+channel deploy "QS1_API"
+import "D:\Jenkins\workspace\mirth\XML\EPIC Source API.xml" Force
+channel deploy "EPIC Source API"
+import "D:\Jenkins\workspace\mirth\XML\QS1-NRx_API.xml" Force
+channel deploy "QS1-NRx_API"
