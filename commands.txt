@@ -1,3 +1,5 @@
+import "D:\Jenkins\workspace\mirth\XML\WebHooks.xml" Force
+channel deploy "WebHooks"
 import "D:\Jenkins\workspace\mirth\XML\QS1_API.xml" Force
 channel deploy "QS1_API"
 import "D:\Jenkins\workspace\mirth\XML\EPIC Source API.xml" Force
@@ -8,6 +10,7 @@ import "D:\Jenkins\workspace\mirth\XML\QS1-NRx.xml" Force
 channel deploy "QS1-NRx"
 import "D:\Jenkins\workspace\mirth\XML\Parata 66 API.xml" Force
 channel deploy "Parata 66 API"
-import "D:\Jenkins\workspace\mirth\XML\WebHooks.xml" Force
-channel deploy "WebHooks"
+import "D:\Jenkins\workspace\mirth\XML\Rx30 API.xml" Force
+channel deploy "Rx30 API"
+
 
