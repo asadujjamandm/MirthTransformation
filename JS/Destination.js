@@ -11,11 +11,29 @@ try {
 	
 	var msg = tcp.SendToServer(batchString.trim());			
 
-	channelMap.put('responseContentType', 'text/plain');
-	channelMap.put('responseCode', '200');
+	//channelMap.put('responseContentType', 'text/plain');
+	//channelMap.put('responseCode', '200');
 	
-	return msg;
+	//return msg;
+
+	channelMap.put('res_json', msg);
+	
 }
 catch(ex) {
 	logger.info(ex)
 }
+
+
+// try{
+// 	logger.info("Executing Destination");
+	
+// 	channelMap.put('responseContentType', 'text/plain');
+// 	channelMap.put('responseCode', '200');
+
+// 	logger.info($('res_json'));
+	
+// 	return $('res_json');
+// }
+// catch(ex){
+// 	logger.error(ex);
+// }

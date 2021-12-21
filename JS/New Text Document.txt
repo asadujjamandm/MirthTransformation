@@ -1,0 +1,175 @@
+var DrugSchedule = {};
+DrugSchedule.Name = "DrugSchedule";
+DrugSchedule.Text = rawMessage.substr(510,3).trim();
+
+var PatientSSN = {};
+PatientSSN.Name = "PatientSSN";
+PatientSSN.Text = rawMessage.substr(510,3).trim();
+
+var Warning1= {};
+Warning1.Name = "Warning1";
+Warning1.Text = rawMessage.substr(510,3).trim();
+
+var Warning2 = {};
+Warning2.Name = "Warning2";
+Warning2.Text = rawMessage.substr(510,3).trim();
+
+var Warning3 = {};
+Warning3.Name = "Warning3";
+Warning3.Text = rawMessage.substr(510,3).trim();
+
+var Warning4 = {};
+Warning4.Name = "Warning4";
+Warning4.Text = rawMessage.substr(510,3).trim();
+
+var RequestedDeviceName = {};
+RequestedDeviceName.Name = "RequestedDeviceName";
+RequestedDeviceName.Text = rawMessage.substr(510,3).trim();
+
+var SourceTerminal = {};
+SourceTerminal.Name = "SourceTerminal";
+SourceTerminal.Text = rawMessage.substr(510,3).trim();
+
+var Urgency = {};
+Urgency.Name = "Urgency";
+Urgency.Text = rawMessage.substr(510,3).trim();
+
+var VialSize = {};
+VialSize.Name = "VialSize";
+VialSize.Text = rawMessage.substr(510,3).trim();
+
+var VialNumber = {};
+VialNumber.Name = "VialNumber";
+VialNumber.Text = rawMessage.substr(510,3).trim();
+
+var StoreNumber = {};
+StoreNumber.Name = "StoreNumber";
+StoreNumber.Text = rawMessage.substr(510,3).trim();
+
+var StoreAddress = {};
+StoreAddress.Name = "StoreAddress";
+StoreAddress.Text = rawMessage.substr(865,60).trim(); //865,60 5001 Library Road Bethel Park, PA 15102
+
+var StorePhoneNumber = {};
+StorePhoneNumber.Name = "StorePhoneNumber";
+StorePhoneNumber.Text = rawMessage.substr(510,3).trim();
+
+var PatientAddress = {};
+PatientAddress.Name = "PatientAddress";
+PatientAddress.Text = rawMessage.substr(510,3).trim();
+
+var LabelText1 = {};
+LabelText1.Name = "LabelText1";
+LabelText1.Text = rawMessage.substr(510,3).trim();
+
+var LabelText2 = {};
+LabelText2.Name = "LabelText2";
+LabelText2.Text = rawMessage.substr(510,3).trim();
+
+var LabelText3 = {};
+LabelText3.Name = "LabelText3";
+LabelText3.Text = rawMessage.substr(510,3).trim();
+
+var PrescribedDrugChemicalName = {};
+PrescribedDrugChemicalName.Name = "PrescribedDrugChemicalName";
+PrescribedDrugChemicalName.Text = rawMessage.substr(510,3).trim();
+
+var RxOrigDate = {};
+RxOrigDate.Name = "RxOrigDate";
+RxOrigDate.Text = rawMessage.substr(510,3).trim();
+
+var FreeformRefill = {};
+FreeformRefill.Name = "FreeformRefill";
+FreeformRefill.Text = rawMessage.substr(510,3).trim();
+
+var RefillsLeft = {};
+RefillsLeft.Name = "RefillsLeft";
+RefillsLeft.Text = rawMessage.substr(510,3).trim();
+
+var SafetyCap = {};
+SafetyCap.Name = "SafetyCap";
+SafetyCap.Text = rawMessage.substr(510,3).trim();
+
+var DrugDescription = {};
+DrugDescription.Name = "DrugDescription";
+DrugDescription.Text = rawMessage.substr(510,3).trim();
+
+var ScanCode = {};
+ScanCode.Name = "ScanCode";
+ScanCode.Text = rawMessage.substr(510,3).trim();
+
+var Price = {};
+Price.Name = "Price";
+Price.Text = rawMessage.substr(510,3).trim();
+
+var FamilyID = {};
+FamilyID.Name = "FamilyID";
+FamilyID.Text = rawMessage.substr(510,3).trim();
+
+var PatientID = {};
+PatientID.Name = "PatientID";
+PatientID.Text = rawMessage.substr(510,3).trim();
+
+var Liquid = {};
+Liquid.Name = "Liquid";
+Liquid.Text = rawMessage.substr(510,3).trim();
+
+var Refrigerated = {};
+Refrigerated.Name = "Refrigerated";
+Refrigerated.Text = rawMessage.substr(510,3).trim();
+
+var PatientDOB = {};
+PatientDOB.Name = "PatientDOB";
+PatientDOB.Text = rawMessage.substr(510,3).trim();
+
+var PatientPhoneNumber = {};
+PatientPhoneNumber.Name = "PatientPhoneNumber";
+PatientPhoneNumber.Text = rawMessage.substr(510,3).trim();
+
+var PartialFill = {};
+PartialFill.Name = "PartialFill";
+PartialFill.Text = rawMessage.substr(510,3).trim();
+
+var Warning1Long = {};
+Warning1Long.Name = "Warning1Long";
+Warning1Long.Text = rawMessage.substr(510,3).trim();
+
+var Warning2Long = {};
+Warning2Long.Name = "Warning2Long";
+Warning2Long.Text = rawMessage.substr(510,3).trim();
+
+var Warning3Long = {};
+Warning3Long.Name = "Warning3Long";
+Warning3Long.Text = rawMessage.substr(510,3).trim();
+
+var Warning4Long = {};
+Warning4Long.Name = "Warning4Long";
+Warning4Long.Text = rawMessage.substr(510,3).trim();
+
+var PrescriberAddress = {};
+PrescriberAddress.Name = "PrescriberAddress";
+PrescriberAddress.Text = rawMessage.substr(510,3).trim();
+
+var PrescriberPhoneNumber = {};
+PrescriberPhoneNumber.Name = "PrescriberPhoneNumber";
+PrescriberPhoneNumber.Text = rawMessage.substr(510,3).trim();
+
+var TotalPillsPrescribed = {};
+TotalPillsPrescribed.Name = "TotalPillsPrescribed";
+TotalPillsPrescribed.Text = rawMessage.substr(510,3).trim();
+
+var TotalPillsRemaining = {};
+TotalPillsRemaining.Name = "TotalPillsRemaining";
+TotalPillsRemaining.Text = rawMessage.substr(510,3).trim();
+
+var PlanCode1 = {};
+PlanCode1.Name = "PlanCode1";
+PlanCode1.Text = rawMessage.substr(510,3).trim();
+
+var PlanCode2 = {};
+PlanCode2.Name = "PlanCode2";
+PlanCode2.Text = rawMessage.substr(510,3).trim();
+
+var PatientMiddleName ={};
+PatientMiddleName.Name = "PatientMiddleName";
+PatientMiddleName.Text = rawMessage.substr(510,3).trim();
