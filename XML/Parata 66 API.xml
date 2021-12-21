@@ -3,7 +3,7 @@
   <nextMetaDataId>2</nextMetaDataId>
   <name>Parata 66 API</name>
   <description></description>
-  <revision>2</revision>
+  <revision>9</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -105,7 +105,7 @@ Patient.DOB = FormateDate(msg[&apos;FillData&apos;][&apos;PatientDOB&apos;].toSt
 Patient.IdType = null;
 Patient.Initials = null;
 Patient.MiddleName = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;MiddleInitial&apos;].toString().trim(); 
-Patient.Sex = msg[&apos;FillData&apos;][&apos;PatientGender&apos;].toString().trim();
+Patient.Sex = IsNullOrEmpty(msg[&apos;FillData&apos;][&apos;PatientGender&apos;].toString().trim()) ? null : msg[&apos;FillData&apos;][&apos;PatientGender&apos;].toString().trim();
 
 Patient.Addresses = Addresses;
 Patient.PhoneNumbers = PhoneNumbers;
@@ -115,80 +115,642 @@ channelMap.put(&apos;Patient&apos;, Patient);
 
 var LabelItems = [];
 
-var StoreName = {}
-StoreName.Name = &quot;StoreName&quot;;
-StoreName.Text = msg[&apos;FillData&apos;][&apos;StoreName&apos;].toString().trim();
+var RxNumber = {}
+RxNumber.Name = &quot;RxNumber&quot;;
+RxNumber.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;RxNumber&apos;].toString().trim();
+LabelItems.push(RxNumber);
 
-if(StoreName.Text != null &amp;&amp; StoreName.Text != &quot;&quot;){
-	LabelItems.push(StoreName);
-}
+var RefillNumber = {}
+RefillNumber.Name = &quot;RefillNumber&quot;;
+RefillNumber.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;RefillNumber&apos;].toString().trim();
+LabelItems.push(RefillNumber);
+
+var PatientTitle = {}
+PatientTitle.Name = &quot;PatientTitle&quot;;
+PatientTitle.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;Title&apos;].toString();
+LabelItems.push(PatientTitle);
+
+var PatientFirstName = {}
+PatientFirstName.Name = &quot;PatientFirstName&quot;;
+PatientFirstName.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;FirstName&apos;].toString();
+LabelItems.push(PatientFirstName);
+
+var PatientMiddleName = {}
+PatientMiddleName.Name = &quot;PatientMiddleName&quot;;
+PatientMiddleName.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;MiddleInitial&apos;].toString();
+LabelItems.push(PatientMiddleName);
+
+var PatientLastName = {}
+PatientLastName.Name = &quot;PatientLastName&quot;;
+PatientLastName.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;LastName&apos;].toString();
+LabelItems.push(PatientLastName);
+
+var DrugNDC = {}
+DrugNDC.Name = &quot;DrugNDC&quot;;
+DrugNDC.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;DrugNDC&apos;].toString();
+LabelItems.push(DrugNDC);
+
+var DispensedDrugName = {}
+DispensedDrugName.Name = &quot;DispensedDrugName&quot;;
+DispensedDrugName.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;DispensedDrugName&apos;].toString();
+LabelItems.push(DispensedDrugName);
+
+var AltDispensedDrugName = {}
+AltDispensedDrugName.Name = &quot;AltDispensedDrugName&quot;;
+AltDispensedDrugName.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;AltDispensedDrugName&apos;].toString();
+LabelItems.push(AltDispensedDrugName);
+
+var InventorySelector = {}
+InventorySelector.Name = &quot;InventorySelector&quot;;
+InventorySelector.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;InventorySelector&apos;].toString();
+LabelItems.push(InventorySelector);
+
+var DispenseQuantity = {}
+DispenseQuantity.Name = &quot;DispenseQuantity&quot;;
+DispenseQuantity.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;DispenseQuantity&apos;].toString();
+LabelItems.push(DispenseQuantity);
+
+var Urgency = {}
+Urgency.Name = &quot;Urgency&quot;;
+Urgency.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;Urgency&apos;].toString();
+LabelItems.push(Urgency);
+
+var Price = {}
+Price.Name = &quot;Price&quot;;
+Price.Text = msg[&apos;FillData&apos;][&apos;Price&apos;].toString();
+LabelItems.push(Price);
+
+var Liquid = {}
+Liquid.Name = &quot;Liquid&quot;;
+Liquid.Text = msg[&apos;FillData&apos;][&apos;Liquid&apos;].toString(); 
+LabelItems.push(Liquid);
+
+var Refrigerated = {}
+Refrigerated.Name = &quot;Refrigerated&quot;;
+Refrigerated.Text = msg[&apos;FillData&apos;][&apos;Refrigerated&apos;].toString();
+LabelItems.push(Refrigerated);
+
+var RefillsLeft = {}
+RefillsLeft.Name = &quot;RefillsLeft&quot;;
+RefillsLeft.Text = msg[&apos;FillData&apos;][&apos;RefillsRemaining&apos;].toString();
+LabelItems.push(RefillsLeft);
+
+var TotalRefills = {}
+TotalRefills.Name = &quot;TotalRefills&quot;;
+TotalRefills.Text = msg[&apos;FillData&apos;][&apos;RefillsAuthorized&apos;].toString();
+LabelItems.push(TotalRefills);
+
+var RxOrigDate = {}
+RxOrigDate.Name = &quot;RxOrigDate&quot;;
+RxOrigDate.Text = msg[&apos;FillData&apos;][&apos;RxStartDate&apos;].toString();
+LabelItems.push(RxOrigDate);
+
+var RefillDate = {}
+RefillDate.Name = &quot;RefillDate&quot;;
+RefillDate.Text = msg[&apos;FillData&apos;][&apos;RefillDate&apos;].toString();
+LabelItems.push(RefillDate);
+
+var DAW = {}
+DAW.Name = &quot;DAW&quot;;
+DAW.Text = msg[&apos;FillData&apos;][&apos;DispenseAsWritten&apos;].toString();
+LabelItems.push(DAW);
+
+var FillDate = {}
+FillDate.Name = &quot;FillDate&quot;;
+FillDate.Text = msg[&apos;FillData&apos;][&apos;FillDate&apos;].toString();
+LabelItems.push(FillDate);
+
+var RxExpirationDate = {}
+RxExpirationDate.Name = &quot;RxExpirationDate&quot;;
+RxExpirationDate.Text = msg[&apos;FillData&apos;][&apos;RxExpirationDate&apos;].toString();
+LabelItems.push(RxExpirationDate);
+
+var DiscardDate = {}
+DiscardDate.Name = &quot;DiscardDate&quot;;
+DiscardDate.Text = msg[&apos;FillData&apos;][&apos;DiscardDate&apos;].toString();
+LabelItems.push(DiscardDate);
+
+var PreviousFillDate = {}
+PreviousFillDate.Name = &quot;PreviousFillDate&quot;;
+PreviousFillDate.Text = msg[&apos;FillData&apos;][&apos;PreviousFillDate&apos;].toString();
+LabelItems.push(PreviousFillDate);
+
+var PrescribedDrugName = {}
+PrescribedDrugName.Name = &quot;PrescribedDrugName&quot;;
+PrescribedDrugName.Text = msg[&apos;FillData&apos;][&apos;PrescribedDrugName&apos;].toString();
+LabelItems.push(PrescribedDrugName);
+
+var PrescribedDrugChemicalName = {}
+PrescribedDrugChemicalName.Name = &quot;PrescribedDrugChemicalName&quot;;
+PrescribedDrugChemicalName.Text = msg[&apos;FillData&apos;][&apos;PrescribedDrugChemicalName&apos;].toString();
+LabelItems.push(PrescribedDrugChemicalName);
+
+var DrugSchedule = {}
+DrugSchedule.Name = &quot;DrugSchedule&quot;;
+DrugSchedule.Text = msg[&apos;FillData&apos;][&apos;DrugClass&apos;].toString(); // DrugClass (not sure)
+LabelItems.push(DrugSchedule);
+
+var CompoundCode = {}
+CompoundCode.Name = &quot;CompoundCode&quot;;
+CompoundCode.Text = msg[&apos;FillData&apos;][&apos;CompoundCode&apos;].toString();
+LabelItems.push(CompoundCode);
+
+var DrugMfg = {}
+DrugMfg.Name = &quot;DrugMfg&quot;;
+DrugMfg.Text = msg[&apos;FillData&apos;][&apos;DrugMfg&apos;].toString();
+LabelItems.push(DrugMfg);
+
+var DrugImprint = {}
+DrugImprint.Name = &quot;DrugImprint&quot;;
+DrugImprint.Text = msg[&apos;FillData&apos;][&apos;DrugImprint&apos;].toString();
+LabelItems.push(DrugImprint);
+
+var DrugForm = {}
+DrugForm.Name = &quot;DrugForm&quot;;
+DrugForm.Text = msg[&apos;FillData&apos;][&apos;DrugFormulation&apos;].toString();
+LabelItems.push(DrugForm);
+
+var DrugStrength = {}
+DrugStrength.Name = &quot;DrugStrength&quot;;
+DrugStrength.Text = msg[&apos;FillData&apos;][&apos;DrugStrength&apos;].toString();
+LabelItems.push(DrugStrength);
 
 
-var StoreAddress = {};
-StoreAddress.Name = &quot;StoreAddress&quot;;
-StoreAddress.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Address1&apos;].toString().trim();
 
-if(StoreAddress.Text != null &amp;&amp; StoreAddress.Text != &quot;&quot;){
-	LabelItems.push(StoreAddress);
-}
+var DaysSupply = {}
+DaysSupply.Name = &quot;DaysSupply&quot;;
+DaysSupply.Text = msg[&apos;FillData&apos;][&apos;DaysSupply&apos;].toString();
+LabelItems.push(DaysSupply);
 
+var Warning1 = {}
+Warning1.Name = &quot;Warning1&quot;;
+Warning1.Text = msg[&apos;FillData&apos;][&apos;DrugWarningLabel1&apos;].toString();
+LabelItems.push(Warning1);
+
+
+var Warning2 = {}
+Warning2.Name = &quot;Warning2&quot;;
+Warning2.Text = msg[&apos;FillData&apos;][&apos;DrugWarningLabel2&apos;].toString();
+LabelItems.push(Warning2);
+
+
+var Warning3 = {}
+Warning3.Name = &quot;Warning3&quot;;
+Warning3.Text = msg[&apos;FillData&apos;][&apos;DrugWarningLabel3&apos;].toString();
+LabelItems.push(Warning3);
+
+var Warning4 = {}
+Warning4.Name = &quot;Warning4&quot;;
+Warning4.Text = msg[&apos;FillData&apos;][&apos;DrugWarningLabel4&apos;].toString();
+LabelItems.push(Warning4);
+
+
+var Warning5 = {}
+Warning5.Name = &quot;Warning5&quot;;
+Warning5.Text = msg[&apos;FillData&apos;][&apos;DrugWarningLabel5&apos;].toString();
+LabelItems.push(Warning5);
+
+var WarningBitmap1 = {}
+WarningBitmap1.Name = &quot;WarningBitmap1&quot;;//An image for the Warning
+WarningBitmap1.Text = null;
+LabelItems.push(WarningBitmap1);
+
+var WarningBitmap2 = {}
+WarningBitmap2.Name = &quot;WarningBitmap2&quot;;//An image for the Warning
+WarningBitmap2.Text = null;
+LabelItems.push(WarningBitmap2);
+
+
+var WarningBitmap3 = {}
+WarningBitmap3.Name = &quot;WarningBitmap3&quot;;//An image for the Warning
+WarningBitmap3.Text = null;
+LabelItems.push(WarningBitmap3);
+
+var WarningBitmap4 = {}
+WarningBitmap4.Name = &quot;WarningBitmap4&quot;;//An image for the Warning
+WarningBitmap4.Text = null;
+LabelItems.push(WarningBitmap4);
+
+var WarningBitmap5 = {}
+WarningBitmap5.Name = &quot;WarningBitmap5&quot;;//An image for the Warning
+WarningBitmap5.Text = &quot;&quot;;
+LabelItems.push(WarningBitmap5);
+
+
+var Sig = {}
+Sig.Name = &quot;Sig&quot;;
+Sig.Text = msg[&apos;FillData&apos;][&apos;Sig&apos;].toString();
+LabelItems.push(Sig);
+
+
+var UnicodeSig = {}
+UnicodeSig.Name = &quot;UnicodeSig&quot;;
+UnicodeSig.Text = msg[&apos;FillData&apos;][&apos;UnicodeSig&apos;].toString();
+LabelItems.push(UnicodeSig);
+
+var SafetyCap = {}
+SafetyCap.Name = &quot;SafetyCap&quot;;
+SafetyCap.Text = msg[&apos;FillData&apos;][&apos;SafetyCap&apos;].toString();
+LabelItems.push(SafetyCap);
+
+
+var StoreAddress1 = {}
+StoreAddress1.Name = &quot;StoreAddress1&quot;;
+StoreAddress1.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Address1&apos;].toString();
+LabelItems.push(StoreAddress1);
+
+var StoreAddress2 = {}
+StoreAddress2.Name = &quot;StoreAddress2&quot;;
+StoreAddress2.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Address2&apos;].toString();
+LabelItems.push(StoreAddress2);
 
 var StoreCity = {};
 StoreCity.Name = &quot;StoreCity&quot;;
-StoreCity.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;City&apos;].toString().trim();
+StoreCity.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;City&apos;].toString()
+LabelItems.push(StoreCity);
 
-if(StoreCity.Text != null &amp;&amp; StoreCity.Text != &quot;&quot;){
-	LabelItems.push(StoreCity);
-}
+
+var StoreDEA = {};
+StoreDEA.Name = &quot;StoreDEA&quot;;
+StoreDEA.Text = msg[&apos;FillData&apos;][&apos;StoreDEA&apos;].toString().trim();
+LabelItems.push(StoreDEA);
+
+
+var StoreName = {}
+StoreName.Name = &quot;StoreName&quot;;
+StoreName.Text = msg[&apos;FillData&apos;][&apos;StoreName&apos;].toString().trim();
+LabelItems.push(StoreName);
+
+
+var StoreNumber = {}
+StoreNumber.Name = &quot;StoreNumber&quot;;
+StoreNumber.Text = msg[&apos;FillData&apos;][&apos;StoreNumber&apos;].toString().trim();
+LabelItems.push(StoreNumber);
+
+var StorePhoneNumber = {}
+StorePhoneNumber.Name = &quot;StorePhoneNumber&quot;;
+StorePhoneNumber.Text = msg[&apos;FillData&apos;][&apos;StorePhoneNumber&apos;].toString().trim();
+LabelItems.push(StorePhoneNumber);
+
+
+var StoreState = {}
+StoreState.Name = &quot;StoreState&quot;;
+StoreState.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;State&apos;].toString().trim();
+LabelItems.push(StoreState);
 
 var StoreZip = {};
 StoreZip.Name = &quot;StoreZip&quot;
 StoreZip.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Zip&apos;].toString().trim();
+LabelItems.push(StoreZip);
 
-if(StoreZip.Text != null &amp;&amp; StoreZip.Text != &quot;&quot;){
-	LabelItems.push(StoreZip);
-}
 
-var DEA = {};
-DEA.Name = &quot;DEA&quot;;
-DEA.Text = msg[&apos;FillData&apos;][&apos;StoreDEA&apos;].toString().trim();
+var TotalPillsPrescribed = {}
+TotalPillsPrescribed.Name = &quot;TotalPillsPrescribed&quot;;
+TotalPillsPrescribed.Text = msg[&apos;FillData&apos;][&apos;TotalPillsPrescribed&apos;].toString().trim();
+LabelItems.push(TotalPillsPrescribed);
 
-if(DEA.Text != null &amp;&amp; DEA.Text != &quot;&quot;){
-	LabelItems.push(DEA);
-}
+var TotalPillsRemaining = {}
+TotalPillsRemaining.Name = &quot;TotalPillsRemaining&quot;;
+TotalPillsRemaining.Text = msg[&apos;FillData&apos;][&apos;TotalPillsRemaining&apos;].toString();
+LabelItems.push(TotalPillsPrescribed);
 
-var PharmacistInitials= {};
-PharmacistInitials.Name = &quot;PharmacistInitials&quot;;
-PharmacistInitials.Text = msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;Title&apos;].toString().trim();
+var PharmacistTitle = {}
+PharmacistTitle.Name = &quot;PharmacistTitle&quot;;
+PharmacistTitle.Text = msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;Title&apos;].toString();
+LabelItems.push(PharmacistTitle);
 
-if(PharmacistInitials.Text != null &amp;&amp; PharmacistInitials.Text != &quot;&quot;){
-	LabelItems.push(PharmacistInitials);
-}
+var PharmacistFirstName = {}
+PharmacistFirstName.Name = &quot;PharmacistFirstName&quot;;
+PharmacistFirstName.Text = msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;FirstName&apos;].toString();
+LabelItems.push(PharmacistFirstName);
 
-var PrescriberTitle = {};
+var PharmacistMiddleName = {};
+PharmacistMiddleName.Name = &quot;PharmacistMiddleName &quot;;
+PharmacistMiddleName.Text = msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;MiddleInitial&apos;].toString();
+LabelItems.push(PharmacistMiddleName);
+
+var PharmacistLastName = {}
+PharmacistLastName.Name = &quot;PharmacistLastName&quot;;
+PharmacistLastName.Text = msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;LastName&apos;].toString();
+LabelItems.push(PharmacistLastName);
+
+var RPhLicenseNumber = {}
+RPhLicenseNumber.Name = &quot;RPhLicenseNumber&quot;;
+RPhLicenseNumber.Text = msg[&apos;FillData&apos;][&apos;RphLicenseNum&apos;].toString().trim();
+LabelItems.push(RPhLicenseNumber);
+
+var RPhInitials = {}
+RPhInitials.Name = &quot;RPhInitials&quot;;
+RPhInitials.Text = msg[&apos;FillData&apos;][&apos;RphInitials&apos;].toString();
+LabelItems.push(RPhInitials);
+
+var RxOrigin = {}
+RxOrigin.Name = &quot;RxOrigin&quot;;
+RxOrigin.Text = msg[&apos;FillData&apos;][&apos;RxOrigin&apos;].toString();
+LabelItems.push(RxOrigin);
+
+var TechInitials = {}
+TechInitials.Name = &quot;TechInitials&quot;;
+TechInitials.Text = msg[&apos;FillData&apos;][&apos;TechInitials&apos;].toString();
+LabelItems.push(TechInitials);
+
+var EntryInitials = {}
+EntryInitials.Name = &quot;EntryInitials&quot;;
+EntryInitials.Text = msg[&apos;FillData&apos;][&apos;EntryInitials&apos;].toString();
+LabelItems.push(EntryInitials);
+
+var EntryDate = {}
+EntryDate.Name = &quot;EntryDate&quot;;
+EntryDate.Text = msg[&apos;FillData&apos;][&apos;EntryDate&apos;].toString();
+LabelItems.push(EntryDate);
+
+var SourceTerminal = {}
+SourceTerminal.Name = &quot;SourceTerminal&quot;;
+SourceTerminal.Text = msg[&apos;FillData&apos;][&apos;SourceTerminal&apos;].toString();
+LabelItems.push(SourceTerminal);
+
+var PatientAddress1 = {}
+PatientAddress1.Name = &quot;PatientAddress1&quot;;
+PatientAddress1.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Address1&apos;].toString() ;
+LabelItems.push(PatientAddress1);
+
+var PatientAddress2 = {}
+PatientAddress2.Name = &quot;PatientAddress2&quot;;
+PatientAddress2.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Address2&apos;].toString();
+LabelItems.push(PatientAddress2);
+
+var PatientCity = {}
+PatientCity.Name = &quot;PatientCity&quot;;
+PatientCity.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;City&apos;].toString();
+LabelItems.push(PatientCity);
+
+var PatientState = {}
+PatientState.Name = &quot;PatientState&quot;;
+PatientState.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;State&apos;].toString();
+LabelItems.push(PatientState);
+
+var PatientZip = {}
+PatientZip.Name = &quot;PatientZip&quot;;
+PatientZip.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(PatientZip);
+
+var PatientSSN = {}
+PatientSSN.Name = &quot;PatientSSN&quot;;
+PatientSSN.Text = msg[&apos;FillData&apos;][&apos;PatientSSN&apos;].toString();
+LabelItems.push(PatientSSN);
+
+var PatientID = {}
+PatientID.Name = &quot;PatientID&quot;;
+PatientID.Text = msg[&apos;FillData&apos;][&apos;PatientID&apos;].toString();
+LabelItems.push(PatientID);
+
+var FamilyID = {}
+FamilyID.Name = &quot;FamilyID&quot;;
+FamilyID.Text = msg[&apos;FillData&apos;][&apos;FamilyID&apos;].toString().trim();
+LabelItems.push(FamilyID);
+
+var PatientDOB = {}
+PatientDOB.Name = &quot;PatientDOB&quot;;
+PatientDOB.Text = msg[&apos;FillData&apos;][&apos;PatientDOB&apos;].toString();
+LabelItems.push(PatientDOB);
+
+var PatientPhoneNumber = {}
+PatientPhoneNumber.Name = &quot;PatientPhoneNumber&quot;;
+PatientPhoneNumber.Text = msg[&apos;FillData&apos;][&apos;PatientPhoneNumber&apos;].toString();
+LabelItems.push(PatientPhoneNumber);
+
+var PrescriberTitle = {}
 PrescriberTitle.Name = &quot;PrescriberTitle&quot;;
-PrescriberTitle.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;Title&apos;].toString().trim();
+PrescriberTitle.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;Title&apos;].toString();
+LabelItems.push(PrescriberTitle);
 
-if(PrescriberTitle.Text != null &amp;&amp; PrescriberTitle.Text != &quot;&quot;){
-	LabelItems.push(PrescriberTitle);
-}
-
-var PrescriberLastName = {};
-PrescriberLastName.Name = &quot;PrescriberLastName&quot;;
-PrescriberLastName.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;LastName&apos;].toString().trim();
-
-if(PrescriberLastName.Text != null &amp;&amp; PrescriberLastName.Text != &quot;&quot;){
-	LabelItems.push(PrescriberLastName);
-}
-
-
-var PrescriberFirstName = {};
+var PrescriberFirstName = {}
 PrescriberFirstName.Name = &quot;PrescriberFirstName&quot;;
-PrescriberFirstName.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;FirstName&apos;].toString().trim();
+PrescriberFirstName.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;FirstName&apos;].toString();
+LabelItems.push(PrescriberFirstName);
 
-if(PrescriberFirstName.Text != null &amp;&amp; PrescriberFirstName.Text != &quot;&quot;){
-	LabelItems.push(PrescriberFirstName);
-}
+var PrescriberMiddleName = {}
+PrescriberMiddleName.Name = &quot;PrescriberMiddleName&quot;;
+PrescriberMiddleName.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;MiddleInitial&apos;].toString();
+LabelItems.push(PrescriberMiddleName);
+
+var PrescriberLastName = {}
+PrescriberLastName.Name = &quot;PrescriberLastName&quot;;
+PrescriberLastName.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;LastName&apos;].toString();
+LabelItems.push(PrescriberLastName);
+
+var PrescriberDEA = {}
+PrescriberDEA.Name = &quot;PrescriberDEA&quot;;
+PrescriberDEA.Text = msg[&apos;FillData&apos;][&apos;PrescriberDEA&apos;].toString();
+LabelItems.push(PrescriberDEA);
+
+var PrescriberNPI = {}
+PrescriberNPI.Name = &quot;PrescriberNPI&quot;;
+PrescriberNPI.Text = msg[&apos;FillData&apos;][&apos;PrescriberNPI&apos;].toString();
+LabelItems.push(PrescriberNPI);
+
+var PrescriberAddress1 = {}
+PrescriberAddress1.Name = &quot;PrescriberAddress1&quot;;
+PrescriberAddress1.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;Address1&apos;].toString();
+LabelItems.push(PrescriberAddress1);
+
+var PrescriberAddress2 = {}
+PrescriberAddress2.Name = &quot;PrescriberAddress2&quot;;
+PrescriberAddress2.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;Address2&apos;].toString();
+LabelItems.push(PrescriberAddress2);
+
+var PrescriberCity = {}
+PrescriberCity.Name = &quot;PrescriberCity&quot;;
+PrescriberCity.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;City&apos;].toString();
+LabelItems.push(PrescriberCity);
+
+
+var PrescriberState = {}
+PrescriberState.Name = &quot;PrescriberState&quot;;
+PrescriberState.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;State&apos;].toString();
+LabelItems.push(PrescriberState);
+
+var PrescriberZip = {}
+PrescriberZip.Name = &quot;PrescriberZip&quot;;
+PrescriberZip.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(PrescriberZip);
+
+var PrescriberPhoneNumber = {}
+PrescriberPhoneNumber.Name = &quot;PrescriberPhoneNumber&quot;;
+PrescriberPhoneNumber.Text = msg[&apos;FillData&apos;][&apos;PrescriberPhoneNumber&apos;].toString();
+LabelItems.push(PrescriberPhoneNumber);
+
+var PrescriberType = {}
+PrescriberType.Name = &quot;PrescriberType&quot;;
+PrescriberType.Text = msg[&apos;FillData&apos;][&apos;PrescriberType&apos;].toString();
+LabelItems.push(PrescriberType);
+
+var ScanCode = {}
+ScanCode.Name = &quot;ScanCode&quot;;
+ScanCode.Text = msg[&apos;FillData&apos;][&apos;WorkFlowBarcode&apos;].toString();//WorkflowBarCode
+LabelItems.push(ScanCode);
+
+var Affiliate = {}
+Affiliate.Name = &quot;Affiliate&quot;;
+Affiliate.Text = msg[&apos;FillData&apos;][&apos;Affiliate&apos;].toString();
+LabelItems.push(Affiliate);
+
+var FillDateText = {}
+FillDateText.Name = &quot;FillDateText&quot;;
+FillDateText.Text = msg[&apos;FillData&apos;][&apos;FillDateText&apos;].toString();
+LabelItems.push(FillDateText);
+
+
+var RxExpirationDateText = {}
+RxExpirationDateText.Name = &quot;RxExpirationDateText&quot;;
+RxExpirationDateText.Text = msg[&apos;FillData&apos;][&apos;RxExpirationDateText&apos;].toString();
+LabelItems.push(RxExpirationDateText);
+
+
+var ReasonPrescribed = {}
+ReasonPrescribed.Name = &quot;ReasonPrescribed&quot;;
+ReasonPrescribed.Text = msg[&apos;FillData&apos;][&apos;ReasonPrescribed&apos;].toString();
+LabelItems.push(ReasonPrescribed);
+
+var DrugExpirationDateText = {}
+DrugExpirationDateText.Name = &quot;DrugExpirationDateText&quot;;
+DrugExpirationDateText.Text = msg[&apos;FillData&apos;][&apos;DrugExpirationDateText&apos;].toString();
+LabelItems.push(DrugExpirationDateText);
+
+var WarningMessage = {}
+WarningMessage.Name = &quot;WarningMessage&quot;;
+WarningMessage.Text = msg[&apos;FillData&apos;][&apos;WarningMessage&apos;].toString();
+LabelItems.push(WarningMessage);
+
+var ServiceCode = {}
+ServiceCode.Name = &quot;ServiceCode&quot;;
+ServiceCode.Text = msg[&apos;FillData&apos;][&apos;ServiceCode&apos;].toString();
+LabelItems.push(ServiceCode);
+
+var BedNumber = {}
+BedNumber.Name = &quot;BedNumber&quot;;
+BedNumber.Text = msg[&apos;FillData&apos;][&apos;BedNumber&apos;].toString();
+LabelItems.push(BedNumber);
+
+var BillingCode = {}
+BillingCode.Name = &quot;BillingCode&quot;;
+BillingCode.Text = msg[&apos;FillData&apos;][&apos;BillingCode&apos;].toString();
+LabelItems.push(BillingCode);
+
+var FacilityID = {}
+FacilityID.Name = &quot;FacilityID&quot;;
+FacilityID.Text = msg[&apos;FillData&apos;][&apos;FacilityID&apos;].toString();
+LabelItems.push(FacilityID);
+
+var PillLineGroup = {}
+PillLineGroup.Name = &quot;PillLineGroup&quot;;
+PillLineGroup.Text = msg[&apos;FillData&apos;][&apos;PillLineGroup&apos;].toString();
+LabelItems.push(PillLineGroup);
+
+var PatientFullName = {}
+PatientFullName.Name = &quot;PatientFullName&quot;;
+PatientFullName.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;FirstName&apos;].toString()+&quot; &quot;+ msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;MiddleInitial&apos;].toString() +&quot; +&quot;+ msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;LastName&apos;].toString();
+LabelItems.push(PatientFullName);
+
+
+var PrescriberFullName = {}
+PrescriberFullName.Name = &quot;PrescriberFullName&quot;;
+PrescriberFullName.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;FirstName&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;MiddleInitial&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;LastName&apos;].toString();
+LabelItems.push(PrescriberFullName);
+
+var PharmacistFullName = {}
+PharmacistFullName.Name = &quot;PharmacistFullName&quot;;
+PharmacistFullName.Text = msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;FirstName&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;MiddleInitial&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;LastName&apos;].toString();
+LabelItems.push(PharmacistFullName);
+
+var SupvPrescriberFullName = {}
+SupvPrescriberFullName.Name = &quot;SupvPrescriberFullName&quot;;
+SupvPrescriberFullName.Text = &quot;&quot;;//not found
+LabelItems.push(SupvPrescriberFullName);
+
+var PrescriberCityStateZip = {}
+PrescriberCityStateZip.Name = &quot;PrescriberCityStateZip&quot;;
+PrescriberCityStateZip.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;City&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;State&apos;].toString() +&quot; &quot;+msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(PrescriberCityStateZip);
+
+var PatientCityStateZip = {}
+PatientCityStateZip.Name = &quot;PatientCityStateZip&quot;;
+PatientCityStateZip.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;City&apos;].toString()+&quot; &quot;+ msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;State&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(PatientCityStateZip);
+
+var StoreCityStateZip = {}
+StoreCityStateZip.Name = &quot;StoreCityStateZip&quot;;
+StoreCityStateZip.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;City&apos;].toString()+&quot; &quot;+ msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;State&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(StoreCityStateZip);
+
+var SecondaryStoreCityStateZip = {}
+SecondaryStoreCityStateZip.Name = &quot;SecondaryStoreCityStateZip&quot;;
+SecondaryStoreCityStateZip.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;City&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;State&apos;].toString() +&quot; &quot;+msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(SecondaryStoreCityStateZip);
+
+var PrescriberAddress = {}
+PrescriberAddress.Name = &quot;PrescriberAddress&quot;;
+PrescriberAddress.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;Address1&apos;].toString();
+LabelItems.push(PrescriberAddress);
+
+
+var PatientAddress = {}
+PatientAddress.Name = &quot;PatientAddress&quot;;
+PatientAddress.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Address1&apos;].toString();
+LabelItems.push(PatientAddress);
+
+var RxNumberAlt = {}
+RxNumberAlt.Name = &quot;RxNumberAlt&quot;;
+RxNumberAlt.Text = &quot;&quot;;
+LabelItems.push(RxNumberAlt);
+
+var SecondaryStoreAddress1 = {}
+SecondaryStoreAddress1.Name = &quot;SecondaryStoreAddress1&quot;;
+SecondaryStoreAddress1.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;Address1&apos;].toString();
+LabelItems.push(SecondaryStoreAddress1);
+
+var SecondaryStoreAddress2 = {}
+SecondaryStoreAddress2.Name = &quot;SecondaryStoreAddress2&quot;;
+SecondaryStoreAddress2.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;Address2&apos;].toString();
+LabelItems.push(SecondaryStoreAddress2);
+
+
+var SecondaryStoreCity = {}
+SecondaryStoreCity.Name = &quot;SecondaryStoreCity&quot;;
+SecondaryStoreCity.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;City&apos;].toString();
+LabelItems.push(SecondaryStoreCity);
+
+var SecondaryStoreDEA = {}
+SecondaryStoreDEA.Name = &quot;SecondaryStoreDEA&quot;;
+SecondaryStoreDEA.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreDEA&apos;].toString();
+LabelItems.push(SecondaryStoreDEA);
+
+var SecondaryStoreName = {}
+SecondaryStoreName.Name = &quot;SecondaryStoreName&quot;;
+SecondaryStoreName.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreName&apos;].toString();
+LabelItems.push(SecondaryStoreName);
+
+
+var SecondaryStoreNumber = {}
+SecondaryStoreNumber.Name = &quot;SecondaryStoreNumber&quot;;
+SecondaryStoreNumber.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreNumber&apos;].toString();
+LabelItems.push(SecondaryStoreNumber);
+
+
+var SecondaryStorePhoneNumber = {}
+SecondaryStorePhoneNumber.Name = &quot;SecondaryStorePhoneNumber&quot;;
+SecondaryStorePhoneNumber.Text = msg[&apos;FillData&apos;][&apos;SecondaryStorePhoneNumber&apos;].toString();
+LabelItems.push(SecondaryStorePhoneNumber);
+
+var SecondaryStoreState = {}
+SecondaryStoreState.Name = &quot;SecondaryStoreState&quot;;
+SecondaryStoreState.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;State&apos;].toString();
+LabelItems.push(SecondaryStoreState);
+
+var SecondaryStoreZip = {}
+SecondaryStoreZip.Name = &quot;SecondaryStoreZip&quot;;
+SecondaryStoreZip.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(SecondaryStoreZip);
 
 channelMap.put(&apos;LabelItems&apos;, LabelItems);
 
@@ -202,7 +764,7 @@ if(IsNullOrEmpty(Med.Description)){
 Med.Id = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;DrugNDC&apos;].toString().trim();
 Med.MedIdType = 0;
 Med.Name = msg[&apos;FillData&apos;][&apos;PrescribedDrugName&apos;].toString().trim();
-Med.InventorySelector = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;InventorySelector&apos;].toString().trim();
+Med.InventorySelector = &quot;&quot;;// msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;InventorySelector&apos;].toString().trim();
 channelMap.put(&apos;Med&apos;, Med);
 
 
@@ -261,13 +823,40 @@ Script.Urgency = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;Urgen
 
 channelMap.put(&apos;Script&apos;, Script);
 
+// Facility //
+
+var Facility = {};
+Facility.Id = msg[&apos;FillData&apos;][&apos;FacilityID&apos;].toString();
+Facility.Bed = msg[&apos;FillData&apos;][&apos;BedNumber&apos;].toString();
+Facility.Cabinet = &quot;&quot;;
+Facility.Floor = &quot;&quot;;
+Facility.Name = &quot;&quot;;
+Facility.NursingStationId = &quot;&quot;;
+Facility.Room = &quot;&quot;;
+Facility.Unit = &quot;&quot;;
+
+Facility.Addresses = [];
+var FacilityAddress = {};
+FacilityAddress.Street1 = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Address1&apos;].toString().trim();
+FacilityAddress.Street2 = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Address2&apos;].toString().trim();
+FacilityAddress.City = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;City&apos;].toString().trim();
+FacilityAddress.State = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;State&apos;].toString().trim();
+FacilityAddress.Zip = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Zip&apos;].toString().trim();;
+FacilityAddress.Country = &quot;&quot;;
+FacilityAddress.AddressType = &quot;Primary&quot;;
+FacilityAddress.Primary = &quot;true&quot;;
+
+Facility.Addresses.push(FacilityAddress);
+
+
 // Batch //
 
 var Batch = {};
 
 var Scripts = [];
 Scripts.push(Script);
-var Facilities = null;
+var Facilities = [];
+Facilities.push(Facility);
 var Patients = [];
 Patients.push(Patient);
 
@@ -350,13 +939,13 @@ channelMap.put(&apos;Batch&apos;, Batch);</script>
 
 	var batchString = JSON.stringify(batch, null, 2);
 
-	//logger.info(batchString);
+	logger.info(batchString);
 	//logger.info(Patient);
 	
-	//var msg = tcp.SendToServer(batchString.trim());			
+	var msg = tcp.SendToServer(batchString.trim());			
 
-	//channelMap.put(&apos;responseContentType&apos;, &apos;text/plain&apos;);
-	//channelMap.put(&apos;responseCode&apos;, &apos;200&apos;);
+	channelMap.put(&apos;responseContentType&apos;, &apos;text/plain&apos;);
+	channelMap.put(&apos;responseCode&apos;, &apos;200&apos;);
 	
 	return batchString;
 }
@@ -455,7 +1044,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1638356562041</time>
+        <time>1640076471502</time>
         <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>
@@ -466,33 +1055,41 @@ return;</undeployScript>
       <codeTemplateLibrary version="3.11.0">
         <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
         <name>Library</name>
-        <revision>23</revision>
+        <revision>9</revision>
         <lastModified>
-          <time>1638356054278</time>
+          <time>1640072875555</time>
           <timezone>UTC</timezone>
         </lastModified>
         <description></description>
         <includeNewChannels>false</includeNewChannels>
         <enabledChannelIds>
           <string>2c88923c-c42f-413f-890f-1b13b846eba3</string>
-          <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
-          <string>16814b6e-2133-4c94-9c64-52f50db9c002</string>
           <string>2552809d-7bda-4bd6-ac76-ba121c5f892e</string>
-          <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
           <string>27e7d67c-6b34-4f7c-b71a-16e31e75ae88</string>
           <string>24999a04-287c-4517-b7f6-a239dd1a2894</string>
-          <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
-          <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
+          <string>3380104e-7dad-4454-86ca-8cb2af26a4ac</string>
           <string>ec193f9b-00c1-4113-ba95-a25f53cc42f2</string>
-          <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
+          <string>859240df-fe33-456c-9793-ccdc4d58f333</string>
           <string>2f26ebf0-8b5b-45b1-88ae-0369e6045454</string>
-          <string>2fa392d7-8669-421e-81a3-1fc3100ee9c8</string>
+          <string>79d329b4-b6d4-47ff-a481-eef7441aade8</string>
           <string>1f8f7b98-91c6-47ba-a8b6-e2c5dede190e</string>
           <string>5ca5fda9-4abd-4426-ba3e-2a45b5cd6e79</string>
           <string>ddbe8266-b97e-4860-8dcc-b85c42c15d89</string>
-          <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
           <string>edbc9000-4a15-455d-9505-2deb0af95a9b</string>
           <string>cf597d0c-7b46-471d-9d11-d6e4946421a0</string>
+          <string>f5da6dfb-b808-4061-9274-fed0339bff1a</string>
+          <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
+          <string>16814b6e-2133-4c94-9c64-52f50db9c002</string>
+          <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
+          <string>db8c015a-f11f-4133-992e-9b3277546cbb</string>
+          <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
+          <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
+          <string>0353744a-3498-4501-a324-a768adfbc8c5</string>
+          <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
+          <string>feb1fe1c-0cd6-4082-83a6-3e92db15d3ec</string>
+          <string>2fa392d7-8669-421e-81a3-1fc3100ee9c8</string>
+          <string>427a148f-a043-48db-bce9-882cc1e6ccf8</string>
+          <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
           <string>b742b188-ed4a-4495-bcf6-0468a1eef0c2</string>
         </enabledChannelIds>
         <disabledChannelIds>
@@ -509,16 +1106,16 @@ return;</undeployScript>
             <name>CheckingNullValue</name>
             <revision>1</revision>
             <lastModified>
-              <time>1633257732275</time>
+              <time>1638876371048</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -538,16 +1135,16 @@ return;</undeployScript>
             <name>IsNullOrEmpty</name>
             <revision>1</revision>
             <lastModified>
-              <time>1637048800795</time>
+              <time>1638876371093</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -568,16 +1165,16 @@ return;</undeployScript>
             <name>MomentJS</name>
             <revision>1</revision>
             <lastModified>
-              <time>1633257732499</time>
+              <time>1638876371211</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6258,18 +6855,18 @@ return;</undeployScript>
           <codeTemplate version="3.11.0">
             <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
             <name>Utils Function</name>
-            <revision>10</revision>
+            <revision>3</revision>
             <lastModified>
-              <time>1638277040856</time>
+              <time>1640032517568</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6282,7 +6879,8 @@ function ProcessScriptAction(key){
 		CA: &quot;Cancel&quot;, //Cancel order 
 		HD: &quot;Hold&quot;, //Hold order 
 		XO: &quot;Edit&quot;, //Update order 
-		AF: &quot;Discard&quot; //Approve fill
+		AF: &quot;Discard&quot;, //Approve fill
+		F: &quot;Fill&quot;
 	};
 	
 	if(Actions[key.toUpperCase()] !== undefined)
@@ -6340,6 +6938,15 @@ function JSONIndent(data){
 	catch(ex){
 		logger.error(ex)
 	}
+}
+
+function DAW(val){
+
+	if(val === 0 || val === &apos;&apos; || vall === null)
+		return false;
+	else
+		return true;
+	
 }</code>
             </properties>
           </codeTemplate>

@@ -3,7 +3,7 @@
   <nextMetaDataId>2</nextMetaDataId>
   <name>Rx30 API</name>
   <description></description>
-  <revision>2</revision>
+  <revision>8</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -114,32 +114,422 @@ channelMap.put(&apos;Patient&apos;, Patient);
 
 var LabelItems = [];
 
+var RxNumber = {};
+RxNumber.Name = &quot;RxNumber&quot;;
+RxNumber.Text = rawMessage.substr(39,15).trim();
+
+LabelItems.push(RxNumber);
+
+var PatientFirstName = {};
+PatientFirstName.Name = &quot;PatientFirstName&quot;;
+PatientFirstName.Text = rawMessage.substr(54,22).trim();
+
+LabelItems.push(PatientFirstName);
+
+var PatientMiddleInitial = {};
+PatientMiddleInitial.Name = &quot;PatientMiddleInitial&quot;;
+PatientMiddleInitial.Text = rawMessage.substr(76,3).trim();
+
+LabelItems.push(PatientMiddleInitial);
+
+var PatientLastName = {};
+PatientLastName.Name = &quot;PatientLastName&quot;;
+PatientLastName.Text = rawMessage.substr(79,30).trim();
+
+LabelItems.push(PatientLastName);
+
+var DrugNDC = {};
+DrugNDC.Name = &quot;DrugNDC&quot;;
+DrugNDC.Text = rawMessage.substr(109,12).trim();
+
+LabelItems.push(DrugNDC);
+
+var DispensedDrugName = {};
+DispensedDrugName.Name = &quot;DispensedDrugName&quot;;
+DispensedDrugName.Text = rawMessage.substr(121,50).trim();
+
+LabelItems.push(DispensedDrugName);
+
+var DispenseQuantity = {};
+DispenseQuantity.Name = &quot;DispenseQuantity&quot;;
+DispenseQuantity.Text = rawMessage.substr(171,5).trim();
+
+LabelItems.push(DispenseQuantity);
+
+var DrugMfg = {};
+DrugMfg.Name = &quot;DrugMfg&quot;;
+DrugMfg.Text = rawMessage.substr(176,40).trim();
+
+LabelItems.push(DrugMfg);
+
+var PrescriberFullName = {};
+PrescriberFullName.Name = &quot;PrescriberFullName&quot;;
+PrescriberFullName.Text = rawMessage.substr(216,52).trim();
+
+LabelItems.push(PrescriberFullName);
+
+var PrescriberDEA = {};
+PrescriberDEA.Name = &quot;PrescriberDEA&quot;;
+PrescriberDEA.Text = rawMessage.substr(268,14).trim();
+
+LabelItems.push(PrescriberDEA);
+
+var RPhInitials = {};
+RPhInitials.Name = &quot;RPhInitials&quot;;
+RPhInitials.Text = rawMessage.substr(282,15).trim();
+
+LabelItems.push(RPhInitials);
+
+var TechInitials = {};
+TechInitials.Name = &quot;TechInitials&quot;;
+TechInitials.Text = rawMessage.substr(297,15).trim();
+
+LabelItems.push(TechInitials);
+
+var Sig = {};
+Sig.Name = &quot;Sig&quot;;
+Sig.Text = rawMessage.substr(312,160).trim();
+
+LabelItems.push(Sig);
+
+var RefillNumber = {};
+RefillNumber.Name = &quot;RefillNumber&quot;;
+RefillNumber.Text = rawMessage.substr(472,3).trim();
+
+LabelItems.push(RefillNumber);
+
+var TotalRefills = {};
+TotalRefills.Name = &quot;TotalRefills&quot;;
+TotalRefills.Text = rawMessage.substr(475,3).trim();
+
+LabelItems.push(TotalRefills);
+
+var RefillDate = {};
+RefillDate.Name = &quot;RefillDate&quot;;
+RefillDate.Text = rawMessage.substr(478,8).trim();
+
+LabelItems.push(RefillDate);
+
+var FillDate= {};
+FillDate.Name = &quot;FillDate&quot;;
+FillDate.Text = rawMessage.substr(486,8).trim();
+
+LabelItems.push(RefillDate);
+
+var RxExpirationDate = {};
+RxExpirationDate.Name = &quot;RxExpirationDate&quot;;
+RxExpirationDate.Text = rawMessage.substr(494,8).trim();
+
+LabelItems.push(RxExpirationDate);
+
+var DrugExpirationDate = {};
+DrugExpirationDate.Name = &quot;DrugExpirationDate&quot;;
+DrugExpirationDate.Text = rawMessage.substr(502,8).trim();
+
+LabelItems.push(DrugExpirationDate);
+
+var DaysSupply = {};
+DaysSupply.Name = &quot;DaysSupply&quot;;
+DaysSupply.Text = rawMessage.substr(510,3).trim();
+
+LabelItems.push(DaysSupply);
+
+var DrugSchedule = {};
+DrugSchedule.Name = &quot;DrugSchedule&quot;;
+DrugSchedule.Text = rawMessage.substr(513,4).trim()
+
+LabelItems.push(DrugSchedule);
+
+var PatientSSN = {};
+PatientSSN.Name = &quot;PatientSSN&quot;;
+PatientSSN.Text = rawMessage.substr(517,11).trim();
+
+LabelItems.push(PatientSSN);
+
+var Warning1= {};
+Warning1.Name = &quot;Warning1&quot;;
+Warning1.Text = rawMessage.substr(528,75).trim();
+
+LabelItems.push(Warning1);
+
+var Warning2 = {};
+Warning2.Name = &quot;Warning2&quot;;
+Warning2.Text = rawMessage.substr(603,75).trim();
+
+LabelItems.push(Warning2);
+
+var Warning3 = {};
+Warning3.Name = &quot;Warning3&quot;;
+Warning3.Text = rawMessage.substr(678,75).trim();
+
+LabelItems.push(Warning3);
+
+var Warning4 = {};
+Warning4.Name = &quot;Warning4&quot;;
+Warning4.Text = rawMessage.substr(653,75).trim();
+
+LabelItems.push(Warning4);
+
+var RequestedDeviceName = {};
+RequestedDeviceName.Name = &quot;RequestedDeviceName&quot;;
+RequestedDeviceName.Text = rawMessage.substr(828,10).trim();
+
+LabelItems.push(RequestedDeviceName);
+
+var SourceTerminal = {};
+SourceTerminal.Name = &quot;SourceTerminal&quot;;
+SourceTerminal.Text = rawMessage.substr(838,5).trim();
+
+LabelItems.push(SourceTerminal);
+
+var Urgency = {};
+Urgency.Name = &quot;Urgency&quot;;
+Urgency.Text = rawMessage.substr(843,5).trim();
+
+LabelItems.push(Urgency);
+
+var VialSize = {};
+VialSize.Name = &quot;VialSize&quot;;
+VialSize.Text = rawMessage.substr(848,2).trim();
+
+LabelItems.push(VialSize);
+
+var VialNumber = {};
+VialNumber.Name = &quot;VialNumber&quot;;
+VialNumber.Text = rawMessage.substr(850,2).trim();
+
+LabelItems.push(VialNumber);
+
+var StoreNumber = {};
+StoreNumber.Name = &quot;StoreNumber&quot;;
+StoreNumber.Text = rawMessage.substr(853,12).trim();
+
+LabelItems.push(StoreNumber);
+
 var StoreAddress = {};
 StoreAddress.Name = &quot;StoreAddress&quot;;
 StoreAddress.Text = rawMessage.substr(865,60).trim(); //865,60 5001 Library Road Bethel Park, PA 15102
 
 LabelItems.push(StoreAddress);
 
-var DEA = {};
-DEA.Name = &quot;DEA&quot;;
-DEA.Text = rawMessage.substr(268,14).trim(); //The prescriber&apos;s Drug Enforcement Agency identification
+var StorePhoneNumber = {};
+StorePhoneNumber.Name = &quot;StorePhoneNumber&quot;;
+StorePhoneNumber.Text = rawMessage.substr(925,10).trim();
 
-LabelItems.push(DEA);
+LabelItems.push(StorePhoneNumber);
 
+var PatientAddress = {};
+PatientAddress.Name = &quot;PatientAddress&quot;;
+PatientAddress.Text = rawMessage.substr(935,60).trim();
 
-var PharmacistInitials= {};
-PharmacistInitials.Name = &quot;PharmacistInitials&quot;;
-PharmacistInitials.Text = rawMessage.substr(282,15).trim();
+LabelItems.push(PatientAddress);
 
-LabelItems.push(PharmacistInitials);
+var LabelText1 = {};
+LabelText1.Name = &quot;LabelText1&quot;;
+LabelText1.Text = rawMessage.substr(995,25).trim();
 
-var PrescriberLastName = {};
-PrescriberLastName.Name = &quot;PrescriberLastName&quot;;
-PrescriberLastName.Text = rawMessage.substr(216,52).trim(); // Prescriber full name
+LabelItems.push(LabelText1);
 
-LabelItems.push(PrescriberLastName);
+var LabelText2 = {};
+LabelText2.Name = &quot;LabelText2&quot;;
+LabelText2.Text = rawMessage.substr(1020,25).trim();
+
+LabelItems.push(LabelText2);
+
+var LabelText3 = {};
+LabelText3.Name = &quot;LabelText3&quot;;
+LabelText3.Text = rawMessage.substr(1045,25).trim();
+
+LabelItems.push(LabelText3);
+
+var PrescribedDrugChemicalName = {};
+PrescribedDrugChemicalName.Name = &quot;PrescribedDrugChemicalName&quot;;
+PrescribedDrugChemicalName.Text = rawMessage.substr(1070,50).trim();
+
+LabelItems.push(PrescribedDrugChemicalName);
+
+var RxOrigDate = {};
+RxOrigDate.Name = &quot;RxOrigDate&quot;;
+RxOrigDate.Text = rawMessage.substr(1120,8).trim();
+
+LabelItems.push(RxOrigDate);
+
+var FreeformRefill = {};
+FreeformRefill.Name = &quot;FreeformRefill&quot;;
+FreeformRefill.Text = rawMessage.substr(1128,30).trim();
+
+LabelItems.push(FreeformRefill);
+
+var RefillsLeft = {};
+RefillsLeft.Name = &quot;RefillsLeft&quot;;
+RefillsLeft.Text = rawMessage.substr(1158,3).trim();
+
+LabelItems.push(RefillsLeft);
+
+var SafetyCap = {};
+SafetyCap.Name = &quot;SafetyCap&quot;;
+SafetyCap.Text = rawMessage.substr(1161,1).trim();
+
+LabelItems.push(SafetyCap);
+
+var DrugDescription = {};
+DrugDescription.Name = &quot;DrugDescription&quot;;
+DrugDescription.Text = rawMessage.substr(1162,200).trim();
+
+LabelItems.push(DrugDescription);
+
+var ScanCode = {};
+ScanCode.Name = &quot;ScanCode&quot;;
+ScanCode.Text = rawMessage.substr(1362,25).trim();
+
+LabelItems.push(ScanCode);
+
+var Price = {};
+Price.Name = &quot;Price&quot;;
+Price.Text = rawMessage.substr(1387,10).trim();
+
+LabelItems.push(Price);
+
+var FamilyID = {};
+FamilyID.Name = &quot;FamilyID&quot;;
+FamilyID.Text = rawMessage.substr(1397,25).trim();
+
+LabelItems.push(FamilyID);
+
+var PatientID = {};
+PatientID.Name = &quot;PatientID&quot;;
+PatientID.Text = rawMessage.substr(1397,25).trim();
+
+LabelItems.push(PatientID);
+
+var Liquid = {};
+Liquid.Name = &quot;Liquid&quot;;
+Liquid.Text = rawMessage.substr(1422,1).trim();
+
+LabelItems.push(Liquid);
+
+var Refrigerated = {};
+Refrigerated.Name = &quot;Refrigerated&quot;;
+Refrigerated.Text = rawMessage.substr(1423,1).trim();
+
+LabelItems.push(Refrigerated);
+
+var PatientDOB = {};
+PatientDOB.Name = &quot;PatientDOB&quot;;
+PatientDOB.Text = rawMessage.substr(1424,10).trim();
+
+LabelItems.push(PatientDOB);
+
+var PatientPhoneNumber = {};
+PatientPhoneNumber.Name = &quot;PatientPhoneNumber&quot;;
+PatientPhoneNumber.Text = rawMessage.substr(1434,10).trim();
+
+LabelItems.push(PatientPhoneNumber);
+
+var PartialFill = {};
+PartialFill.Name = &quot;PartialFill&quot;;
+PartialFill.Text = rawMessage.substr(1444,3).trim();
+
+LabelItems.push(PartialFill);
+
+var Warning1Long = {};
+Warning1Long.Name = &quot;Warning1Long&quot;;
+Warning1Long.Text = rawMessage.substr(1447,200).trim();
+
+LabelItems.push(Warning1Long);
+
+var Warning2Long = {};
+Warning2Long.Name = &quot;Warning2Long&quot;;
+Warning2Long.Text = rawMessage.substr(1647,200).trim();
+
+LabelItems.push(Warning2Long);
+
+var Warning3Long = {};
+Warning3Long.Name = &quot;Warning3Long&quot;;
+Warning3Long.Text = rawMessage.substr(1847,200).trim();
+
+LabelItems.push(Warning3Long);
+
+var Warning4Long = {};
+Warning4Long.Name = &quot;Warning4Long&quot;;
+Warning4Long.Text = rawMessage.substr(2047,200).trim();
+
+LabelItems.push(Warning4Long);
+
+var PrescriberAddress = {};
+PrescriberAddress.Name = &quot;PrescriberAddress&quot;;
+PrescriberAddress.Text = rawMessage.substr(2247,60).trim();
+
+LabelItems.push(PrescriberAddress);
+
+var PrescriberPhoneNumber = {};
+PrescriberPhoneNumber.Name = &quot;PrescriberPhoneNumber&quot;;
+PrescriberPhoneNumber.Text = rawMessage.substr(2307,10).trim();
+
+LabelItems.push(PrescriberPhoneNumber);
+
+var TotalPillsPrescribed = {};
+TotalPillsPrescribed.Name = &quot;TotalPillsPrescribed&quot;;
+TotalPillsPrescribed.Text = rawMessage.substr(2317,6).trim();
+
+LabelItems.push(TotalPillsPrescribed);
+
+var TotalPillsRemaining = {};
+TotalPillsRemaining.Name = &quot;TotalPillsRemaining&quot;;
+TotalPillsRemaining.Text = rawMessage.substr(2323,6).trim();
+
+LabelItems.push(TotalPillsRemaining);
+
+var PlanCode1 = {};
+PlanCode1.Name = &quot;PlanCode1&quot;;
+PlanCode1.Text = rawMessage.substr(2330,8).trim();
+
+LabelItems.push(PlanCode1);
+
+var PlanCode2 = {};
+PlanCode2.Name = &quot;PlanCode2&quot;;
+PlanCode2.Text = rawMessage.substr(2338,8).trim();
+
+LabelItems.push(PlanCode2);
+
+var PatientMiddleName ={};
+PatientMiddleName.Name = &quot;PatientMiddleName&quot;;
+PatientMiddleName.Text = rawMessage.substr(2346,22).trim();
+
+LabelItems.push(PatientMiddleName);
 
 channelMap.put(&apos;LabelItems&apos;, LabelItems);
+
+// Facility //
+
+var Facilities = [];
+
+var Facility = {};
+
+Facility.Id = &quot;103215&quot;;
+Facility.Bed = null;
+Facility.Cabinet = null;
+Facility.Floor = null;
+Facility.Name = &quot;StoreX&quot;;
+Facility.NursingStationId = null;
+Facility.Room = null;
+Facility.Unit = null;
+Facility.Addresses = [];
+
+var FacilityAddress = {};
+FacilityAddress.Street1 = rawMessage.substr(865,60).trim();;
+FacilityAddress.Street2 = &quot;NA&quot;;
+FacilityAddress.City = &quot;NA&quot;;
+FacilityAddress.State = &quot;NA&quot;;
+FacilityAddress.Zip = &quot;NA&quot;;
+FacilityAddress.Country = &quot;US&quot;;
+FacilityAddress.AddressType = &quot;Primary&quot;;
+FacilityAddress.Primary = true
+
+Facility.Addresses.push(FacilityAddress);
+
+Facilities.push(Facility);
+
 
 // Med //
 var Med = {};
@@ -166,8 +556,6 @@ var HOA = {};
 var Script = {};
 Script.Action = ProcessScriptAction(rawMessage.substr(852,1).trim());
 Script.Packaging = DoesHOAExists(HOA) === true ? 1:5; //Adherence 1; Blister 2; Manual 3; Pouch 4; Vial 5;
-
-
 Script.RxNumber = rawMessage.substr(39,15).trim(); ///39,15....14,15
 Script.RefillNumber = rawMessage.substr(472,3).trim();
 Script.TransactionId = Script.RxNumber + Script.RefillNumber + &quot;00&quot;;
@@ -179,7 +567,7 @@ Script.BatchId = BatchId;
 
 Script.SequenceNumber = &quot;1&quot;;
 Script.PatientId = Patient.Id;
-Script.FacilityId =null;
+Script.FacilityId = null;//Facility.Id;
 Script.Med = Med;
 Script.DAW = rawMessage.substr(2329,1).trim() === &quot;0&quot; ? false : true;
 Script.DaysSupply = rawMessage.substr(510,3).trim() == &quot;&quot; ? &quot;0&quot; : rawMessage.substr(510,3).trim();
@@ -189,9 +577,6 @@ Script.RefillsRemaining = rawMessage.substr(1158,3).trim();
 Script.RefillsTotal = parseInt(Script.RefillNumber) + parseInt(Script.RefillsRemaining);
 Script.PartialNumber = &quot;0&quot;;
 Script.RxExpirationDate = FormateDate(rawMessage.substr(494,8).trim());
-
-
-
 Script.Urgency = CalculateUrgency(rawMessage.substr(843,5).trim()).toString();
 
 channelMap.put(&apos;Script&apos;, Script);
@@ -200,7 +585,6 @@ var Batch = {};
 
 var Scripts = [];
 Scripts.push(Script);
-var Facilities = null;
 var Patients = [];
 Patients.push(Patient);
 
@@ -209,9 +593,9 @@ Patients.push(Patient);
 Batch.Id = BatchId;
 Batch.TransmissionId = &quot;&quot;;
 Batch.ScriptCount = Scripts.length;
-Batch.SourceTerminal = &quot;UNKNOWN&quot;;
+Batch.SourceTerminal = rawMessage.substr(838,5);
 Batch.Scripts = Scripts;
-Batch.Facilities = Facilities;
+Batch.Facilities = [];//Facilities;
 Batch.Patients = Patients;
 
 channelMap.put(&apos;Batch&apos;, Batch);
@@ -384,7 +768,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1638701758615</time>
+        <time>1640075026249</time>
         <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>
@@ -395,35 +779,41 @@ return;</undeployScript>
       <codeTemplateLibrary version="3.11.0">
         <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
         <name>Library</name>
-        <revision>26</revision>
+        <revision>9</revision>
         <lastModified>
-          <time>1638701621223</time>
+          <time>1640072875555</time>
           <timezone>UTC</timezone>
         </lastModified>
         <description></description>
         <includeNewChannels>false</includeNewChannels>
         <enabledChannelIds>
           <string>2c88923c-c42f-413f-890f-1b13b846eba3</string>
-          <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
-          <string>16814b6e-2133-4c94-9c64-52f50db9c002</string>
           <string>2552809d-7bda-4bd6-ac76-ba121c5f892e</string>
-          <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
           <string>27e7d67c-6b34-4f7c-b71a-16e31e75ae88</string>
           <string>24999a04-287c-4517-b7f6-a239dd1a2894</string>
-          <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
-          <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
+          <string>3380104e-7dad-4454-86ca-8cb2af26a4ac</string>
           <string>ec193f9b-00c1-4113-ba95-a25f53cc42f2</string>
-          <string>0353744a-3498-4501-a324-a768adfbc8c5</string>
-          <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
+          <string>859240df-fe33-456c-9793-ccdc4d58f333</string>
           <string>2f26ebf0-8b5b-45b1-88ae-0369e6045454</string>
           <string>79d329b4-b6d4-47ff-a481-eef7441aade8</string>
-          <string>2fa392d7-8669-421e-81a3-1fc3100ee9c8</string>
           <string>1f8f7b98-91c6-47ba-a8b6-e2c5dede190e</string>
           <string>5ca5fda9-4abd-4426-ba3e-2a45b5cd6e79</string>
           <string>ddbe8266-b97e-4860-8dcc-b85c42c15d89</string>
-          <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
           <string>edbc9000-4a15-455d-9505-2deb0af95a9b</string>
           <string>cf597d0c-7b46-471d-9d11-d6e4946421a0</string>
+          <string>f5da6dfb-b808-4061-9274-fed0339bff1a</string>
+          <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
+          <string>16814b6e-2133-4c94-9c64-52f50db9c002</string>
+          <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
+          <string>db8c015a-f11f-4133-992e-9b3277546cbb</string>
+          <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
+          <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
+          <string>0353744a-3498-4501-a324-a768adfbc8c5</string>
+          <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
+          <string>feb1fe1c-0cd6-4082-83a6-3e92db15d3ec</string>
+          <string>2fa392d7-8669-421e-81a3-1fc3100ee9c8</string>
+          <string>427a148f-a043-48db-bce9-882cc1e6ccf8</string>
+          <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
           <string>b742b188-ed4a-4495-bcf6-0468a1eef0c2</string>
         </enabledChannelIds>
         <disabledChannelIds>
@@ -440,16 +830,16 @@ return;</undeployScript>
             <name>CheckingNullValue</name>
             <revision>1</revision>
             <lastModified>
-              <time>1633257732275</time>
+              <time>1638876371048</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -469,16 +859,16 @@ return;</undeployScript>
             <name>IsNullOrEmpty</name>
             <revision>1</revision>
             <lastModified>
-              <time>1637048800795</time>
+              <time>1638876371093</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -499,16 +889,16 @@ return;</undeployScript>
             <name>MomentJS</name>
             <revision>1</revision>
             <lastModified>
-              <time>1633257732499</time>
+              <time>1638876371211</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6189,18 +6579,18 @@ return;</undeployScript>
           <codeTemplate version="3.11.0">
             <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
             <name>Utils Function</name>
-            <revision>11</revision>
+            <revision>3</revision>
             <lastModified>
-              <time>1638455117429</time>
+              <time>1640032517568</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6272,6 +6662,15 @@ function JSONIndent(data){
 	catch(ex){
 		logger.error(ex)
 	}
+}
+
+function DAW(val){
+
+	if(val === 0 || val === &apos;&apos; || vall === null)
+		return false;
+	else
+		return true;
+	
 }</code>
             </properties>
           </codeTemplate>
