@@ -1,67 +1,707 @@
-<codeTemplateLibrary version="3.11.0">
-  <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
-  <name>Library</name>
-  <revision>12</revision>
-  <lastModified>
-    <time>1641116243535</time>
-    <timezone>UTC</timezone>
-  </lastModified>
+<channel version="3.11.0">
+  <id>e5a879a3-dddf-48d1-b69b-878152c0cb9e</id>
+  <nextMetaDataId>2</nextMetaDataId>
+  <name>CHCS API</name>
   <description></description>
-  <includeNewChannels>false</includeNewChannels>
-  <enabledChannelIds>
-    <string>2c88923c-c42f-413f-890f-1b13b846eba3</string>
-    <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
-    <string>1be8c69b-0ab1-4772-b037-5e9919eb0447</string>
-    <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
-    <string>db8c015a-f11f-4133-992e-9b3277546cbb</string>
-    <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
-    <string>ec193f9b-00c1-4113-ba95-a25f53cc42f2</string>
-    <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
-    <string>0353744a-3498-4501-a324-a768adfbc8c5</string>
-    <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
-    <string>2f26ebf0-8b5b-45b1-88ae-0369e6045454</string>
-    <string>79d329b4-b6d4-47ff-a481-eef7441aade8</string>
-    <string>feb1fe1c-0cd6-4082-83a6-3e92db15d3ec</string>
-    <string>2fa392d7-8669-421e-81a3-1fc3100ee9c8</string>
-    <string>1f8f7b98-91c6-47ba-a8b6-e2c5dede190e</string>
-    <string>ddbe8266-b97e-4860-8dcc-b85c42c15d89</string>
-    <string>e5a879a3-dddf-48d1-b69b-878152c0cb9e</string>
-    <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
-    <string>edbc9000-4a15-455d-9505-2deb0af95a9b</string>
-    <string>f5da6dfb-b808-4061-9274-fed0339bff1a</string>
-    <string>cf597d0c-7b46-471d-9d11-d6e4946421a0</string>
-    <string>b742b188-ed4a-4495-bcf6-0468a1eef0c2</string>
-  </enabledChannelIds>
-  <disabledChannelIds>
-    <string>69026bbe-b2a9-4629-8ba1-3bc4b91adfc2</string>
-    <string>4778ade6-4fa9-40bb-a30d-fb5d4716f94d</string>
-    <string>5bb52472-55db-4995-8422-f756b55b4ae3</string>
-    <string>1106f5ac-f27d-44f1-bdad-1971420e070c</string>
-    <string>30e104b5-3fca-45bc-9a10-4bc559e81405</string>
-    <string>e83c9f1d-04c8-4d50-adab-19d8e14e94b2</string>
-    <string>22f93589-a6e4-497d-894f-a05ce4a9ce6f</string>
-  </disabledChannelIds>
-  <codeTemplates>
-    <codeTemplate version="3.11.0">
-      <id>64575436-4197-4ad7-b223-88693dbfe7f0</id>
-      <name>CheckingNullValue</name>
-      <revision>1</revision>
+  <revision>3</revision>
+  <sourceConnector version="3.11.0">
+    <metaDataId>0</metaDataId>
+    <name>sourceConnector</name>
+    <properties class="com.mirth.connect.connectors.http.HttpReceiverProperties" version="3.11.0">
+      <pluginProperties>
+        <com.mirth.connect.plugins.httpauth.NoneHttpAuthProperties version="3.11.0">
+  <authType>NONE</authType>
+        </com.mirth.connect.plugins.httpauth.NoneHttpAuthProperties>
+      </pluginProperties>
+      <listenerConnectorProperties version="3.11.0">
+        <host>0.0.0.0</host>
+        <port>8099</port>
+      </listenerConnectorProperties>
+      <sourceConnectorProperties version="3.11.0">
+        <responseVariable>d1</responseVariable>
+        <respondAfterProcessing>true</respondAfterProcessing>
+        <processBatch>false</processBatch>
+        <firstResponse>false</firstResponse>
+        <processingThreads>1</processingThreads>
+        <resourceIds class="linked-hash-map">
+          <entry>
+            <string>Default Resource</string>
+            <string>[Default Resource]</string>
+          </entry>
+        </resourceIds>
+        <queueBufferSize>1000</queueBufferSize>
+      </sourceConnectorProperties>
+      <xmlBody>false</xmlBody>
+      <parseMultipart>true</parseMultipart>
+      <includeMetadata>false</includeMetadata>
+      <binaryMimeTypes>application/.*(?&lt;!json|xml)$|image/.*|video/.*|audio/.*</binaryMimeTypes>
+      <binaryMimeTypesRegex>true</binaryMimeTypesRegex>
+      <responseContentType>${responseContentType}</responseContentType>
+      <responseDataTypeBinary>false</responseDataTypeBinary>
+      <responseStatusCode>${responseCode}</responseStatusCode>
+      <responseHeaders class="linked-hash-map"/>
+      <responseHeadersVariable></responseHeadersVariable>
+      <useResponseHeadersVariable>false</useResponseHeadersVariable>
+      <charset>UTF-8</charset>
+      <contextPath>api/chcs/</contextPath>
+      <timeout>30000</timeout>
+      <staticResources/>
+    </properties>
+    <transformer version="3.11.0">
+      <elements>
+        <com.mirth.connect.plugins.javascriptstep.JavaScriptStep version="3.11.0">
+          <name>CHCSTransformer</name>
+          <sequenceNumber>0</sequenceNumber>
+          <enabled>true</enabled>
+          <script>var rawMessage = connectorMessage.getRawData();
+var arrMessage = rawMessage.split(&quot;\\|&quot;);
+
+var APS = arrMessage[0];
+var RX1 = arrMessage[1];
+var SG1 = arrMessage[2];
+var PAT = arrMessage[3];
+var DOC = arrMessage[4];
+var END = arrMessage[5];
+var REQR = arrMessage[6];
+
+
+// Message Type //
+var type = &quot;&quot;;
+
+// Address //
+
+var Address = {};
+Address.Street1 = PAT.substr(3,30).trim(); 
+Address.Street2 = &quot;NA&quot;;
+Address.City = PAT.substr(33,20).trim();
+Address.State = PAT.substr(53,2).trim();
+Address.Zip = PAT.substr(55,9).trim();
+Address.Country = &quot;US&quot;;
+Address.AddressType = &quot;Home&quot;;
+Address.Primary = true;
+
+var Addresses = [];
+Addresses.push(Address);
+
+channelMap.put(&apos;Address&apos;, Address);
+channelMap.put(&apos;Addresses&apos;, Addresses);
+
+
+
+// PhoneNumber //
+
+var PhoneNumberH = {};
+PhoneNumberH.Number = PAT.substr(64,10).trim();
+PhoneNumberH.Type = &quot;Home&quot;;
+
+
+var PhoneNumbers = [];
+if(!IsNullOrEmpty(PhoneNumberH.Number)){
+	PhoneNumbers.push(PhoneNumberH);
+}
+
+
+// Patient //
+
+var Patient = {};
+FullName = RX1.substr(39,30).trim();
+PatinetFullName = FullName.split(&quot; &quot;);
+Patient.Id = END.substr(17,12).trim();
+Patient.LastName = PatinetFullName[2];
+Patient.FirstName = PatinetFullName[0]; 
+Patient.DOB = FormateDate(RX1.substr(290,8).trim());
+Patient.IdType = null;
+Patient.Initials = null;
+Patient.MiddleName = PatinetFullName[1];
+Patient.Addresses = Addresses;
+Patient.PhoneNumbers = PhoneNumbers;
+Patient.Sex = &quot;Undeclared&quot;
+channelMap.put(&apos;Patient&apos;, Patient);
+
+// LabelItems //
+
+var LabelItems = [];
+
+var SourceTerminal = {}
+SourceTerminal.Name = &quot;SourceTerminal&quot;;
+SourceTerminal.Text = APS.substr(3,3).trim();
+LabelItems.push(SourceTerminal);
+
+var EntryInitials = {}
+EntryInitials.Name = &quot;EntryInitials&quot;;
+EntryInitials.Text = APS.substr(6,5).trim();
+LabelItems.push(EntryInitials);
+
+var OriginalEntryInitials = {}
+OriginalEntryInitials.Name = &quot;OriginalEntryInitials&quot;;
+OriginalEntryInitials.Text = APS.substr(11,5).trim();
+LabelItems.push(OriginalEntryInitials);
+
+
+var EntryDate = {}
+EntryDate.Name = &quot;EntryDate&quot;;
+EntryDate.Text = FormatDate3(APS.substr(16,14).trim());
+LabelItems.push(EntryDate);
+
+var Urgency = {}
+Urgency.Name = &quot;Urgency&quot;;
+Urgency.Text = APS.substr(36,1).trim();
+LabelItems.push(Urgency);
+
+var FamilyID = {}
+FamilyID.Name = &quot;FamilyID&quot;;
+FamilyID.Text = RX1.substr(23,16).trim();
+LabelItems.push(FamilyID);
+
+var PatientFullName = {}
+PatientFullName.Name = &quot;PatientFullName&quot;;
+PatientFullName.Text = RX1.substr(39,30).trim();
+LabelItems.push(PatientFullName);
+
+var RxNumber = {}
+RxNumber.Name = &quot;RxNumber&quot;;
+RxNumber.Text = RX1.substr(83,11).trim();
+LabelItems.push(RxNumber);
+
+
+
+var RefillNumber = {}
+RefillNumber.Name = &quot;RefillNumber&quot;;
+RefillNumber.Text = RX1.substr(105,2).trim();
+LabelItems.push(RefillNumber);
+
+var DispenseQuantity = {}
+DispenseQuantity.Name = &quot;DispenseQuantity&quot;;
+DispenseQuantity.Text = RX1.substr(107,4).trim();
+LabelItems.push(DispenseQuantity);
+
+var DaysSupply = {}
+DaysSupply.Name = &quot;DaysSupply&quot;;
+DaysSupply.Text = RX1.substr(111,2).trim();
+LabelItems.push(DaysSupply);
+
+var DrugNDC = {}
+DrugNDC.Name = &quot;DrugNDC&quot;;
+DrugNDC.Text = RX1.substr(114,12).trim();
+LabelItems.push(DrugNDC);
+
+var DAW = {}
+DAW.Name = &quot;DAW&quot;;
+DAW.Text = RX1.substr(126,1).trim();
+LabelItems.push(DAW);
+
+var TotalRefills = {}
+TotalRefills.Name = &quot;TotalRefills&quot;;
+TotalRefills.Text = RX1.substr(127,2).trim();
+LabelItems.push(TotalRefills);
+
+var RxOrigin = {}
+RxOrigin.Name = &quot;RxOrigin&quot;;
+RxOrigin.Text = RX1.substr(129,1);
+LabelItems.push(RxOrigin);
+
+var DispensedDrugName = {}
+DispensedDrugName.Name = &quot;DispensedDrugName&quot;;
+DispensedDrugName.Text = RX1.substr(130,40).trim();
+LabelItems.push(DispensedDrugName);
+
+var DrugSchedule = {}
+DrugSchedule.Name = &quot;DrugSchedule&quot;;
+DrugSchedule.Text = RX1.substr(170,1).trim(); 
+LabelItems.push(DrugSchedule);
+
+var PreviousRxNumber = {}
+PreviousRxNumber.Name = &quot;PreviousRxNumber&quot;;
+PreviousRxNumber.Text = RX1.substr(171,11).trim();
+LabelItems.push(PreviousRxNumber);
+
+
+var PrescriberFullName = {}
+PrescriberFullName.Name = &quot;PrescriberFullName&quot;;
+PrescriberFullName.Text = RX1.substr(182,30).trim();
+LabelItems.push(PrescriberFullName);
+
+var PatientSSN = {}
+PatientSSN.Name = &quot;PatientSSN&quot;;
+PatientSSN.Text = RX1.substr(212,13).trim();
+LabelItems.push(PatientSSN);
+
+var PartialFill = {}
+PartialFill.Name = &quot;PartialFill&quot;;
+PartialFill.Text = RX1.substr(225,1);
+LabelItems.push(PartialFill);
+
+var RxOrigDate = {}
+RxOrigDate.Name = &quot;RxOrigDate&quot;;
+RxOrigDate.Text = FormateDate(RX1.substr(226,8).trim());
+LabelItems.push(RxOrigDate);
+
+var PrescribedDrugName = {}
+PrescribedDrugName.Name = &quot;PrescribedDrugName&quot;;
+PrescribedDrugName.Text = RX1.substr(234,40).trim();
+LabelItems.push(PrescribedDrugName);
+
+var DrugIEN = {}
+DrugIEN.Name = &quot;DrugIEN&quot;;
+DrugIEN.Text = RX1.substr(274,16).trim();
+LabelItems.push(DrugIEN);
+
+var PatientDOB = {}
+PatientDOB.Name = &quot;PatientDOB&quot;;
+PatientDOB.Text = Patient.DOB;//FormateDate3(RX1.substr(290,8).trim());
+LabelItems.push(PatientDOB);
+
+var Warning1 = {}
+Warning1.Name = &quot;Warning1&quot;;
+Warning1.Text = SG1.substr(16,5).trim();
+LabelItems.push(Warning1);
+
+
+var Warning2 = {}
+Warning2.Name = &quot;Warning2&quot;;
+Warning2.Text = SG1.substr(21,5).trim();
+LabelItems.push(Warning2);
+
+
+var Warning3 = {}
+Warning3.Name = &quot;Warning3&quot;;
+Warning3.Text = SG1.substr(26,5).trim();
+LabelItems.push(Warning3);
+
+var Warning4 = {}
+Warning4.Name = &quot;Warning4&quot;;
+Warning4.Text = SG1.substr(31,5).trim();
+LabelItems.push(Warning4);
+
+var Sig = {}
+Sig.Name = &quot;Sig&quot;;
+Sig.Text = SG1.substr(39,999).trim();
+LabelItems.push(Sig);
+
+var PatientAddress = {}
+PatientAddress.Name = &quot;PatientAddress&quot;;
+PatientAddress.Text = PAT.substr(3,30).trim();
+LabelItems.push(PatientAddress);
+
+var PatientCity = {}
+PatientCity.Name = &quot;PatientCity&quot;;
+PatientCity.Text = PAT.substr(33,20).trim();
+LabelItems.push(PatientCity);
+
+var PatientState = {}
+PatientState.Name = &quot;PatientState&quot;;
+PatientState.Text = PAT.substr(53,2).trim();
+LabelItems.push(PatientState);
+
+var PatientZip = {}
+PatientZip.Name = &quot;PatientZip&quot;;
+PatientZip.Text = PAT.substr(55,9).trim();
+LabelItems.push(PatientZip);
+
+var PatientPhoneNumber = {}
+PatientPhoneNumber.Name = &quot;PatientPhoneNumber&quot;;
+PatientPhoneNumber.Text = PAT.substr(64,10).trim();
+LabelItems.push(PatientPhoneNumber);
+
+var PrescriberAddress1 = {}
+PrescriberAddress1.Name = &quot;PrescriberAddress1&quot;;
+PrescriberAddress1.Text = DOC.substr(3,30).trim();
+LabelItems.push(PrescriberAddress1);
+
+var PrescriberCity = {}
+PrescriberCity.Name = &quot;PrescriberCity&quot;;
+PrescriberCity.Text = DOC.substr(33,20).trim();
+LabelItems.push(PrescriberCity);
+
+
+var PrescriberState = {}
+PrescriberState.Name = &quot;PrescriberState&quot;;
+PrescriberState.Text = DOC.substr(53,2).trim();
+LabelItems.push(PrescriberState);
+
+var PrescriberZip = {}
+PrescriberZip.Name = &quot;PrescriberZip&quot;;
+PrescriberZip.Text = DOC.substr(55,9).trim();
+LabelItems.push(PrescriberZip);
+
+var PrescriberPhoneNumber = {}
+PrescriberPhoneNumber.Name = &quot;PrescriberPhoneNumber&quot;;
+PrescriberPhoneNumber.Text = DOC.substr(64,10).trim();
+LabelItems.push(PrescriberPhoneNumber);
+
+var PrescriberDEA = {}
+PrescriberDEA.Name = &quot;PrescriberDEA&quot;;
+PrescriberDEA.Text = DOC.substr(74,10).trim();
+LabelItems.push(PrescriberDEA);
+
+channelMap.put(&apos;LabelItems&apos;, LabelItems);
+
+// Med //
+
+var Med = {};
+Med.Description = &quot;&quot;;
+if(IsNullOrEmpty(Med.Description)){
+	Med.Description = &quot;&quot;;
+}
+Med.Id = RX1.substr(114,12).trim();
+Med.MedIdType = 0;
+Med.Name = RX1.substr(234,40).trim();
+Med.InventorySelector = &quot;&quot;;
+channelMap.put(&apos;Med&apos;, Med);
+
+
+// Doses //
+var Doses = [];
+var Dose = {};
+
+Dose.AdminDateTime = FormateDate();
+var doseQuantity = &quot;&quot;;
+Dose.Quantity = IsNullOrEmpty(doseQuantity) ? &apos;1&apos; : doseQuantity;
+Dose.Sig = SG1.substr(39,999).trim();
+Dose.TimeName = &quot;&quot;; 
+
+Doses.push(Dose);
+
+// HOA //
+
+var HOA = {};
+
+HOA.StartDate = FormateDate();
+HOA.EndDate = FormateDate();
+HOA.Doses = Doses;
+HOA.ScheduleType = 0;
+
+channelMap.put(&apos;HOA&apos;, HOA);
+
+// Scripts //
+
+var Script = {};
+
+//logger.info();
+Script.Action = ProcessScriptAction(APS.substr(35,1));
+Script.Packaging = DoesHOAExists(HOA) === true ? 1:5; //Adherence 1; Blister 2; Manual 3; Pouch 4; Vial 5;
+Script.RxNumber = RX1.substr(83,11).trim();
+Script.RefillNumber = parseFloat(RX1.substr(105,2));
+Script.TransactionId = Script.RxNumber + Script.RefillNumber + &quot;00&quot;;
+Script.Barcode = Script.TransactionId
+Script.DispenseQuantity = parseFloat(RX1.substr(107,4).trim());
+
+var BatchId = UUIDGenerator.getUUID();
+Script.BatchId = BatchId;
+
+Script.SequenceNumber = 1;
+Script.PatientId = Patient.Id
+Script.FacilityId = &quot;StoreX&quot;;
+Script.Med = Med;
+Script.DAW = RX1.substr(126,1) === &quot;N&quot; ? false : true; //boolean
+Script.DaysSupply = IsNullOrEmpty(parseInt(RX1.substr(111,2))) ? 0 : parseInt(RX1.substr(111,2));
+Script.HOA = null;
+Script.LabelItems = LabelItems;
+Script.RefillsRemaining = 0.0;// numeric
+Script.RefillsTotal = parseFloat(RX1.substr(127,2))//parseFloat(Script.RefillNumber + Script.RefillsRemaining); // numeric
+Script.PartialNumber = parseInt(RX1.substr(225,1));//0;
+Script.RxExpirationDate = &quot;&quot;;//FormateDate();
+Script.SafetyCap = &quot;NA&quot;;
+Script.Sig = SG1.substr(39,999);
+Script.Urgency = APS.substr(36,1); //numeric Urgency - (0) Delay, (1) Normal, (2) Rush, (3) Urgent, (4) Hold 
+
+//
+
+channelMap.put(&apos;Script&apos;, Script);
+
+// Facility //
+
+var Facility = {};
+Facility.Id = Script.FacilityId;
+Facility.Bed = null;
+Facility.Cabinet = null;
+Facility.Floor = null;
+Facility.Name = &quot;StoreX&quot;;
+Facility.NursingStationId = null;
+Facility.Room = null;
+Facility.Unit = null;
+Facility.Addresses = [];
+
+var FacilityAddress = {};
+FacilityAddress.Street1 = &quot;NA&quot;;
+FacilityAddress.Street2 = &quot;NA&quot;;
+FacilityAddress.City = &quot;NA&quot;;
+FacilityAddress.State = &quot;NA&quot;;
+FacilityAddress.Zip = &quot;NA&quot;;
+FacilityAddress.Country = &quot;US&quot;;
+FacilityAddress.AddressType = &quot;Home&quot;;
+FacilityAddress.Primary = true;
+
+Facility.Addresses.push(FacilityAddress);
+
+
+// Batch //
+
+var Batch = {};
+
+var Scripts = [];
+Scripts.push(Script);
+var Facilities = [];
+Facilities.push(Facility);
+var Patients = [];
+Patients.push(Patient);
+
+
+
+Batch.Id = BatchId;
+Batch.TransmissionId = &quot;&quot;;
+Batch.ScriptCount = Scripts.length;
+Batch.SourceTerminal = &quot;&quot;;
+Batch.Scripts = Scripts;
+Batch.Facilities = Facilities;
+Batch.Patients = Patients;
+
+channelMap.put(&apos;Batch&apos;, Batch);
+//logger.info(JSON.stringify(Batch,null,2));</script>
+        </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
+      </elements>
+      <inboundTemplate encoding="base64">QVBTMSBTS0MgU0tDMDYxNTIwMDcxNzEyMTRZWVkzMUYxTjAwfFJYMTExIDEwNzg0NzQyMzEgQU1JRUUgWCBBVEtJTlMgMDYxNTIwMDcwMDAwMDAxMDAwIDAwMDA5OTI0ODg4MDAzMCAzMDAwMDAwNjA0MDEwMSBOMDUwIDYxMjM0NTY3ODkxMVRJVExFQkFVTSxTRUFNIEogODkwOTkwODA1IDAyMDA3MDYxNUxBTlNPUFJBWk9MRSAoUFJFVkFDSUQgRVEpIDMwTUcgQ0FQIDE4MDc1ODkxOTc1MDYyOHxTRzFHNjAwNzg5NiAwMzExMTExMjIyMjIzMzMzMzQ0NDQ0MDYwVEFLRSBPTkUgQ0FQU1VMRSBCWSBNT1VUSH5FVkVSWSBEQVkgQkVGT1JFIFlPVVIgRklSU1R+TUVBTH4gfFBBVDEwMCBQYXRpZW50IEFkZHJlc3MgTWV0cm9wb2xpcyBOQzEyMzQ1Njc4OTkxOTEyMzQ1Njk5IHxET0MxMDAgRG9jdG9yIFdheSBNZXRyb3BvbGlzIE5DMTIzNDU2Nzg5OTE5Nzg3ODEwNkJLOTk5OTk5OTl8RU5EMDYxNTIwMDcxNzEyNDYgMTAyMzkwOXx+</inboundTemplate>
+      <outboundTemplate encoding="base64"></outboundTemplate>
+      <inboundDataType>RAW</inboundDataType>
+      <outboundDataType>JSON</outboundDataType>
+      <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.11.0">
+        <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.11.0">
+          <splitType>JavaScript</splitType>
+          <batchScript></batchScript>
+        </batchProperties>
+      </inboundProperties>
+      <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+        <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
+          <splitType>JavaScript</splitType>
+          <batchScript></batchScript>
+        </batchProperties>
+      </outboundProperties>
+    </transformer>
+    <filter version="3.11.0">
+      <elements/>
+    </filter>
+    <transportName>HTTP Listener</transportName>
+    <mode>SOURCE</mode>
+    <enabled>true</enabled>
+    <waitForPrevious>true</waitForPrevious>
+  </sourceConnector>
+  <destinationConnectors>
+    <connector version="3.11.0">
+      <metaDataId>1</metaDataId>
+      <name>AIM Service Call</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.11.0">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.11.0">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <script>try {
+	var tcp = new Packages.mirthSocket.TcpDestination(&quot;10.6.72.59&quot;, 2000);	
+
+	var batch = $(&apos;Batch&apos;);
+	batch.Scripts[0].LabelItems = $(&apos;LabelItems&apos;);
+
+	var batchString = JSON.stringify(batch, null, 2);
+
+	logger.info(batchString);	
+	
+	var msg = tcp.SendToServer(batchString.trim());			
+
+	channelMap.put(&apos;responseContentType&apos;, &apos;text/plain&apos;);
+	channelMap.put(&apos;responseCode&apos;, &apos;200&apos;);
+	
+	return msg;
+}
+catch(ex) {
+	logger.info(ex)
+}
+</script>
+      </properties>
+      <transformer version="3.11.0">
+        <elements/>
+        <inboundDataType>JSON</inboundDataType>
+        <outboundDataType>JSON</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.11.0">
+        <elements/>
+        <inboundDataType>JSON</inboundDataType>
+        <outboundDataType>JSON</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.11.0">
+        <elements/>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+  </destinationConnectors>
+  <preprocessingScript>// Modify the message variable below to pre process data
+return message;</preprocessingScript>
+  <postprocessingScript>// This script executes once after a message has been processed
+// Responses returned from here will be stored as &quot;Postprocessor&quot; in the response map
+return;</postprocessingScript>
+  <deployScript>// This script executes once when the channel is deployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</deployScript>
+  <undeployScript>// This script executes once when the channel is undeployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</undeployScript>
+  <properties version="3.11.0">
+    <clearGlobalChannelMap>true</clearGlobalChannelMap>
+    <messageStorageMode>DEVELOPMENT</messageStorageMode>
+    <encryptData>false</encryptData>
+    <removeContentOnCompletion>false</removeContentOnCompletion>
+    <removeOnlyFilteredOnCompletion>false</removeOnlyFilteredOnCompletion>
+    <removeAttachmentsOnCompletion>false</removeAttachmentsOnCompletion>
+    <initialState>STARTED</initialState>
+    <storeAttachments>true</storeAttachments>
+    <metaDataColumns>
+      <metaDataColumn>
+        <name>SOURCE</name>
+        <type>STRING</type>
+        <mappingName>mirth_source</mappingName>
+      </metaDataColumn>
+      <metaDataColumn>
+        <name>TYPE</name>
+        <type>STRING</type>
+        <mappingName>mirth_type</mappingName>
+      </metaDataColumn>
+    </metaDataColumns>
+    <attachmentProperties version="3.11.0">
+      <type>None</type>
+      <properties/>
+    </attachmentProperties>
+    <resourceIds class="linked-hash-map">
+      <entry>
+        <string>Default Resource</string>
+        <string>[Default Resource]</string>
+      </entry>
+    </resourceIds>
+  </properties>
+  <exportData>
+    <metadata>
+      <enabled>true</enabled>
       <lastModified>
-        <time>1638876371048</time>
+        <time>1641112753202</time>
         <timezone>UTC</timezone>
       </lastModified>
-      <contextSet>
-        <delegate>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_DISPATCHER</contextType>
-          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-          <contextType>SOURCE_RECEIVER</contextType>
-          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-        </delegate>
-      </contextSet>
-      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
-        <type>FUNCTION</type>
-        <code>function IsNullOrEmpty(stringValue){
+      <pruningSettings>
+        <archiveEnabled>true</archiveEnabled>
+      </pruningSettings>
+    </metadata>
+    <codeTemplateLibraries>
+      <codeTemplateLibrary version="3.11.0">
+        <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
+        <name>Library</name>
+        <revision>12</revision>
+        <lastModified>
+          <time>1641116243535</time>
+          <timezone>UTC</timezone>
+        </lastModified>
+        <description></description>
+        <includeNewChannels>false</includeNewChannels>
+        <enabledChannelIds>
+          <string>2c88923c-c42f-413f-890f-1b13b846eba3</string>
+          <string>2552809d-7bda-4bd6-ac76-ba121c5f892e</string>
+          <string>1be8c69b-0ab1-4772-b037-5e9919eb0447</string>
+          <string>27e7d67c-6b34-4f7c-b71a-16e31e75ae88</string>
+          <string>24999a04-287c-4517-b7f6-a239dd1a2894</string>
+          <string>3380104e-7dad-4454-86ca-8cb2af26a4ac</string>
+          <string>ec193f9b-00c1-4113-ba95-a25f53cc42f2</string>
+          <string>859240df-fe33-456c-9793-ccdc4d58f333</string>
+          <string>2f26ebf0-8b5b-45b1-88ae-0369e6045454</string>
+          <string>79d329b4-b6d4-47ff-a481-eef7441aade8</string>
+          <string>1f8f7b98-91c6-47ba-a8b6-e2c5dede190e</string>
+          <string>5ca5fda9-4abd-4426-ba3e-2a45b5cd6e79</string>
+          <string>ddbe8266-b97e-4860-8dcc-b85c42c15d89</string>
+          <string>edbc9000-4a15-455d-9505-2deb0af95a9b</string>
+          <string>cf597d0c-7b46-471d-9d11-d6e4946421a0</string>
+          <string>f5da6dfb-b808-4061-9274-fed0339bff1a</string>
+          <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
+          <string>16814b6e-2133-4c94-9c64-52f50db9c002</string>
+          <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
+          <string>db8c015a-f11f-4133-992e-9b3277546cbb</string>
+          <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
+          <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
+          <string>0353744a-3498-4501-a324-a768adfbc8c5</string>
+          <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
+          <string>feb1fe1c-0cd6-4082-83a6-3e92db15d3ec</string>
+          <string>2fa392d7-8669-421e-81a3-1fc3100ee9c8</string>
+          <string>427a148f-a043-48db-bce9-882cc1e6ccf8</string>
+          <string>e5a879a3-dddf-48d1-b69b-878152c0cb9e</string>
+          <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
+          <string>b742b188-ed4a-4495-bcf6-0468a1eef0c2</string>
+        </enabledChannelIds>
+        <disabledChannelIds>
+          <string>69026bbe-b2a9-4629-8ba1-3bc4b91adfc2</string>
+          <string>4778ade6-4fa9-40bb-a30d-fb5d4716f94d</string>
+          <string>5bb52472-55db-4995-8422-f756b55b4ae3</string>
+          <string>30e104b5-3fca-45bc-9a10-4bc559e81405</string>
+          <string>e83c9f1d-04c8-4d50-adab-19d8e14e94b2</string>
+          <string>22f93589-a6e4-497d-894f-a05ce4a9ce6f</string>
+        </disabledChannelIds>
+        <codeTemplates>
+          <codeTemplate version="3.11.0">
+            <id>64575436-4197-4ad7-b223-88693dbfe7f0</id>
+            <name>CheckingNullValue</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1638876371048</time>
+              <timezone>UTC</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>function IsNullOrEmpty(stringValue){
 	if(stringValue !== &quot;&quot; &amp;&amp; stringValue !== null){
 		return false;	
 	}
@@ -69,28 +709,28 @@
 		return true;
 	}
 }</code>
-      </properties>
-    </codeTemplate>
-    <codeTemplate version="3.11.0">
-      <id>9387eb90-f794-432f-9212-3c724c9cfffc</id>
-      <name>IsNullOrEmpty</name>
-      <revision>1</revision>
-      <lastModified>
-        <time>1638876371093</time>
-        <timezone>UTC</timezone>
-      </lastModified>
-      <contextSet>
-        <delegate>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_DISPATCHER</contextType>
-          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-          <contextType>SOURCE_RECEIVER</contextType>
-          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-        </delegate>
-      </contextSet>
-      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
-        <type>FUNCTION</type>
-        <code>function IsNullOrEmpty(stringValue){
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.11.0">
+            <id>9387eb90-f794-432f-9212-3c724c9cfffc</id>
+            <name>IsNullOrEmpty</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1638876371093</time>
+              <timezone>UTC</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>function IsNullOrEmpty(stringValue){
 	if(stringValue !== &quot;&quot; &amp;&amp; stringValue !== null){
 		false;
 		}else
@@ -99,28 +739,28 @@
 			}
 	
 	}</code>
-      </properties>
-    </codeTemplate>
-    <codeTemplate version="3.11.0">
-      <id>5314a696-892a-463e-add6-4cdc0fbec2dd</id>
-      <name>MomentJS</name>
-      <revision>1</revision>
-      <lastModified>
-        <time>1638876371211</time>
-        <timezone>UTC</timezone>
-      </lastModified>
-      <contextSet>
-        <delegate>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_DISPATCHER</contextType>
-          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-          <contextType>SOURCE_RECEIVER</contextType>
-          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-        </delegate>
-      </contextSet>
-      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
-        <type>FUNCTION</type>
-        <code>//! moment.js
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.11.0">
+            <id>5314a696-892a-463e-add6-4cdc0fbec2dd</id>
+            <name>MomentJS</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1638876371211</time>
+              <timezone>UTC</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>//! moment.js
 //! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
@@ -5791,28 +6431,28 @@
 
 })));
 </code>
-      </properties>
-    </codeTemplate>
-    <codeTemplate version="3.11.0">
-      <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
-      <name>Utils Function</name>
-      <revision>4</revision>
-      <lastModified>
-        <time>1641116243558</time>
-        <timezone>UTC</timezone>
-      </lastModified>
-      <contextSet>
-        <delegate>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_DISPATCHER</contextType>
-          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-          <contextType>SOURCE_RECEIVER</contextType>
-          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-        </delegate>
-      </contextSet>
-      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
-        <type>FUNCTION</type>
-        <code>/// Utils Method Segments ///
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.11.0">
+            <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
+            <name>Utils Function</name>
+            <revision>4</revision>
+            <lastModified>
+              <time>1641116243558</time>
+              <timezone>UTC</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/// Utils Method Segments ///
 function ProcessScriptAction(key){	
 	var Actions = {
 		NW: &quot;Fill&quot;, // New order 
@@ -5901,7 +6541,10 @@ function DAW(val){
 		return true;
 	
 }</code>
-      </properties>
-    </codeTemplate>
-  </codeTemplates>
-</codeTemplateLibrary>
+            </properties>
+          </codeTemplate>
+        </codeTemplates>
+      </codeTemplateLibrary>
+    </codeTemplateLibraries>
+  </exportData>
+</channel>
