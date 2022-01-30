@@ -1,9 +1,9 @@
 <channel version="3.11.0">
   <id>22f93589-a6e4-497d-894f-a05ce4a9ce6f</id>
   <nextMetaDataId>6</nextMetaDataId>
-  <name>WebHooks</name>
+  <name>WebHooks_Log</name>
   <description></description>
-  <revision>56</revision>
+  <revision>2</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -53,11 +53,13 @@
           <name>Process Data</name>
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
-          <script>var rawMessage = connectorMessage.getRawData();
+          <script>Packages.lu.hrs.mirth.MetaAppender.setFocus(channelName);
+var rawMessage = connectorMessage.getRawData();
 
 channelMap.put(&apos;DbResponse&apos;, rawMessage);
 
 logger.info(rawMessage);
+mirth_log(JSON.stringify(rawMessage));
 
 //var db_data = JSON.parse(rawMessage);
 //var js = JSON.stringify(rawMessage);
@@ -498,8 +500,8 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1638278559908</time>
-        <timezone>UTC</timezone>
+        <time>1643375204116</time>
+        <timezone>Asia/Dhaka</timezone>
       </lastModified>
       <pruningSettings>
         <archiveEnabled>true</archiveEnabled>
