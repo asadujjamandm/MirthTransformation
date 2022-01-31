@@ -3,7 +3,7 @@
   <nextMetaDataId>2</nextMetaDataId>
   <name>Parata 66 API_Log</name>
   <description></description>
-  <revision>11</revision>
+  <revision>24</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -771,7 +771,7 @@ if(IsNullOrEmpty(Med.Description)){
 Med.Id = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;DrugNDC&apos;].toString().trim();
 Med.MedIdType = 0;
 Med.Name = msg[&apos;FillData&apos;][&apos;PrescribedDrugName&apos;].toString().trim();
-Med.InventorySelector = &quot;&quot;;
+Med.InventorySelector = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;InventorySelector&apos;].toString();
 channelMap.put(&apos;Med&apos;, Med);
 
 
@@ -802,12 +802,12 @@ channelMap.put(&apos;HOA&apos;, HOA);
 
 var Script = {};
 
-logger.info(msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;Action&apos;].toString());
+
 Script.Action = ProcessScriptAction(msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;Action&apos;].toString().trim());
 Script.Packaging = DoesHOAExists(HOA) === true ? 1:5; //Adherence 1; Blister 2; Manual 3; Pouch 4; Vial 5;
 Script.RxNumber = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;RxId&apos;].toString().trim();
 Script.RefillNumber = parseFloat(msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;RefillNumber&apos;].toString());
-Script.TransactionId = Script.RxNumber + Script.RefillNumber + &quot;00&quot;;
+Script.TransactionId = msg[&apos;ScriptStatus&apos;][&apos;RxID&apos;].toString().trim();//Script.RxNumber + Script.RefillNumber + &quot;00&quot;;
 Script.Barcode = Script.TransactionId
 Script.DispenseQuantity = parseFloat(msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;DispenseQuantity&apos;].toString());
 
@@ -816,14 +816,15 @@ Script.BatchId = BatchId;
 
 Script.SequenceNumber = 1;
 Script.PatientId = Patient.Id;
-Script.FacilityId =msg[&apos;FillData&apos;][&apos;FacilityID&apos;].toString().trim();
+Script.FacilityId = msg[&apos;FillData&apos;][&apos;FacilityID&apos;].toString().trim();
 Script.Med = Med;
 Script.DAW = msg[&apos;FillData&apos;][&apos;DispenseAsWritten&apos;].toString().trim() === &quot;0&quot; ? false : true; //boolean
 Script.DaysSupply = IsNullOrEmpty(parseInt(msg[&apos;FillData&apos;][&apos;DaysSupply&apos;].toString())) ? 0 : parseInt(msg[&apos;FillData&apos;][&apos;DaysSupply&apos;].toString());
 Script.HOA = null;
 Script.LabelItems = LabelItems;
 Script.RefillsRemaining = parseFloat(msg[&apos;FillData&apos;][&apos;RefillsRemaining&apos;].toString());// numeric
-Script.RefillsTotal = parseFloat(Script.RefillNumber + Script.RefillsRemaining); // numeric
+//Script.RefillsTotal = parseFloat(Script.RefillNumber + Script.RefillsRemaining); // numeric
+Script.RefillsTotal = msg[&apos;FillData&apos;][&apos;RefillsAuthorized&apos;].toString().trim();
 Script.PartialNumber = 0;
 Script.RxExpirationDate = FormateDate(msg[&apos;FillData&apos;][&apos;RxExpirationDate&apos;].toString().trim());
 Script.SafetyCap = msg[&apos;FillData&apos;][&apos;SafetyCap&apos;].toString();
@@ -1054,7 +1055,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1643373845843</time>
+        <time>1643617309108</time>
         <timezone>Asia/Dhaka</timezone>
       </lastModified>
       <pruningSettings>
@@ -1133,11 +1134,11 @@ return;</undeployScript>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1162,11 +1163,11 @@ return;</undeployScript>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1203,11 +1204,11 @@ function mirth_log(_msg, type) {
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1233,11 +1234,11 @@ function mirth_log(_msg, type) {
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1267,11 +1268,11 @@ function loggingTime() {
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6959,11 +6960,11 @@ function loggingTime() {
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -7062,5 +7063,6 @@ function DAW(val){
         </codeTemplates>
       </codeTemplateLibrary>
     </codeTemplateLibraries>
+    <channelTags/>
   </exportData>
 </channel>
