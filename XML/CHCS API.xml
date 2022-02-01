@@ -53,7 +53,7 @@
           <name>CHCSTransformer</name>
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
-          <script>//Packages.lu.hrs.mirth.MetaAppender.setFocus(channelName);
+          <script>Packages.lu.hrs.mirth.MetaAppender.setFocus(channelName);
 
 var rawMessage = connectorMessage.getRawData();
 var arrMessage = rawMessage.split(&quot;\\|&quot;);
