@@ -24,16 +24,3 @@ catch(ex) {
 }
 
 
-// try{
-// 	logger.info("Executing Destination");
-	
-// 	channelMap.put('responseContentType', 'text/plain');
-// 	channelMap.put('responseCode', '200');
-
-// 	logger.info($('res_json'));
-	
-// 	return $('res_json');
-// }
-// catch(ex){
-// 	logger.error(ex);
-// }
