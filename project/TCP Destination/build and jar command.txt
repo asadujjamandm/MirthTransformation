@@ -1,6 +1,6 @@
-javac -cp src src/mirthLineBreaker/*.java -d bin
+javac -cp src src/mirthSocket/*.java -d bin
 
-javadoc src/mirthLineBreaker/*.java -d docs
+javadoc src/mirthSocket/*.java -d docs
 
 jar cvfm tcp_lineBreaker.jar .\resources\manifest.txt -C bin . src docs
 

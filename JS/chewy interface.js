@@ -1,5 +1,11 @@
+Packages.lu.hrs.mirth.MetaAppender.setFocus(channelName);
+
+channelMap.put("ip", "10.6.72.59");
+channelMap.put("port", 2000);
+
 // Message Type //
 var type = msg['Msg_Header']['MsgType'].toString().trim();
+
 
 // Address //
 
@@ -753,7 +759,7 @@ channelMap.put('HOA', HOA);
 
 var Script = {};
 
-logger.info(msg['FillData']['DispenseData']['Action'].toString());
+mirth_log(msg['FillData']['DispenseData']['Action'].toString());
 Script.Action = ProcessScriptAction(msg['FillData']['DispenseData']['Action'].toString().trim());
 Script.Packaging = DoesHOAExists(HOA) === true ? 1:5; //Adherence 1; Blister 2; Manual 3; Pouch 4; Vial 5;
 Script.RxNumber = msg['FillData']['DispenseData']['RxNumber'].toString().trim();
@@ -837,6 +843,6 @@ Batch.Scripts = Scripts;
 Batch.Facilities = Facilities;
 Batch.Patients = Patients;
 
-logger.info(JSON.stringify(Batch));
+mirth_log(JSON.stringify(Batch));
 
 channelMap.put('Batch', Batch);

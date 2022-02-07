@@ -2,6 +2,8 @@ package mirthSocket;
 
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class TcpDestination {    
     public String host;
@@ -12,16 +14,30 @@ public class TcpDestination {
         this.port = _port;        
     }
 
-    public String SendToServer(String msg) {    
+    public String ReadDataFromFile(){
+        try{
+            Path fileName = Path.of("D:\\TCP Destination\\log.txt");
 
+            String data = Files.readString(fileName);
+            return data;
+        }
+        catch(Exception ex){
+            return ex.getMessage();
+        }
+    }
+
+    public String SendToServer(String msg) {    
         try{            
             String msgState = msg;
-            msg = msg.replaceAll("\\{\n", "{\r\n")
-            .replaceAll("\\,\n", ",\r\n")
-            .replaceAll("\\[\n" , "[\r\n")
-            .replaceAll("\\\n}", "\r\n}")
-            .replaceAll("\\\n]", "\r\n]")
-            .replaceAll("\"", "\\\"");
+            // msg = msg.replaceAll("\\{\n", "{\r\n")             
+            // .replaceAll("\\[\n" , "[\r\n")
+            // .replaceAll("\\}\n" , "}\r\n")            
+            // .replaceAll("\\]\n" , "]\r\n")
+            // .replaceAll("\\,\n" , ",\r\n")
+            // .replaceAll("\""    , "\\\"") + "\r\n";
+
+            //msg = "\r\n" + msg.replaceAll("\\\n", "\r\n") + "\r\n";
+            msg = msg.replaceAll("\\\n", "\r\n");
 
             msgState = msg;
 
@@ -34,6 +50,12 @@ public class TcpDestination {
             System.out.print("msg sent to server");
 
             socket.close();
+
+            //File fileObj = new File("C:\\Program Files\\Mirth Connect\\custom-lib\\log.txt");
+
+            // FileWriter myWriter = new FileWriter("C:\\Program Files\\Mirth Connect\\custom-lib\\log.txt");
+            // myWriter.write(msgState);
+            // myWriter.close();
 
             return msgState;            
         }
