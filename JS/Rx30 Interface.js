@@ -471,6 +471,7 @@ FacilityAddress.Country = "US";
 FacilityAddress.AddressType = "Primary";
 FacilityAddress.Primary = true
 
+
 Facility.Addresses.push(FacilityAddress);
 
 Facilities.push(Facility);
