@@ -3,7 +3,7 @@
   <nextMetaDataId>6</nextMetaDataId>
   <name>WebHooks</name>
   <description></description>
-  <revision>56</revision>
+  <revision>1</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -498,7 +498,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1638278559908</time>
+        <time>1643537389943</time>
         <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>

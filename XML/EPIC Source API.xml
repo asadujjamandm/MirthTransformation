@@ -3,7 +3,7 @@
   <nextMetaDataId>8</nextMetaDataId>
   <name>EPIC Source API</name>
   <description></description>
-  <revision>32</revision>
+  <revision>8</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -49,647 +49,24 @@
     </properties>
     <transformer version="3.11.0">
       <elements>
-        <com.mirth.connect.plugins.javascriptstep.JavaScriptStep version="3.11.0">
-          <name>BatchOBj</name>
+        <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
+          <name>EpicSource Transformer</name>
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
-          <script>// Message Type //
-var type = msg[&apos;MSH&apos;][&apos;MSH.9&apos;][&apos;MSH.9.1&apos;].toString();
-
-// Address //
-
-var Address = {};
-
-Address.Street1 = msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.1&apos;].toString().trim();
-Address.Street2 = msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.2&apos;].toString().trim();
-Address.City = msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.3&apos;].toString().trim();
-Address.State = msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.4&apos;].toString().trim();
-Address.ZIP = msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.5&apos;].toString().trim();
-Address.Country = msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.6&apos;].toString().trim();
-Address.AddressType = &quot;Primary&quot;;//msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.7&apos;].toString().trim();
-Address.Primary = &quot;true&quot;;
-//Address.Id =null;
-
-var Addresses = [];
-//if(((Address.Street1 !== null || Address.Street1 !== &quot;&quot;) || (Address.Street2 !== null || Address.Street2 !== &quot;&quot;)) &amp;&amp; 
-//	((Address.City !== null || Address.City !== &quot;&quot;) || (Address.State !== null || Address.State !== &quot;&quot;)) &amp;&amp; 
-//	(Address.Country !== null || Address.Country !==)){}
-
-if((!IsNullOrEmpty(Address.Street1) || !IsNullOrEmpty(Address.Street2)) &amp;&amp; 
-	(!IsNullOrEmpty(Address.City) || !IsNullOrEmpty(Address.State)) &amp;&amp;
-	(!IsNullOrEmpty(Address.Country)))
-{
-	Addresses.push(Address);
-}
-
-channelMap.put(&apos;Address&apos;, Address);
-channelMap.put(&apos;Addresses&apos;, Addresses);
-
-//logger.info(&apos;Address: &apos; + JSON.stringify(Address));
-
-// PhoneNumber //
-
-var PhoneNumberH = {};
-
-PhoneNumberH.Number = msg[&apos;PID&apos;][&apos;PID.13&apos;][&apos;PID.13.1&apos;].toString().trim();
-PhoneNumberH.Type = msg[&apos;PID&apos;][&apos;PID.13&apos;][&apos;PID.13.3&apos;].toString().trim();
-//PhoneNumberH.Id=null;
-
-var PhoneNumberW = {};
-
-PhoneNumberW.Number = msg[&apos;PID&apos;][&apos;PID.14&apos;][&apos;PID.14.1&apos;].toString().trim();
-PhoneNumberW.Type = msg[&apos;PID&apos;][&apos;PID.14&apos;][&apos;PID.14.3&apos;].toString().trim();
-//PhoneNumberW.Id=null;
-
-var PhoneNumbers = [];
-
-if(!IsNullOrEmpty(PhoneNumberH.Number)){
-	PhoneNumbers.push(PhoneNumberH);
-}
-
-if(!IsNullOrEmpty(PhoneNumberW.Number)){
-	PhoneNumbers.push(PhoneNumberW);
-}
-
-
-channelMap.put(&apos;PhoneNumberH&apos;, PhoneNumberH);
-channelMap.put(&apos;PhoneNumberW&apos;, PhoneNumberW);
-channelMap.put(&apos;PhoneNumbers&apos;, PhoneNumbers);
-
-//logger.info(&apos;PhoneNumber: &apos; + JSON.stringify(PhoneNumber));
-
-// Patient //
-
-var Patient = {};
-
-
-var _values_list = [];
-
-for (i = 0; i &lt; getArrayOrXmlLength(msg[&apos;PID&apos;]); i++) {                 
-    //
-    for (j = 0; j &lt; getArrayOrXmlLength(msg[&apos;PID&apos;][i][&apos;PID.3&apos;]); j++) {
-   		_values_list.push(msg[&apos;PID&apos;][i][&apos;PID.3&apos;][j][&apos;PID.3.1&apos;].toString());
-   	}
-    //}   
-}
-
-//logger.info(&quot;Patient_ID&quot; + _values_list);
-//Patient.Patient_Id = null;
-Patient.Id = _values_list[0];
-Patient.FirstName = msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.1&apos;].toString().trim();
-Patient.LastName = msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.2&apos;].toString().trim();
-Patient.DOB = FormateDate(msg[&apos;PID&apos;][&apos;PID.7&apos;][&apos;PID.7.1&apos;].toString().trim());
-Patient.IdType = null;
-Patient.Initials = null;
-Patient.MiddleName = msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.3&apos;].toString().trim();
-Patient.Sex = msg[&apos;PID&apos;][&apos;PID.8&apos;][&apos;PID.8.1&apos;].toString().trim() === &quot;M&quot; ? &quot;Male&quot; : &quot;Female&quot;;
-
-//for(i=0;i&lt;Addresses.length;i++){
-//	Addresses[i].PatientID = Patient.Id;
-//}
-
-//for(i=0;i&lt;PhoneNumbers.length;i++){
-	//PhoneNumbers[i].PatientID = Patient.Id;
-//}
-
-Patient.Addresses = Addresses;
-Patient.PhoneNumbers = PhoneNumbers;
-channelMap.put(&apos;Patient&apos;, Patient);
-
-//logger.info(&apos;Patient: &apos; + JSON.stringify(Patient));
-
-// LabelItems //
-
-var LabelItems = [];
-
-var StoreName = {}
-StoreName.Name = &quot;StoreName&quot;;
-StoreName.Text = msg[&apos;RXE&apos;][&apos;RXE.40&apos;][&apos;RXE.40.2&apos;].toString().trim();
-
-if(StoreName.Text != null &amp;&amp; StoreName.Text != &quot;&quot;){
-	LabelItems.push(StoreName);
-}
-
-
-var StoreAddress = {};
-StoreAddress.Name = &quot;StoreAddress&quot;;
-StoreAddress.Text = msg[&apos;RXE&apos;][&apos;RXE.41&apos;][&apos;RXE.41.1&apos;].toString().trim();
-
-if(StoreAddress.Text != null &amp;&amp; StoreAddress.Text != &quot;&quot;){
-	LabelItems.push(StoreAddress);
-}
-
-
-var StoreCity = {};
-StoreCity.Name = &quot;StoreCity&quot;;
-StoreCity.Text = msg[&apos;RXE&apos;][&apos;RXE.41&apos;][&apos;RXE.41.3&apos;].toString().trim();
-
-if(StoreCity.Text != null &amp;&amp; StoreCity.Text != &quot;&quot;){
-	LabelItems.push(StoreCity);
-}
-
-var StoreZip = {};
-StoreZip.Name = &quot;StoreZip&quot;
-StoreZip.Text = msg[&apos;RXE&apos;][&apos;RXE.41&apos;][&apos;RXE.41.5&apos;].toString().trim();
-
-if(StoreZip.Text != null &amp;&amp; StoreZip.Text != &quot;&quot;){
-	LabelItems.push(StoreZip);
-}
-
-var DEA = {};
-DEA.Name = &quot;DEA&quot;;
-DEA.Text = msg[&apos;RXE&apos;][&apos;RXE.13&apos;][&apos;RXE.13.1&apos;].toString().trim();
-
-if(DEA.Text != null &amp;&amp; DEA.Text != &quot;&quot;){
-	LabelItems.push(DEA);
-}
-
-var PharmacistInitials= {};
-PharmacistInitials.Name = &quot;PharmacistInitials&quot;;
-PharmacistInitials.Text = msg[&apos;ORC&apos;][&apos;ORC.12&apos;][&apos;ORC.12.21&apos;].toString().trim();
-
-if(PharmacistInitials.Text != null &amp;&amp; PharmacistInitials.Text != &quot;&quot;){
-	LabelItems.push(PharmacistInitials);
-}
-
-var PrescriberTitle = {};
-PrescriberTitle.Name = &quot;PrescriberTitle&quot;;
-PrescriberTitle.Text = msg[&apos;ORC&apos;][&apos;ORC.12&apos;][&apos;ORC.12.3&apos;].toString().trim();
-
-if(PrescriberTitle.Text != null &amp;&amp; PrescriberTitle.Text != &quot;&quot;){
-	LabelItems.push(PrescriberTitle);
-}
-
-var PrescriberLastName = {};
-PrescriberLastName.Name = &quot;PrescriberLastName&quot;;
-PrescriberLastName.Text = msg[&apos;RXE&apos;][&apos;RXE.14&apos;][&apos;RXE.14.2&apos;].toString().trim();
-
-if(PrescriberLastName.Text != null &amp;&amp; PrescriberLastName.Text != &quot;&quot;){
-	LabelItems.push(PrescriberLastName);
-}
-
-
-var PrescriberFirstName = {};
-PrescriberFirstName.Name = &quot;PrescriberFirstName&quot;;
-PrescriberFirstName.Text = msg[&apos;RXE&apos;][&apos;RXE.14&apos;][&apos;RXE.14.3&apos;].toString().trim();
-
-if(PrescriberFirstName.Text != null &amp;&amp; PrescriberFirstName.Text != &quot;&quot;){
-	LabelItems.push(PrescriberFirstName);
-}
-
-channelMap.put(&apos;LabelItems&apos;, LabelItems);
-
-//logger.info(&apos;LabelItems: &apos; + JSON.stringify(LabelItems));
-
-// Med //
-
-var Med = {};
-//Med.Med_Id = null;
-Med.Description = msg[&apos;RXE&apos;][&apos;RXE.2&apos;][&apos;RXE.2.2&apos;].toString().trim();
-if(IsNullOrEmpty(Med.Description)){
-	Med.Description = null;
-}
-Med.Id = msg[&apos;RXE&apos;][&apos;RXE.2&apos;][&apos;RXE.2.1&apos;].toString().trim();
-Med.MedIdType = 0;
-Med.Name = null;
-Med.InventorySelector = &quot;&quot;;
-
-channelMap.put(&apos;Med&apos;, Med);
-
-//logger.info(JSON.stringify(Med));
-
-// Doses //
-var TQ1count = getArrayOrXmlLength(msg[&apos;TQ1&apos;]);
-var RXGcount = getArrayOrXmlLength(msg[&apos;RXG&apos;]);
-var currentRXGCount = 0;
-//logger.info(&apos;count: &apos; + TQ1count + &quot;-&quot; + RXGcount);
-var Doses = [];
-
-var Dose = {};
-
-if(TQ1count) {
-	for (i = 0; i &lt; TQ1count; i++) {                 	
-
-		if(!IsNullOrEmpty(msg[&apos;TQ1&apos;][i][&apos;TQ1.2&apos;][&apos;TQ1.2.1&apos;].toString().trim()))
-		{		
-			i++;
-		}
-		
-		if(i&lt;TQ1count &amp;&amp; currentRXGCount&lt;RXGcount)
-		{
-			//Dose.Id = null;
-			Dose.AdminDateTime =  FormateDate(msg[&apos;TQ1&apos;][i][&apos;TQ1.7&apos;][&apos;TQ1.7.1&apos;].toString().trim());
-			Dose.Quantity =  msg[&apos;RXG&apos;][currentRXGCount][&apos;RXG.5&apos;][&apos;RXG.5.1&apos;].toString().trim();
-			Dose.Sig = &quot;&quot;;
-			Dose.TimeName = msg[&apos;RXG&apos;][currentRXGCount][&apos;RXG.13&apos;][&apos;RXG.13.2&apos;].toString().trim();       
-			//logger.info(&apos;i: &apos; + i + &quot; : &quot; + currentRXGCount);
-			currentRXGCount++;
-			//logger.info(&apos;Dose: &apos; + JSON.stringify(Dose));
-		
-			Doses.push(Dose);
-		}		
-	}	
-}
-else {
-	//Dose.Id = null;
-	Dose.AdminDateTime = FormateDate(null);
-	Dose.Quantity = 1;
-	Dose.Sig = null;
-	Dose.TimeName = null;
-
-	Doses.push(Dose);
-}
-
-channelMap.put(&apos;Doses&apos;, Doses);
-//logger.info(&apos;Doses: &apos; + JSON.stringify(Doses));
-
-// HOA //
-
-var HOA = {};
-
-//HOA.Id = null;
-HOA.StartDate = FormateDate(msg[&apos;RXE&apos;][&apos;RXE.1&apos;][&apos;RXE.1.4&apos;].toString().trim());
-HOA.EndDate = FormateDate(msg[&apos;RXE&apos;][&apos;RXE.1&apos;][&apos;RXE.1.5&apos;].toString().trim());
-HOA.Doses = Doses;
-HOA.ScheduleType = 0;
-
-
-channelMap.put(&apos;HOA&apos;, HOA);
-
-//logger.info(&apos;HOA: &apos; + JSON.stringify(HOA));
-
-
-
-// Scripts //
-
-var Script = {};
-//Script.Id = null;
-Script.Action = ProcessScriptAction(msg[&apos;ORC&apos;][&apos;ORC.1&apos;][&apos;ORC.1.1&apos;].toString().trim().toUpperCase());
-Script.Packaging = DoesHOAExists(HOA) === true ? 1:5; //Adherence 1; Blister 2; Manual 3; Pouch 4; Vial 5;
-
-var number = msg[&apos;RXE&apos;][&apos;RXE.2&apos;][&apos;RXE.2.1&apos;].toString().trim().split(&apos;-&apos;);
-var RxNumb = &quot;&quot;
-if(number.length &gt; 1) {
-	for(i=0; i&lt;number.length; i++) {
-		RxNumb = RxNumb + number[i]
-	}	
-}
-else {
-	RxNumb = number[0];
-}
-
-Script.RxNumber = RxNumb;
-Script.RefillNumber =msg[&apos;RXE&apos;][&apos;RXE.17&apos;][&apos;RXE.17.1&apos;].toString().trim();
-Script.TransactionId = Script.RxNumber + Script.RefillNumber + &quot;00&quot;;
-Script.Barcode = Script.TransactionId
-Script.DispenseQuantity = msg[&apos;RXE&apos;][&apos;RXE.10&apos;][&apos;RXE.10.1&apos;].toString().trim();
-
-var BatchId = UUIDGenerator.getUUID();
-Script.BatchId = BatchId;
-
-Script.SequenceNumber = &quot;1&quot;;
-Script.PatientId = Patient.Id;
-Script.FacilityId =null;
-Script.Med = Med;
-Script.DAW = msg[&apos;RXE&apos;][&apos;RXE.9&apos;][&apos;RXE.9.1&apos;].toString() === &quot;0&quot; ? false : true;
-Script.DaysSupply = msg[&apos;RXE&apos;][&apos;RXE.1&apos;][&apos;RXE.1.3&apos;].toString().trim() == &quot;&quot; ? &quot;0&quot; : msg[&apos;RXE&apos;][&apos;RXE.1&apos;][&apos;RXE.1.3&apos;].toString().trim();
-Script.HOA = HOA;
-Script.LabelItems = LabelItems;
-Script.RefillsRemaining = msg[&apos;RXE&apos;][&apos;RXE.16&apos;][&apos;RXE.16.1&apos;].toString().trim();
-Script.RefillsTotal = parseInt(Script.RefillNumber) + parseInt(Script.RefillsRemaining);
-Script.PartialNumber = &quot;0&quot;;
-Script.RxExpirationDate = FormateDate(msg[&apos;RXE&apos;][&apos;RXE.1&apos;][&apos;RXE.1.5&apos;].toString().trim());
-
-for (i = 0; i &lt; getArrayOrXmlLength(msg[&apos;RXE&apos;][&apos;RXE.7&apos;]); i++) {
-	if(type === &quot;RDS&quot;)	
-		Script.Sig = msg[&apos;RXE&apos;][&apos;RXE.7&apos;][i][&apos;RXE.7.2&apos;].toString();
-	if(type === &quot;RDE&quot;)
-		Script.Sig = msg[&apos;RXE&apos;][&apos;RXE.7&apos;][i][&apos;RXE.7.1&apos;].toString();
-}
-
-Script.Urgency = CalculateUrgency(msg[&apos;ORC&apos;][&apos;ORC.27&apos;][&apos;ORC.27.1&apos;].toString().trim()).toString();
-
-channelMap.put(&apos;Script&apos;, Script);
-
-//logger.info(&apos;Scripts: &apos; + JSON.stringify(Script));
-
-var Batch = {};
-
-var Scripts = [];
-Scripts.push(Script);
-var Facilities = null;
-var Patients = [];
-Patients.push(Patient);
-
-
-
-Batch.Id = BatchId;
-Batch.TransmissionId = &quot;&quot;;
-Batch.ScriptCount = Scripts.length;
-Batch.SourceTerminal = &quot;UNKNOWN&quot;;
-Batch.Scripts = Scripts;
-Batch.Facilities = Facilities;
-Batch.Patients = Patients;
-
-channelMap.put(&apos;Batch&apos;, Batch);</script>
-        </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
-        <com.mirth.connect.plugins.javascriptstep.JavaScriptStep version="3.11.0">
-          <name>AIMField</name>
+          <scriptPath>C:\Projects\Mirth\MirthTransformation\JS\EpicBatchInterface.js</scriptPath>
+        </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
+        <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
+          <name>Epic Aim Transformer</name>
           <sequenceNumber>1</sequenceNumber>
           <enabled>true</enabled>
-          <script>var AIMObj = {};
-var LabelItems = $(&apos;LabelItems&apos;);
-
-//AIMObj.FieldSeparator = msg[&apos;MSH&apos;][&apos;MSH.1&apos;].toString();
-var FieldSeparator = {}
-FieldSeparator.Name = &quot;FieldSeparator&quot;;
-FieldSeparator.Text = msg[&apos;MSH&apos;][&apos;MSH.1&apos;].toString();
-
-if(!IsNullOrEmpty(FieldSeparator.Text)){
-	LabelItems.push(FieldSeparator);
-}
-
-//AIMObj.EncodingCharacters = msg[&apos;MSH&apos;][&apos;MSH.2&apos;].toString();
-var EncodingCharacters = {}
-EncodingCharacters.Name = &quot;EncodingCharacters&quot;;
-EncodingCharacters.Text = msg[&apos;MSH&apos;][&apos;MSH.2&apos;].toString();
-
-if(!IsNullOrEmpty(EncodingCharacters.Text)){
-	LabelItems.push(EncodingCharacters);
-}
-
-//AIMObj.SendingApplication = msg[&apos;MSH&apos;][&apos;MSH.3&apos;][&apos;MSH.3.1&apos;].toString();
-var SendingApplication = {}
-SendingApplication.Name = &quot;SendingApplication&quot;;
-SendingApplication.Text = msg[&apos;MSH&apos;][&apos;MSH.3&apos;][&apos;MSH.3.1&apos;].toString();
-
-if(!IsNullOrEmpty(SendingApplication.Text)){
-	LabelItems.push(SendingApplication);
-}
-
-//AIMObj.SendingFacility = msg[&apos;MSH&apos;][&apos;MSH.4&apos;][&apos;MSH.4.1&apos;].toString();
-var SendingFacility = {}
-SendingFacility.Name = &quot;SendingFacility&quot;;
-SendingFacility.Text = msg[&apos;MSH&apos;][&apos;MSH.4&apos;][&apos;MSH.4.1&apos;].toString();
-
-if(!IsNullOrEmpty(SendingFacility.Text)){
-	LabelItems.push(SendingFacility);
-}
-
-//AIMObj.ReceivingApplication = msg[&apos;MSH&apos;][&apos;MSH.5&apos;][&apos;MSH.5.1&apos;].toString();
-var ReceivingApplication = {}
-ReceivingApplication.Name = &quot;ReceivingApplication&quot;;
-ReceivingApplication.Text = msg[&apos;MSH&apos;][&apos;MSH.5&apos;][&apos;MSH.5.1&apos;].toString();
-
-if(!IsNullOrEmpty(ReceivingApplication.Text)){
-	LabelItems.push(ReceivingApplication);
-}
-
-//AIMObj.ReceivingFacility = msg[&apos;MSH&apos;][&apos;MSH.6&apos;][&apos;MSH.6.1&apos;].toString();
-var ReceivingFacility = {}
-ReceivingFacility.Name = &quot;ReceivingFacility&quot;;
-ReceivingFacility.Text = msg[&apos;MSH&apos;][&apos;MSH.6&apos;][&apos;MSH.6.1&apos;].toString();
-
-if(!IsNullOrEmpty(ReceivingFacility.Text)){
-	LabelItems.push(ReceivingFacility);
-}
-
-//AIMObj.PMSCurrentDate = moment(msg[&apos;MSH&apos;][&apos;MSH.7&apos;][&apos;MSH.7.1&apos;].toString(), &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);
-var PMSCurrentDate = {}
-PMSCurrentDate.Name = &quot;PMSCurrentDate&quot;;
-PMSCurrentDate.Text =  moment(msg[&apos;MSH&apos;][&apos;MSH.7&apos;][&apos;MSH.7.1&apos;].toString(), &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);
-
-if(!IsNullOrEmpty(PMSCurrentDate.Text)){
-	LabelItems.push(PMSCurrentDate);
-}
-
-//AIMObj.SecurityCode = msg[&apos;MSH&apos;][&apos;MSH.8&apos;][&apos;MSH.8.1&apos;].toString();
-var SecurityCode = {}
-SecurityCode.Name = &quot;SecurityCode&quot;;
-SecurityCode.Text = msg[&apos;MSH&apos;][&apos;MSH.8&apos;][&apos;MSH.8.1&apos;].toString();
-
-if(!IsNullOrEmpty(SecurityCode.Text)){
-	LabelItems.push(SecurityCode);
-}
-
-//AIMObj.MessageType = msg[&apos;MSH&apos;][&apos;MSH.9&apos;][&apos;MSH.9.1&apos;].toString();
-var MessageType = {}
-MessageType.Name = &quot;MessageType&quot;;
-MessageType.Text =  msg[&apos;MSH&apos;][&apos;MSH.9&apos;][&apos;MSH.9.1&apos;].toString();
-
-if(!IsNullOrEmpty(MessageType.Text)){
-	LabelItems.push(MessageType);
-}
-
-//AIMObj.MessageType2 = msg[&apos;MSH&apos;][&apos;MSH.9&apos;][&apos;MSH.9.2&apos;].toString();
-var MessageType2 = {}
-MessageType2.Name = &quot;MessageType2&quot;;
-MessageType2.Text = msg[&apos;MSH&apos;][&apos;MSH.9&apos;][&apos;MSH.9.2&apos;].toString();
-
-if(!IsNullOrEmpty(MessageType2.Text)){
-	LabelItems.push(MessageType2);
-}
-
-//AIMObj.MessageControlID = msg[&apos;MSH&apos;][&apos;MSH.10&apos;][&apos;MSH.10.1&apos;].toString();
-var MessageControlID = {}
-MessageControlID.Name = &quot;MessageControlID&quot;;
-MessageControlID.Text = msg[&apos;MSH&apos;][&apos;MSH.10&apos;][&apos;MSH.10.1&apos;].toString();
-
-if(!IsNullOrEmpty(MessageControlID.Text)){
-	LabelItems.push(MessageControlID);
-}
-
-//AIMObj.ProcessingID = msg[&apos;MSH&apos;][&apos;MSH.11&apos;][&apos;MSH.11.1&apos;].toString();
-var ProcessingID = {}
-ProcessingID.Name = &quot;ProcessingID&quot;;
-ProcessingID.Text = msg[&apos;MSH&apos;][&apos;MSH.11&apos;][&apos;MSH.11.1&apos;].toString();
-
-if(!IsNullOrEmpty(ProcessingID.Text)){
-	LabelItems.push(ProcessingID);
-}
-
-//AIMObj.VersionID = msg[&apos;MSH&apos;][&apos;MSH.12&apos;][&apos;MSH.12.1&apos;].toString();
-var VersionID = {}
-VersionID.Name = &quot;VersionID&quot;;
-VersionID.Text = msg[&apos;MSH&apos;][&apos;MSH.12&apos;][&apos;MSH.12.1&apos;].toString();
-
-if(!IsNullOrEmpty(VersionID.Text)){
-	LabelItems.push(VersionID);
-}
-
-//AIMObj.SequenceNum = IsNullOrEmpty(msg[&apos;MSH&apos;][&apos;MSH.13&apos;][&apos;MSH.13.1&apos;].toString()) ? 0 : msg[&apos;MSH&apos;][&apos;MSH.13&apos;][&apos;MSH.13.1&apos;].toString();
-var SequenceNum = {}
-SequenceNum.Name = &quot;SequenceNum&quot;;
-SequenceNum.Text = IsNullOrEmpty(msg[&apos;MSH&apos;][&apos;MSH.13&apos;][&apos;MSH.13.1&apos;].toString()) ? 0 : msg[&apos;MSH&apos;][&apos;MSH.13&apos;][&apos;MSH.13.1&apos;].toString();
-
-if(!IsNullOrEmpty(SequenceNum.Text)){
-	LabelItems.push(SequenceNum);
-}
-
-//AIMObj.ContinuationPointer = msg[&apos;MSH&apos;][&apos;MSH.14&apos;][&apos;MSH.14.1&apos;].toString();
-var ContinuationPointer = {}
-ContinuationPointer.Name = &quot;ContinuationPointer&quot;;
-ContinuationPointer.Text = msg[&apos;MSH&apos;][&apos;MSH.14&apos;][&apos;MSH.14.1&apos;].toString();
-
-if(!IsNullOrEmpty(ContinuationPointer.Text)){
-	LabelItems.push(ContinuationPointer);
-}
-
-//AIMObj.AcceptACKType = msg[&apos;MSH&apos;][&apos;MSH.15&apos;][&apos;MSH.15.1&apos;].toString();
-var AcceptACKType = {}
-AcceptACKType.Name = &quot;AcceptACKType&quot;;
-AcceptACKType.Text = msg[&apos;MSH&apos;][&apos;MSH.15&apos;][&apos;MSH.15.1&apos;].toString();
-
-if(!IsNullOrEmpty(AcceptACKType.Text)){
-	LabelItems.push(AcceptACKType);
-}
-
-//AIMObj.AppACKType = msg[&apos;MSH&apos;][&apos;MSH.16&apos;][&apos;MSH.16.1&apos;].toString();
-var AppACKType = {}
-AppACKType.Name = &quot;AppACKType&quot;;
-AppACKType.Text = msg[&apos;MSH&apos;][&apos;MSH.16&apos;][&apos;MSH.16.1&apos;].toString();
-
-if(!IsNullOrEmpty(AppACKType.Text)){
-	LabelItems.push(AppACKType);
-}
-
-//AIMObj.CountryCode = msg[&apos;MSH&apos;][&apos;MSH.17&apos;][&apos;MSH.17.1&apos;].toString();
-var CountryCode = {}
-CountryCode.Name = &quot;CountryCode&quot;;
-CountryCode.Text = msg[&apos;MSH&apos;][&apos;MSH.17&apos;][&apos;MSH.17.1&apos;].toString();
-
-if(!IsNullOrEmpty(CountryCode.Text)){
-	LabelItems.push(CountryCode);
-}
-
-//AIMObj.CharacterSet = msg[&apos;MSH&apos;][&apos;MSH.18&apos;][&apos;MSH.18.1&apos;].toString();
-var CharacterSet = {}
-CharacterSet.Name = &quot;CharacterSete&quot;;
-CharacterSet.Text = msg[&apos;MSH&apos;][&apos;MSH.18&apos;][&apos;MSH.18.1&apos;].toString();
-
-if(!IsNullOrEmpty(CharacterSet.Text)){
-	LabelItems.push(CharacterSet);
-}
-
-//AIMObj.PatientAltID = msg[&apos;PID&apos;][&apos;PID.4&apos;][&apos;PID.4.1&apos;].toString();
-var PatientAltID = {}
-PatientAltID.Name = &quot;PatientAltID&quot;;
-PatientAltID.Text = msg[&apos;PID&apos;][&apos;PID.4&apos;][&apos;PID.4.1&apos;].toString();
-
-if(!IsNullOrEmpty(PatientAltID.Text)){
-	LabelItems.push(PatientAltID);
-}
-
-//AIMObj.LanguageCode = msg[&apos;PID&apos;][&apos;PID.15&apos;][&apos;PID.15.1&apos;].toString(); // EN PID,15
-var LanguageCode = {}
-LanguageCode.Name = &quot;LanguageCode&quot;;
-LanguageCode.Text = msg[&apos;PID&apos;][&apos;PID.15&apos;][&apos;PID.15.1&apos;].toString(); // EN PID,15
-
-if(!IsNullOrEmpty(LanguageCode.Text)){
-	LabelItems.push(LanguageCode);
-}
-
-//AIMObj.PatientSSN = msg[&apos;PID&apos;][&apos;PID.19&apos;][&apos;PID.19.1&apos;].toString(); // PID,19
-var PatientSSN = {}
-PatientSSN.Name = &quot;PatientSSN&quot;;
-PatientSSN.Text = msg[&apos;PID&apos;][&apos;PID.19&apos;][&apos;PID.19.1&apos;].toString(); // PID,19
-
-if(!IsNullOrEmpty(PatientSSN.Text)){
-	LabelItems.push(PatientSSN);
-}
-
-///AIMObj.Action = msg[&apos;ORC&apos;][&apos;ORC.1&apos;][&apos;ORC.1.1&apos;].toString(); // ORC,1
-var Action = {}
-Action.Name = &quot;Action&quot;;
-Action.Text = msg[&apos;ORC&apos;][&apos;ORC.1&apos;][&apos;ORC.1.1&apos;].toString(); // ORC,1
-
-if(!IsNullOrEmpty(Action.Text)){
-	LabelItems.push(Action);
-}
-
-//AIMObj.PromisedDate = IsNullOrEmpty(msg[&apos;ORC&apos;][&apos;ORC.27&apos;][&apos;ORC.27.1&apos;].toString()) ? null : msg[&apos;ORC&apos;][&apos;ORC.27&apos;][&apos;ORC.27.1&apos;].toString(); //ORC,27
-var PromisedDate = {}
-PromisedDate.Name = &quot;PromisedDate&quot;;
-PromisedDate.Text = IsNullOrEmpty(msg[&apos;ORC&apos;][&apos;ORC.27&apos;][&apos;ORC.27.1&apos;].toString()) ? null : msg[&apos;ORC&apos;][&apos;ORC.27&apos;][&apos;ORC.27.1&apos;].toString(); //ORC,27
-
-if(!IsNullOrEmpty(PromisedDate.Text)){
-	LabelItems.push(PromisedDate);
-}
-
-//AIMObj.DAW = msg[&apos;RXE&apos;][&apos;RXE.9&apos;][&apos;RXE.9.1&apos;].toString();
-var DAW = {}
-DAW.Name = &quot;DAW&quot;;
-DAW.Text = msg[&apos;RXE&apos;][&apos;RXE.9&apos;][&apos;RXE.9.1&apos;].toString();
-
-if(!IsNullOrEmpty(DAW.Text)){
-	LabelItems.push(DAW);
-}
-
-//AIMObj.PrescribedDrugName = msg[&apos;ZLB&apos;][&apos;ZLB.1&apos;][&apos;ZLB.1.1&apos;].toString(); // ZLB,1.4
-var PrescribedDrugName = {}
-PrescribedDrugName.Name = &quot;PrescribedDrugName&quot;;
-PrescribedDrugName.Text = msg[&apos;ZLB&apos;][&apos;ZLB.1&apos;][&apos;ZLB.1.1&apos;].toString(); // ZLB,1.4
-
-if(!IsNullOrEmpty(PrescribedDrugName.Text)){
-	LabelItems.push(PrescribedDrugName);
-}
-
-//AIMObj.UniqueId =  msg[&apos;ZLB&apos;][&apos;ZLB.15&apos;][&apos;ZLB.15.1&apos;].toString();// ZLB,15.1
-var UniqueId = {}
-UniqueId.Name = &quot;UniqueId&quot;;
-UniqueId.Text = msg[&apos;ZLB&apos;][&apos;ZLB.1&apos;][&apos;ZLB.1.1&apos;].toString(); // ZLB,1.4
-
-if(!IsNullOrEmpty(UniqueId.Text)){
-	LabelItems.push(UniqueId);
-}
-
-//AIMObj.IsPartial = msg[&apos;OBX&apos;][&apos;OBX.3&apos;][&apos;OBX.3.5&apos;].toString(); // OBX[3],5 -- 3 -- IF OBX|3| contains 1 in the segment highlighted below... please display the quantity as “OBX|1| / OBX|6|
-var IsPartial = {}
-IsPartial.Name = &quot;IsPartial&quot;;
-IsPartial.Text = msg[&apos;ZLB&apos;][&apos;ZLB.1&apos;][&apos;ZLB.1.1&apos;].toString(); // ZLB,1.4
-
-if(!IsNullOrEmpty(IsPartial.Text)){
-	LabelItems.push(IsPartial);
-}
-
-//AIMObj.PartialFill = msg[&apos;OBX&apos;][&apos;OBX.1&apos;][&apos;OBX.1.5&apos;].toString(); //OBX[1],5
-var PartialFill = {}
-PartialFill.Name = &quot;PartialFill&quot;;
-PartialFill.Text = msg[&apos;OBX&apos;][&apos;OBX.1&apos;][&apos;OBX.1.5&apos;].toString(); //OBX[1],5
-
-if(!IsNullOrEmpty(PartialFill.Text)){
-	LabelItems.push(PartialFill);
-}
-
-//AIMObj.OriginalDispenseQty = IsNullOrEmpty(msg[&apos;OBX&apos;][&apos;OBX.6&apos;][&apos;OBX.6.5&apos;].toString()) ? 0 : msg[&apos;OBX&apos;][&apos;OBX.6&apos;][&apos;OBX.6.5&apos;].toString(); //OBX[6],5
-var OriginalDispenseQty = {}
-OriginalDispenseQty.Name = &quot;OriginalDispenseQty&quot;;
-OriginalDispenseQty.Text = IsNullOrEmpty(msg[&apos;OBX&apos;][&apos;OBX.6&apos;][&apos;OBX.6.5&apos;].toString()) ? 0 : msg[&apos;OBX&apos;][&apos;OBX.6&apos;][&apos;OBX.6.5&apos;].toString(); //OBX[6],5
-
-if(!IsNullOrEmpty(OriginalDispenseQty.Text)){
-	LabelItems.push(OriginalDispenseQty);
-}
-
-//AIMObj.DosageForm = msg[&apos;OBX&apos;][&apos;OBX.7&apos;][&apos;OBX.7.5&apos;].toString(); // OBX[7],5
-var DosageForm = {}
-DosageForm.Name = &quot;OriginalDispenseQty&quot;;
-DosageForm.Text = msg[&apos;OBX&apos;][&apos;OBX.7&apos;][&apos;OBX.7.5&apos;].toString();
-
-if(!IsNullOrEmpty(DosageForm.Text)){
-	LabelItems.push(DosageForm);
-}
-
-//AIMObj.StoreNumber = msg[&apos;RXE&apos;][&apos;RXE.40&apos;][&apos;RXE.40.1&apos;].toString().trim();
-var StoreNumber = {}
-StoreNumber.Name = &quot;StoreNumber&quot;;
-StoreNumber.Text = msg[&apos;RXE&apos;][&apos;RXE.40&apos;][&apos;RXE.40.1&apos;].toString().trim();
-
-if(!IsNullOrEmpty(StoreNumber.Text)){
-	LabelItems.push(StoreNumber);
-}
-
-channelMap.put(&quot;LabelItems&quot;, LabelItems);</script>
-        </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
+          <scriptPath>C:\Projects\Mirth\MirthTransformation\JS\EpicAIMInterface.js</scriptPath>
+        </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
+        <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
+          <name>IpConfig</name>
+          <sequenceNumber>2</sequenceNumber>
+          <enabled>true</enabled>
+          <scriptPath>C:\Projects\Mirth\MirthTransformation\JS\IpConfig.js</scriptPath>
+        </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
       </elements>
       <inboundTemplate encoding="base64">TVNIfF5+XCZ8TUhTIEdFTkVTSVN8MDEyN3xQQVJBVEF8TkhPSCBNYWluIE9QfDIwMTkwNjExMTQzNjQwfHxSRFNeTzAxfDF8VHwyLjMKUElEfDF8fEcxMDI5Xl5eXkVQSX4yMDA4NTdeXl5efHxQaWVycmVeVGhvbWFzXkN8fDE5NzkxMDE5fEZ8fHw0NTggTUlUQ0hFTEwgIFNUXl5CRUxMRVZJTExFXldJXjUzNTA4Xl5eXnx8KDQwOCkyNzEtOTAwMF5QXlBIfHx8fHx8fHx8fHx8fHx8fHxOfHx8fHx8fHwKT1JDfE5XfF5ITkFNX09SREVSSUR8ODg4MHwxNjUyODM2NF5ITkFNX1JVTklEfE9yZGVyZWR8fF5eRDkwXjIwMTkwNjAzMDcwMDAwXjIwMjAwNjAyMDY1OTU5XkNEOjIzMDA3NDQ3MV5eZ2VtZmlicm96aWwgNjAwIG1nIFRhYiAxIFRJRCBXTSBXSVRIIEZVTEwgR0xBU1MgT0YgV0FURVIgICM5MHx8MjAxOTA2MTExNDM2NDB8QzA1ODA3XkRoaW5ncmEgKENlcm5lcileQXNoaXNoXl5eQ2VybmVyIERldl5eXkVYVEVSTkFMSUReUGVyc29ubmVsXl5eRXh0ZXJuYWwgSWRlbnRpZmllcl5EaGluZ3JhIChDZXJuZXIpfHwyNDUwNDUzNjM2XkJST1dOXktBUkxeTC58RE9OT1RTRU5EXl5eMDEyNy0wMTI3Xl5QSEFSTUFDWV5ET05PVFNFTkR8fHxEaXNwZW5zZXxOSE9IIE9QIFBoYXJtYWN5fE9NfHx8fHx8NzMwMCBSZG9ob3JqamggSWJyaHhibl5eSGJ0a2JrIE9xeW5eUEReODY0NDFeV0sKUlhFfDkwXl45MF4yMDE5MDYwMzA3MDAwMF4yMDIwMDYwMjA2NTk1OV5Sb3V0aW5lXl5EYXJ2b2NldC1OIDEwMCBUQUJMRVQgMSBUSUQgV00gV0lUSCBGVUxMIEdMQVNTIE9GIFdBVEVSICAjOTB8MDA1NTUwMTM5MjZeXk5EQ15EYXJ2b2NldC1OIDEwMCBUQUJMRVR8fHx8VGFifF4oNy4xLjIpIFRha2UgMSB0YWJsZXQgYnkgbW91dGggdGhyZWUgdGltZXMgYSBkYXkgd2l0aCBtZWFscyBXSVRIIEZVTEwgR0xBU1MgT0YgV0FURVJ+Xig3LjIuMikgVGFrZSAxIHRhYmxldCBieSBtb3V0aCB0aHJlZSB0aW1lcyBhIGRheSB3aXRoIG1lYWxzIFdJVEggRlVMTCBHTEFTUyBPRiBXQVRFUnx8MHwzNHxFQXwwM3xLQjEyMzQ1NjdeQlJPV05eS0FSTF5MLnxDMDU4MDdBXkRoaW5ncmEgKENlcm5lcileQXNoaXNoXl5eQ2VybmVyIERldl5eXkVYVEVSTkFMSUR8MDAwMzYwMTIwNDAxfDN8MDB8MjAxOTA2MDMwNzAwMDB8fHwxM15UYWtlIG9yIHVzZSBleGFjdGx5IGFzIGRpcmVjdGVkLiBaWDN8TGVnZW5kfDYwMTIwNDAxfHx8fDN8WXx8MjAxOTA2MTExNDM2MjF8UGFyYXRhIE1heCBBfDAwMDItMDEzODM0NnwxfDF8OTB8TkhPSCBNYWluIE9QfGdlbWZpYnJvemlsfExvcGlkfEV4ZWxhbiBQaGFybWFjZXV0aWNhbHMgSW5jfHwwfHx8fHwzUkQgUEFSVFl8Q0Q6MjM0NzA4NDIzfDIxMXwwfDExLjYzfDAuMTN8MS43NXwwfDAgWkFQfExlZ2VuZHw2MDEyMDQwMXx8fHx8WXx8MjEx</inboundTemplate>
       <outboundTemplate encoding="base64"></outboundTemplate>
@@ -1260,7 +637,7 @@ finally {
       </filter>
       <transportName>JavaScript Writer</transportName>
       <mode>DESTINATION</mode>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <waitForPrevious>true</waitForPrevious>
     </connector>
     <connector version="3.11.0">
@@ -1706,7 +1083,10 @@ main();</script>
           <reattachAttachments>true</reattachAttachments>
         </destinationConnectorProperties>
         <script>try {
-	var tcp = new Packages.mirthSocket.TcpDestination(&quot;10.6.72.59&quot;, 2000);
+	var ip=$(&apos;ip&apos;);
+	var port=$(&apos;port&apos;);
+	
+	var tcp = new Packages.mirthSocket.TcpDestination(ip, port);
 	//var tcp = new Packages.mirthSocket.TcpDestination(&quot;10.12.72.6&quot;, 8071);
 
 	var batch = $(&apos;Batch&apos;);
@@ -1818,7 +1198,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1637069429522</time>
+        <time>1644850012917</time>
         <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>
@@ -1829,31 +1209,47 @@ return;</undeployScript>
       <codeTemplateLibrary version="3.11.0">
         <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
         <name>Library</name>
-        <revision>20</revision>
+        <revision>2</revision>
         <lastModified>
-          <time>1637490828206</time>
+          <time>1644850128080</time>
           <timezone>UTC</timezone>
         </lastModified>
         <description></description>
         <includeNewChannels>false</includeNewChannels>
         <enabledChannelIds>
           <string>2c88923c-c42f-413f-890f-1b13b846eba3</string>
-          <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
-          <string>16814b6e-2133-4c94-9c64-52f50db9c002</string>
           <string>2552809d-7bda-4bd6-ac76-ba121c5f892e</string>
-          <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
+          <string>1be8c69b-0ab1-4772-b037-5e9919eb0447</string>
           <string>27e7d67c-6b34-4f7c-b71a-16e31e75ae88</string>
           <string>24999a04-287c-4517-b7f6-a239dd1a2894</string>
-          <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
-          <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
-          <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
+          <string>3380104e-7dad-4454-86ca-8cb2af26a4ac</string>
+          <string>ec193f9b-00c1-4113-ba95-a25f53cc42f2</string>
+          <string>859240df-fe33-456c-9793-ccdc4d58f333</string>
           <string>2f26ebf0-8b5b-45b1-88ae-0369e6045454</string>
-          <string>2fa392d7-8669-421e-81a3-1fc3100ee9c8</string>
+          <string>79d329b4-b6d4-47ff-a481-eef7441aade8</string>
+          <string>1f8f7b98-91c6-47ba-a8b6-e2c5dede190e</string>
           <string>5ca5fda9-4abd-4426-ba3e-2a45b5cd6e79</string>
           <string>ddbe8266-b97e-4860-8dcc-b85c42c15d89</string>
-          <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
           <string>edbc9000-4a15-455d-9505-2deb0af95a9b</string>
           <string>cf597d0c-7b46-471d-9d11-d6e4946421a0</string>
+          <string>f5da6dfb-b808-4061-9274-fed0339bff1a</string>
+          <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
+          <string>16814b6e-2133-4c94-9c64-52f50db9c002</string>
+          <string>99e7a0b2-ec62-4333-9363-cb9c15e04910</string>
+          <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
+          <string>db8c015a-f11f-4133-992e-9b3277546cbb</string>
+          <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
+          <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
+          <string>0353744a-3498-4501-a324-a768adfbc8c5</string>
+          <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
+          <string>feb1fe1c-0cd6-4082-83a6-3e92db15d3ec</string>
+          <string>2fa392d7-8669-421e-81a3-1fc3100ee9c8</string>
+          <string>427a148f-a043-48db-bce9-882cc1e6ccf8</string>
+          <string>2a593b1b-915f-4f8e-88fa-4daf8ed7a5dd</string>
+          <string>64b04136-25f1-40a3-b5d8-14379420f99a</string>
+          <string>4dfc5eb3-20a8-49f3-acb2-497224a4b224</string>
+          <string>e5a879a3-dddf-48d1-b69b-878152c0cb9e</string>
+          <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
           <string>b742b188-ed4a-4495-bcf6-0468a1eef0c2</string>
         </enabledChannelIds>
         <disabledChannelIds>
@@ -1870,16 +1266,16 @@ return;</undeployScript>
             <name>CheckingNullValue</name>
             <revision>1</revision>
             <lastModified>
-              <time>1633257732275</time>
+              <time>1643537038018</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1899,16 +1295,16 @@ return;</undeployScript>
             <name>IsNullOrEmpty</name>
             <revision>1</revision>
             <lastModified>
-              <time>1637048800795</time>
+              <time>1643537038130</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1929,16 +1325,16 @@ return;</undeployScript>
             <name>MomentJS</name>
             <revision>1</revision>
             <lastModified>
-              <time>1633257732499</time>
+              <time>1643537038385</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -7619,34 +7015,39 @@ return;</undeployScript>
           <codeTemplate version="3.11.0">
             <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
             <name>Utils Function</name>
-            <revision>4</revision>
+            <revision>1</revision>
             <lastModified>
-              <time>1637068877087</time>
+              <time>1643537038214</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
               <type>FUNCTION</type>
               <code>/// Utils Method Segments ///
-function ProcessScriptAction(key){
+function ProcessScriptAction(key){	
 	var Actions = {
-			NW: &quot;Fill&quot;, // New order 
-			RF: &quot;Fill&quot;, //Refill order 
-			CA: &quot;Cancel&quot;, //Cancel order 
-			HD: &quot;Hold&quot;, //Hold order 
-			XO: &quot;Edit&quot;, //Update order 
-			AF: &quot;Discard&quot; //Approve fill
-		};
-
-	return Actions[key];	
+		NW: &quot;Fill&quot;, // New order 
+		RF: &quot;Fill&quot;, //Refill order 
+		CA: &quot;Cancel&quot;, //Cancel order 
+		HD: &quot;Hold&quot;, //Hold order 
+		XO: &quot;Edit&quot;, //Update order 
+		AF: &quot;Discard&quot;, //Approve fill
+		F: &quot;Fill&quot;
+	};
+	
+	if(Actions[key.toUpperCase()] !== undefined)
+		return Actions[key.toUpperCase()];	
+	else
+		return key;
+	
 }
 
 function FormateDate(dateString){
@@ -7655,6 +7056,18 @@ function FormateDate(dateString){
 		date = moment(dateString, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);				
 	}
 	return date;	
+}
+
+function FormatDate2(dateString){
+	date = moment(dateString, &apos;MMDDYYYYhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);
+	return date;
+}
+
+
+//&quot;Text&quot;: &quot;6/15/2007 5:12:14 PM&quot;
+function FormatDate3(dateString){
+	date = moment(dateString, &apos;MMDDYYYYhhmmss&apos;).format(&apos;MM/DD/YYYY hh:mm:ss A&apos;);
+	return date;
 }
 
 function DoesHOAExists(hoa){
@@ -7697,6 +7110,15 @@ function JSONIndent(data){
 	catch(ex){
 		logger.error(ex)
 	}
+}
+
+function DAW(val){
+
+	if(val === 0 || val === &apos;&apos; || vall === null)
+		return false;
+	else
+		return true;
+	
 }</code>
             </properties>
           </codeTemplate>

@@ -3,7 +3,7 @@
   <nextMetaDataId>2</nextMetaDataId>
   <name>Chewy API</name>
   <description></description>
-  <revision>20</revision>
+  <revision>1</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -898,7 +898,7 @@ channelMap.put(&apos;Batch&apos;, Batch);</script>
           <name>External </name>
           <sequenceNumber>1</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>D:\Mirth\MirthTransformation\JS\chewy interface.js</scriptPath>
+          <scriptPath>C:\Projects\Mirth\MirthTransformation\JS\chewy interface.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
       </elements>
       <inboundTemplate encoding="base64">PFBhcmF0YVJkc19Nc2c+CiAgICA8TXNnX0hlYWRlcj4KCQk8VmVyc2lvbj42LjY8L1ZlcnNpb24+CgkJPE1zZ19JRD4yPC9Nc2dfSUQ+CgkJPE1zZ1R5cGU+UkVRVUVTVDwvTXNnVHlwZT4KCQk8UmVxdWVzdFR5cGU+RmlsbFNjcmlwdDwvUmVxdWVzdFR5cGU+Cgk8L01zZ19IZWFkZXI+Cgk8RmlsbERhdGE+CgkJPERpc3BlbnNlRGF0YT4KCQkJPFJ4SWQ+NDAwMTAwMDAtMjwvUnhJZD4KCQkJPFJ4TnVtYmVyPjQwMDE8L1J4TnVtYmVyPgoJCQk8RHJ1Z05EQz4wMDAwNjA0MDEwMTwvRHJ1Z05EQz4KCQkJPFJlZmlsbE51bWJlcj4wMDwvUmVmaWxsTnVtYmVyPgoJCQk8QWN0aW9uPkZpbGw8L0FjdGlvbj4KCQkJPFBhdGllbnROYW1lPgoJCQkJPFRpdGxlPk1yLjwvVGl0bGU+CgkJCSAgICA8Rmlyc3ROYW1lPkFOTkE8L0ZpcnN0TmFtZT4KCQkJCTxNaWRkbGVJbml0aWFsPlE8L01pZGRsZUluaXRpYWw+CgkJCQk8TGFzdE5hbWU+QVRLSU5TPC9MYXN0TmFtZT4JCQkJCQkJCQoJCQk8L1BhdGllbnROYW1lPgoJCQk8RGlzcGVuc2VkRHJ1Z05hbWU+PC9EaXNwZW5zZWREcnVnTmFtZT4KCQkJPEFsdERpc3BlbnNlZERydWdOYW1lPk1PVFJJTjwvQWx0RGlzcGVuc2VkRHJ1Z05hbWU+CgkJCTxJbnZlbnRvcnlTZWxlY3Rvcj48L0ludmVudG9yeVNlbGVjdG9yPgoJCQk8RGlzcGVuc2VRdWFudGl0eT4zMDwvRGlzcGVuc2VRdWFudGl0eT4KCQkJPFVyZ2VuY3k+MTwvVXJnZW5jeT4JCQkKICAgICAgICA8L0Rpc3BlbnNlRGF0YT4KICAgICAgICA8UGhhcm1hY2lzdE5hbWU+CiAgICAgICAgICAgIDxGaXJzdE5hbWU+QS4gRmlsYXRvdjwvRmlyc3ROYW1lPgogICAgICAgIDwvUGhhcm1hY2lzdE5hbWU+CiAgICAgICAgPFByZXNjcmliZXJOYW1lPgogICAgICAgICAgICA8Rmlyc3ROYW1lPkRvY3RvciBKb2huPC9GaXJzdE5hbWU+CiAgICAgICAgPC9QcmVzY3JpYmVyTmFtZT4KICAgICAgICA8UmVmaWxsc1JlbWFpbmluZz4zMDA8L1JlZmlsbHNSZW1haW5pbmc+CiAgICAgICAgPEZpbGxEYXRlPjEyLzEyLzIwPC9GaWxsRGF0ZT4KICAgICAgICA8UnhFeHBpcmF0aW9uRGF0ZT4xMi8xMi8yMTwvUnhFeHBpcmF0aW9uRGF0ZT4KICAgICAgICA8RHJ1Z01mZz5ab2V0aXM8L0RydWdNZmc+CiAgICAgICAgPERydWdDb2xvcj5CbHVlL1doaXRlPC9EcnVnQ29sb3I+CiAgICAgICAgPERydWdTaGFwZT5PYmxvbmc8L0RydWdTaGFwZT4KICAgICAgICA8RHJ1Z0ltcHJpbnQ+UlQ7RlM8L0RydWdJbXByaW50PgogICAgICAgIDxTaWc+VEFLRSBPTkUgVEFCTEVUIE9SQUxMWSBUV08gVElNRVMgQSBEQVk8L1NpZz4KICAgICAgICA8U3RvcmVQaG9uZU51bWJlcj44ODgtNTMyLTc5MTA8L1N0b3JlUGhvbmVOdW1iZXI+CiAgICAgICAgPFdhcm5pbmdNZXNzYWdlPktFRVAgT1VUIE9GIFJFQUNIIE9GIENISUxEUkVOPC9XYXJuaW5nTWVzc2FnZT4KICAgICAgICA8V29ya0Zsb3dCYXJjb2RlPjQwMDEwMDAwPC9Xb3JrRmxvd0JhcmNvZGU+CiAgICAgICAgPFN0b3JlTmFtZT5TREY0IC0gS1kgUGhhcm1hY3k8L1N0b3JlTmFtZT4KICAgICAgICA8U3RvcmVBZGRyZXNzPgogICAgICAgICAgICA8QWRkcmVzczE+U0RGNCAtIEtZIFBoYXJtYWN5PC9BZGRyZXNzMT4KICAgICAgICAgICAgPEFkZHJlc3MyPjI2MDAgTWVyaWRpYW4gUGt3eTwvQWRkcmVzczI+CiAgICAgICAgICAgIDxDaXR5PkplZmZlcnNvbnRvd248L0NpdHk+CiAgICAgICAgICAgIDxTdGF0ZT5LWTwvU3RhdGU+CiAgICAgICAgICAgIDxaaXA+NDAyOTk8L1ppcD4KICAgICAgICA8L1N0b3JlQWRkcmVzcz4KICAgIDwvRmlsbERhdGE+CjwvUGFyYXRhUmRzX01zZz4=</inboundTemplate>
@@ -1072,7 +1072,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1643276998704</time>
+        <time>1644850212223</time>
         <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>
@@ -1083,9 +1083,9 @@ return;</undeployScript>
       <codeTemplateLibrary version="3.11.0">
         <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
         <name>Library</name>
-        <revision>17</revision>
+        <revision>2</revision>
         <lastModified>
-          <time>1643347444627</time>
+          <time>1644850128080</time>
           <timezone>UTC</timezone>
         </lastModified>
         <description></description>
@@ -1140,16 +1140,16 @@ return;</undeployScript>
             <name>CheckingNullValue</name>
             <revision>1</revision>
             <lastModified>
-              <time>1638876371048</time>
+              <time>1643537038018</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1165,69 +1165,20 @@ return;</undeployScript>
             </properties>
           </codeTemplate>
           <codeTemplate version="3.11.0">
-            <id>b1d192d9-b017-4a6e-b760-db211f45bcf0</id>
-            <name>InterfaceLog</name>
-            <revision>5</revision>
-            <lastModified>
-              <time>1643182652460</time>
-              <timezone>UTC</timezone>
-            </lastModified>
-            <contextSet>
-              <delegate>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
-              </delegate>
-            </contextSet>
-            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
-              <type>FUNCTION</type>
-              <code>/**
-	Modify the description here. Modify the function name and parameters as needed. One function per
-	template is recommended; create a new code template for each new function.
-
-	@param {String} arg1 - arg1 description
-	@return {String} return description
-*/
-function loggingTime() {
-	var date = new Date();	
-	var formatedDate = moment(date, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);	
-	
-	//return logger.info(formatedDate);
-
-	return formatedDate;
-}
-
-function mirth_log(_msg, type) {
-	// Date : Error/Info : Message
-	// var date = new Date();	
-	// formatedDate = moment(date, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);	
-
-	if(type == &quot;&quot; || type == null){
-		type = &quot;info&quot;;
-	}
-	
-	var logMsg =  loggingTime() + &quot;: &quot; + type + &quot;: &quot; + _msg + &quot;\n&quot;;
-	logger.info(logMsg);
-}</code>
-            </properties>
-          </codeTemplate>
-          <codeTemplate version="3.11.0">
             <id>9387eb90-f794-432f-9212-3c724c9cfffc</id>
             <name>IsNullOrEmpty</name>
             <revision>1</revision>
             <lastModified>
-              <time>1638876371093</time>
+              <time>1643537038130</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1248,16 +1199,16 @@ function mirth_log(_msg, type) {
             <name>MomentJS</name>
             <revision>1</revision>
             <lastModified>
-              <time>1638876371211</time>
+              <time>1643537038385</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6938,18 +6889,18 @@ function mirth_log(_msg, type) {
           <codeTemplate version="3.11.0">
             <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
             <name>Utils Function</name>
-            <revision>4</revision>
+            <revision>1</revision>
             <lastModified>
-              <time>1641116243558</time>
+              <time>1643537038214</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">

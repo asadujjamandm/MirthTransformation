@@ -3,7 +3,7 @@
   <nextMetaDataId>2</nextMetaDataId>
   <name>CHCS API</name>
   <description></description>
-  <revision>3</revision>
+  <revision>5</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -49,416 +49,18 @@
     </properties>
     <transformer version="3.11.0">
       <elements>
-        <com.mirth.connect.plugins.javascriptstep.JavaScriptStep version="3.11.0">
+        <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
           <name>CHCSTransformer</name>
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
-          <script>var rawMessage = connectorMessage.getRawData();
-var arrMessage = rawMessage.split(&quot;\\|&quot;);
-
-var APS = arrMessage[0];
-var RX1 = arrMessage[1];
-var SG1 = arrMessage[2];
-var PAT = arrMessage[3];
-var DOC = arrMessage[4];
-var END = arrMessage[5];
-var REQR = arrMessage[6];
-
-
-// Message Type //
-var type = &quot;&quot;;
-
-// Address //
-
-var Address = {};
-Address.Street1 = PAT.substr(3,30).trim(); 
-Address.Street2 = &quot;NA&quot;;
-Address.City = PAT.substr(33,20).trim();
-Address.State = PAT.substr(53,2).trim();
-Address.Zip = PAT.substr(55,9).trim();
-Address.Country = &quot;US&quot;;
-Address.AddressType = &quot;Home&quot;;
-Address.Primary = true;
-
-var Addresses = [];
-Addresses.push(Address);
-
-channelMap.put(&apos;Address&apos;, Address);
-channelMap.put(&apos;Addresses&apos;, Addresses);
-
-
-
-// PhoneNumber //
-
-var PhoneNumberH = {};
-PhoneNumberH.Number = PAT.substr(64,10).trim();
-PhoneNumberH.Type = &quot;Home&quot;;
-
-
-var PhoneNumbers = [];
-if(!IsNullOrEmpty(PhoneNumberH.Number)){
-	PhoneNumbers.push(PhoneNumberH);
-}
-
-
-// Patient //
-
-var Patient = {};
-FullName = RX1.substr(39,30).trim();
-PatinetFullName = FullName.split(&quot; &quot;);
-Patient.Id = END.substr(17,12).trim();
-Patient.LastName = PatinetFullName[2];
-Patient.FirstName = PatinetFullName[0]; 
-Patient.DOB = FormateDate(RX1.substr(290,8).trim());
-Patient.IdType = null;
-Patient.Initials = null;
-Patient.MiddleName = PatinetFullName[1];
-Patient.Addresses = Addresses;
-Patient.PhoneNumbers = PhoneNumbers;
-Patient.Sex = &quot;Undeclared&quot;
-channelMap.put(&apos;Patient&apos;, Patient);
-
-// LabelItems //
-
-var LabelItems = [];
-
-var SourceTerminal = {}
-SourceTerminal.Name = &quot;SourceTerminal&quot;;
-SourceTerminal.Text = APS.substr(3,3).trim();
-LabelItems.push(SourceTerminal);
-
-var EntryInitials = {}
-EntryInitials.Name = &quot;EntryInitials&quot;;
-EntryInitials.Text = APS.substr(6,5).trim();
-LabelItems.push(EntryInitials);
-
-var OriginalEntryInitials = {}
-OriginalEntryInitials.Name = &quot;OriginalEntryInitials&quot;;
-OriginalEntryInitials.Text = APS.substr(11,5).trim();
-LabelItems.push(OriginalEntryInitials);
-
-
-var EntryDate = {}
-EntryDate.Name = &quot;EntryDate&quot;;
-EntryDate.Text = FormatDate3(APS.substr(16,14).trim());
-LabelItems.push(EntryDate);
-
-var Urgency = {}
-Urgency.Name = &quot;Urgency&quot;;
-Urgency.Text = APS.substr(36,1).trim();
-LabelItems.push(Urgency);
-
-var FamilyID = {}
-FamilyID.Name = &quot;FamilyID&quot;;
-FamilyID.Text = RX1.substr(23,16).trim();
-LabelItems.push(FamilyID);
-
-var PatientFullName = {}
-PatientFullName.Name = &quot;PatientFullName&quot;;
-PatientFullName.Text = RX1.substr(39,30).trim();
-LabelItems.push(PatientFullName);
-
-var RxNumber = {}
-RxNumber.Name = &quot;RxNumber&quot;;
-RxNumber.Text = RX1.substr(83,11).trim();
-LabelItems.push(RxNumber);
-
-
-
-var RefillNumber = {}
-RefillNumber.Name = &quot;RefillNumber&quot;;
-RefillNumber.Text = RX1.substr(105,2).trim();
-LabelItems.push(RefillNumber);
-
-var DispenseQuantity = {}
-DispenseQuantity.Name = &quot;DispenseQuantity&quot;;
-DispenseQuantity.Text = RX1.substr(107,4).trim();
-LabelItems.push(DispenseQuantity);
-
-var DaysSupply = {}
-DaysSupply.Name = &quot;DaysSupply&quot;;
-DaysSupply.Text = RX1.substr(111,2).trim();
-LabelItems.push(DaysSupply);
-
-var DrugNDC = {}
-DrugNDC.Name = &quot;DrugNDC&quot;;
-DrugNDC.Text = RX1.substr(114,12).trim();
-LabelItems.push(DrugNDC);
-
-var DAW = {}
-DAW.Name = &quot;DAW&quot;;
-DAW.Text = RX1.substr(126,1).trim();
-LabelItems.push(DAW);
-
-var TotalRefills = {}
-TotalRefills.Name = &quot;TotalRefills&quot;;
-TotalRefills.Text = RX1.substr(127,2).trim();
-LabelItems.push(TotalRefills);
-
-var RxOrigin = {}
-RxOrigin.Name = &quot;RxOrigin&quot;;
-RxOrigin.Text = RX1.substr(129,1);
-LabelItems.push(RxOrigin);
-
-var DispensedDrugName = {}
-DispensedDrugName.Name = &quot;DispensedDrugName&quot;;
-DispensedDrugName.Text = RX1.substr(130,40).trim();
-LabelItems.push(DispensedDrugName);
-
-var DrugSchedule = {}
-DrugSchedule.Name = &quot;DrugSchedule&quot;;
-DrugSchedule.Text = RX1.substr(170,1).trim(); 
-LabelItems.push(DrugSchedule);
-
-var PreviousRxNumber = {}
-PreviousRxNumber.Name = &quot;PreviousRxNumber&quot;;
-PreviousRxNumber.Text = RX1.substr(171,11).trim();
-LabelItems.push(PreviousRxNumber);
-
-
-var PrescriberFullName = {}
-PrescriberFullName.Name = &quot;PrescriberFullName&quot;;
-PrescriberFullName.Text = RX1.substr(182,30).trim();
-LabelItems.push(PrescriberFullName);
-
-var PatientSSN = {}
-PatientSSN.Name = &quot;PatientSSN&quot;;
-PatientSSN.Text = RX1.substr(212,13).trim();
-LabelItems.push(PatientSSN);
-
-var PartialFill = {}
-PartialFill.Name = &quot;PartialFill&quot;;
-PartialFill.Text = RX1.substr(225,1);
-LabelItems.push(PartialFill);
-
-var RxOrigDate = {}
-RxOrigDate.Name = &quot;RxOrigDate&quot;;
-RxOrigDate.Text = FormateDate(RX1.substr(226,8).trim());
-LabelItems.push(RxOrigDate);
-
-var PrescribedDrugName = {}
-PrescribedDrugName.Name = &quot;PrescribedDrugName&quot;;
-PrescribedDrugName.Text = RX1.substr(234,40).trim();
-LabelItems.push(PrescribedDrugName);
-
-var DrugIEN = {}
-DrugIEN.Name = &quot;DrugIEN&quot;;
-DrugIEN.Text = RX1.substr(274,16).trim();
-LabelItems.push(DrugIEN);
-
-var PatientDOB = {}
-PatientDOB.Name = &quot;PatientDOB&quot;;
-PatientDOB.Text = Patient.DOB;//FormateDate3(RX1.substr(290,8).trim());
-LabelItems.push(PatientDOB);
-
-var Warning1 = {}
-Warning1.Name = &quot;Warning1&quot;;
-Warning1.Text = SG1.substr(16,5).trim();
-LabelItems.push(Warning1);
-
-
-var Warning2 = {}
-Warning2.Name = &quot;Warning2&quot;;
-Warning2.Text = SG1.substr(21,5).trim();
-LabelItems.push(Warning2);
-
-
-var Warning3 = {}
-Warning3.Name = &quot;Warning3&quot;;
-Warning3.Text = SG1.substr(26,5).trim();
-LabelItems.push(Warning3);
-
-var Warning4 = {}
-Warning4.Name = &quot;Warning4&quot;;
-Warning4.Text = SG1.substr(31,5).trim();
-LabelItems.push(Warning4);
-
-var Sig = {}
-Sig.Name = &quot;Sig&quot;;
-Sig.Text = SG1.substr(39,999).trim();
-LabelItems.push(Sig);
-
-var PatientAddress = {}
-PatientAddress.Name = &quot;PatientAddress&quot;;
-PatientAddress.Text = PAT.substr(3,30).trim();
-LabelItems.push(PatientAddress);
-
-var PatientCity = {}
-PatientCity.Name = &quot;PatientCity&quot;;
-PatientCity.Text = PAT.substr(33,20).trim();
-LabelItems.push(PatientCity);
-
-var PatientState = {}
-PatientState.Name = &quot;PatientState&quot;;
-PatientState.Text = PAT.substr(53,2).trim();
-LabelItems.push(PatientState);
-
-var PatientZip = {}
-PatientZip.Name = &quot;PatientZip&quot;;
-PatientZip.Text = PAT.substr(55,9).trim();
-LabelItems.push(PatientZip);
-
-var PatientPhoneNumber = {}
-PatientPhoneNumber.Name = &quot;PatientPhoneNumber&quot;;
-PatientPhoneNumber.Text = PAT.substr(64,10).trim();
-LabelItems.push(PatientPhoneNumber);
-
-var PrescriberAddress1 = {}
-PrescriberAddress1.Name = &quot;PrescriberAddress1&quot;;
-PrescriberAddress1.Text = DOC.substr(3,30).trim();
-LabelItems.push(PrescriberAddress1);
-
-var PrescriberCity = {}
-PrescriberCity.Name = &quot;PrescriberCity&quot;;
-PrescriberCity.Text = DOC.substr(33,20).trim();
-LabelItems.push(PrescriberCity);
-
-
-var PrescriberState = {}
-PrescriberState.Name = &quot;PrescriberState&quot;;
-PrescriberState.Text = DOC.substr(53,2).trim();
-LabelItems.push(PrescriberState);
-
-var PrescriberZip = {}
-PrescriberZip.Name = &quot;PrescriberZip&quot;;
-PrescriberZip.Text = DOC.substr(55,9).trim();
-LabelItems.push(PrescriberZip);
-
-var PrescriberPhoneNumber = {}
-PrescriberPhoneNumber.Name = &quot;PrescriberPhoneNumber&quot;;
-PrescriberPhoneNumber.Text = DOC.substr(64,10).trim();
-LabelItems.push(PrescriberPhoneNumber);
-
-var PrescriberDEA = {}
-PrescriberDEA.Name = &quot;PrescriberDEA&quot;;
-PrescriberDEA.Text = DOC.substr(74,10).trim();
-LabelItems.push(PrescriberDEA);
-
-channelMap.put(&apos;LabelItems&apos;, LabelItems);
-
-// Med //
-
-var Med = {};
-Med.Description = &quot;&quot;;
-if(IsNullOrEmpty(Med.Description)){
-	Med.Description = &quot;&quot;;
-}
-Med.Id = RX1.substr(114,12).trim();
-Med.MedIdType = 0;
-Med.Name = RX1.substr(234,40).trim();
-Med.InventorySelector = &quot;&quot;;
-channelMap.put(&apos;Med&apos;, Med);
-
-
-// Doses //
-var Doses = [];
-var Dose = {};
-
-Dose.AdminDateTime = FormateDate();
-var doseQuantity = &quot;&quot;;
-Dose.Quantity = IsNullOrEmpty(doseQuantity) ? &apos;1&apos; : doseQuantity;
-Dose.Sig = SG1.substr(39,999).trim();
-Dose.TimeName = &quot;&quot;; 
-
-Doses.push(Dose);
-
-// HOA //
-
-var HOA = {};
-
-HOA.StartDate = FormateDate();
-HOA.EndDate = FormateDate();
-HOA.Doses = Doses;
-HOA.ScheduleType = 0;
-
-channelMap.put(&apos;HOA&apos;, HOA);
-
-// Scripts //
-
-var Script = {};
-
-//logger.info();
-Script.Action = ProcessScriptAction(APS.substr(35,1));
-Script.Packaging = DoesHOAExists(HOA) === true ? 1:5; //Adherence 1; Blister 2; Manual 3; Pouch 4; Vial 5;
-Script.RxNumber = RX1.substr(83,11).trim();
-Script.RefillNumber = parseFloat(RX1.substr(105,2));
-Script.TransactionId = Script.RxNumber + Script.RefillNumber + &quot;00&quot;;
-Script.Barcode = Script.TransactionId
-Script.DispenseQuantity = parseFloat(RX1.substr(107,4).trim());
-
-var BatchId = UUIDGenerator.getUUID();
-Script.BatchId = BatchId;
-
-Script.SequenceNumber = 1;
-Script.PatientId = Patient.Id
-Script.FacilityId = &quot;StoreX&quot;;
-Script.Med = Med;
-Script.DAW = RX1.substr(126,1) === &quot;N&quot; ? false : true; //boolean
-Script.DaysSupply = IsNullOrEmpty(parseInt(RX1.substr(111,2))) ? 0 : parseInt(RX1.substr(111,2));
-Script.HOA = null;
-Script.LabelItems = LabelItems;
-Script.RefillsRemaining = 0.0;// numeric
-Script.RefillsTotal = parseFloat(RX1.substr(127,2))//parseFloat(Script.RefillNumber + Script.RefillsRemaining); // numeric
-Script.PartialNumber = parseInt(RX1.substr(225,1));//0;
-Script.RxExpirationDate = &quot;&quot;;//FormateDate();
-Script.SafetyCap = &quot;NA&quot;;
-Script.Sig = SG1.substr(39,999);
-Script.Urgency = APS.substr(36,1); //numeric Urgency - (0) Delay, (1) Normal, (2) Rush, (3) Urgent, (4) Hold 
-
-//
-
-channelMap.put(&apos;Script&apos;, Script);
-
-// Facility //
-
-var Facility = {};
-Facility.Id = Script.FacilityId;
-Facility.Bed = null;
-Facility.Cabinet = null;
-Facility.Floor = null;
-Facility.Name = &quot;StoreX&quot;;
-Facility.NursingStationId = null;
-Facility.Room = null;
-Facility.Unit = null;
-Facility.Addresses = [];
-
-var FacilityAddress = {};
-FacilityAddress.Street1 = &quot;NA&quot;;
-FacilityAddress.Street2 = &quot;NA&quot;;
-FacilityAddress.City = &quot;NA&quot;;
-FacilityAddress.State = &quot;NA&quot;;
-FacilityAddress.Zip = &quot;NA&quot;;
-FacilityAddress.Country = &quot;US&quot;;
-FacilityAddress.AddressType = &quot;Home&quot;;
-FacilityAddress.Primary = true;
-
-Facility.Addresses.push(FacilityAddress);
-
-
-// Batch //
-
-var Batch = {};
-
-var Scripts = [];
-Scripts.push(Script);
-var Facilities = [];
-Facilities.push(Facility);
-var Patients = [];
-Patients.push(Patient);
-
-
-
-Batch.Id = BatchId;
-Batch.TransmissionId = &quot;&quot;;
-Batch.ScriptCount = Scripts.length;
-Batch.SourceTerminal = &quot;&quot;;
-Batch.Scripts = Scripts;
-Batch.Facilities = Facilities;
-Batch.Patients = Patients;
-
-channelMap.put(&apos;Batch&apos;, Batch);
-//logger.info(JSON.stringify(Batch,null,2));</script>
-        </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
+          <scriptPath>C:\Projects\Mirth\MirthTransformation\JS\CHCS Interface.js</scriptPath>
+        </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
+        <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
+          <name>IpConfig</name>
+          <sequenceNumber>1</sequenceNumber>
+          <enabled>true</enabled>
+          <scriptPath>C:\Projects\Mirth\MirthTransformation\JS\IpConfig.js</scriptPath>
+        </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
       </elements>
       <inboundTemplate encoding="base64">QVBTMSBTS0MgU0tDMDYxNTIwMDcxNzEyMTRZWVkzMUYxTjAwfFJYMTExIDEwNzg0NzQyMzEgQU1JRUUgWCBBVEtJTlMgMDYxNTIwMDcwMDAwMDAxMDAwIDAwMDA5OTI0ODg4MDAzMCAzMDAwMDAwNjA0MDEwMSBOMDUwIDYxMjM0NTY3ODkxMVRJVExFQkFVTSxTRUFNIEogODkwOTkwODA1IDAyMDA3MDYxNUxBTlNPUFJBWk9MRSAoUFJFVkFDSUQgRVEpIDMwTUcgQ0FQIDE4MDc1ODkxOTc1MDYyOHxTRzFHNjAwNzg5NiAwMzExMTExMjIyMjIzMzMzMzQ0NDQ0MDYwVEFLRSBPTkUgQ0FQU1VMRSBCWSBNT1VUSH5FVkVSWSBEQVkgQkVGT1JFIFlPVVIgRklSU1R+TUVBTH4gfFBBVDEwMCBQYXRpZW50IEFkZHJlc3MgTWV0cm9wb2xpcyBOQzEyMzQ1Njc4OTkxOTEyMzQ1Njk5IHxET0MxMDAgRG9jdG9yIFdheSBNZXRyb3BvbGlzIE5DMTIzNDU2Nzg5OTE5Nzg3ODEwNkJLOTk5OTk5OTl8RU5EMDYxNTIwMDcxNzEyNDYgMTAyMzkwOXx+</inboundTemplate>
       <outboundTemplate encoding="base64"></outboundTemplate>
@@ -512,7 +114,10 @@ channelMap.put(&apos;Batch&apos;, Batch);
           <reattachAttachments>true</reattachAttachments>
         </destinationConnectorProperties>
         <script>try {
-	var tcp = new Packages.mirthSocket.TcpDestination(&quot;10.6.72.59&quot;, 2000);	
+	var ip=$(&apos;ip&apos;);
+	var port=$(&apos;port&apos;);
+	
+	var tcp = new Packages.mirthSocket.TcpDestination(ip, port);	
 
 	var batch = $(&apos;Batch&apos;);
 	batch.Scripts[0].LabelItems = $(&apos;LabelItems&apos;);
@@ -623,7 +228,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1641112753202</time>
+        <time>1644146195305</time>
         <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>
@@ -634,9 +239,9 @@ return;</undeployScript>
       <codeTemplateLibrary version="3.11.0">
         <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
         <name>Library</name>
-        <revision>12</revision>
+        <revision>2</revision>
         <lastModified>
-          <time>1641116243535</time>
+          <time>1644850128080</time>
           <timezone>UTC</timezone>
         </lastModified>
         <description></description>
@@ -660,6 +265,7 @@ return;</undeployScript>
           <string>f5da6dfb-b808-4061-9274-fed0339bff1a</string>
           <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
           <string>16814b6e-2133-4c94-9c64-52f50db9c002</string>
+          <string>99e7a0b2-ec62-4333-9363-cb9c15e04910</string>
           <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
           <string>db8c015a-f11f-4133-992e-9b3277546cbb</string>
           <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
@@ -669,6 +275,9 @@ return;</undeployScript>
           <string>feb1fe1c-0cd6-4082-83a6-3e92db15d3ec</string>
           <string>2fa392d7-8669-421e-81a3-1fc3100ee9c8</string>
           <string>427a148f-a043-48db-bce9-882cc1e6ccf8</string>
+          <string>2a593b1b-915f-4f8e-88fa-4daf8ed7a5dd</string>
+          <string>64b04136-25f1-40a3-b5d8-14379420f99a</string>
+          <string>4dfc5eb3-20a8-49f3-acb2-497224a4b224</string>
           <string>e5a879a3-dddf-48d1-b69b-878152c0cb9e</string>
           <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
           <string>b742b188-ed4a-4495-bcf6-0468a1eef0c2</string>
@@ -687,15 +296,15 @@ return;</undeployScript>
             <name>CheckingNullValue</name>
             <revision>1</revision>
             <lastModified>
-              <time>1638876371048</time>
+              <time>1643537038018</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -716,15 +325,15 @@ return;</undeployScript>
             <name>IsNullOrEmpty</name>
             <revision>1</revision>
             <lastModified>
-              <time>1638876371093</time>
+              <time>1643537038130</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -746,15 +355,15 @@ return;</undeployScript>
             <name>MomentJS</name>
             <revision>1</revision>
             <lastModified>
-              <time>1638876371211</time>
+              <time>1643537038385</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -6436,17 +6045,17 @@ return;</undeployScript>
           <codeTemplate version="3.11.0">
             <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
             <name>Utils Function</name>
-            <revision>4</revision>
+            <revision>1</revision>
             <lastModified>
-              <time>1641116243558</time>
+              <time>1643537038214</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
