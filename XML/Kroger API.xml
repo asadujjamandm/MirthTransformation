@@ -3,7 +3,7 @@
   <nextMetaDataId>2</nextMetaDataId>
   <name>Kroger API</name>
   <description></description>
-  <revision>7</revision>
+  <revision>4</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -49,843 +49,18 @@
     </properties>
     <transformer version="3.11.0">
       <elements>
-        <com.mirth.connect.plugins.javascriptstep.JavaScriptStep version="3.11.0">
-          <name>BatchObj</name>
+        <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
+          <name>KrogerTransformer</name>
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
-          <script>// Address //
-
-var Address = {};
-
-Address.Street1 = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;street1&apos;].toString().trim();
-Address.Street2 = null;
-Address.City = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;city&apos;].toString().trim();
-Address.State = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;stateCode&apos;].toString().trim();	
-Address.ZIP = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;postalCode&apos;].toString().trim();
-Address.Country = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;county&apos;].toString().trim();
-Address.AddressType = &quot;Primary&quot;;
-Address.Primary = &quot;true&quot;;
-
-var Addresses = [];
-
-if((!IsNullOrEmpty(Address.Street1) || !IsNullOrEmpty(Address.Street2)) &amp;&amp; 
-	(!IsNullOrEmpty(Address.City) || !IsNullOrEmpty(Address.State)))
-{
-	Addresses.push(Address);
-}
-
-channelMap.put(&apos;Addresses&apos;, Addresses);
-
-
-// PhoneNumber //
-
-var PhoneNumberH = {};
-
-PhoneNumberH.Number = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;phoneNumber&apos;][&apos;TelephoneRS&apos;][&apos;areaCode&apos;].toString().trim() + msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;phoneNumber&apos;][&apos;TelephoneRS&apos;][&apos;number&apos;].toString().trim();
-PhoneNumberH.Type = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;phoneNumber&apos;][&apos;TelephoneRS&apos;][&apos;type&apos;].toString().trim();
-
-var PhoneNumbers = [];
-
-if(!IsNullOrEmpty(PhoneNumberH.Number)){
-	PhoneNumbers.push(PhoneNumberH);
-}
-
-channelMap.put(&apos;PhoneNumbers&apos;, PhoneNumbers);
-
-// Patient //
-
-var Patient = {};
-
-Patient.Id = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;patientNumber&apos;].toString();
-Patient.FirstName = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;firstName&apos;].toString().trim();
-Patient.LastName = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;lastName&apos;].toString().trim();
-Patient.DOB = FormateDate(msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;birthDate&apos;][&apos;Date&apos;][&apos;year&apos;].toString().trim() +msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;birthDate&apos;][&apos;Date&apos;][&apos;month&apos;].toString().trim() + msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;birthDate&apos;][&apos;Date&apos;][&apos;day&apos;].toString().trim());
-Patient.IdType = null;
-Patient.Initials = null; //// FOL
-Patient.MiddleName = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;middleName&apos;].toString().trim();
-Patient.Sex = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;gender&apos;].toString() === &quot;F&quot; ? &quot;Female&quot; : &quot;Male&quot;;
-
-Patient.Addresses = Addresses;
-Patient.PhoneNumbers = PhoneNumbers;
-channelMap.put(&apos;Patient&apos;, Patient);
-
-// LabelItems //
-
-var LabelItems = [];
-
-var RxNumber = {}
-RxNumber.Name = &quot;RxNumber&quot;;
-RxNumber.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;rxNumber&apos;].toString().trim();
-LabelItems.push(RxNumber);
-
-var RefillNumber = {}
-RefillNumber.Name = &quot;RefillNumber&quot;;
-RefillNumber.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;refillNumber&apos;].toString().trim();
-LabelItems.push(RefillNumber);
-
-var PatientTitle = {}
-PatientTitle.Name = &quot;PatientTitle&quot;;
-PatientTitle.Text =&quot;&quot; ;
-LabelItems.push(PatientTitle);
-
-var PatientFirstName = {}
-PatientFirstName.Name = &quot;PatientFirstName&quot;;
-PatientFirstName.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;firstName&apos;].toString().trim();
-LabelItems.push(PatientFirstName);
-
-var PatientMiddleName = {}
-PatientMiddleName.Name = &quot;PatientMiddleName&quot;;
-PatientMiddleName.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;middleName&apos;].toString().trim();
-LabelItems.push(PatientMiddleName);
-
-var PatientLastName = {}
-PatientLastName.Name = &quot;PatientLastName&quot;;
-PatientLastName.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;lastName&apos;].toString().trim();
-LabelItems.push(PatientLastName);
-
-var DrugNDC = {}
-DrugNDC.Name = &quot;DrugNDC&quot;;
-DrugNDC.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;product&apos;][&apos;ProductRS&apos;][&apos;nDCMfgCode&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;product&apos;][&apos;ProductRS&apos;][&apos;nDCProductCode&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;product&apos;][&apos;ProductRS&apos;][&apos;nDCSize&apos;].toString().trim();
-LabelItems.push(DrugNDC);
-
-var DispensedDrugName = {}
-DispensedDrugName.Name = &quot;DispensedDrugName&quot;;
-DispensedDrugName.Text =msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensedProduct&apos;][&apos;ProductRS&apos;][&apos;labelName&apos;].toString().trim();
-LabelItems.push(DispensedDrugName);
-
-var AltDispensedDrugName = {}
-AltDispensedDrugName.Name = &quot;AltDispensedDrugName&quot;;
-AltDispensedDrugName.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensedProduct&apos;][&apos;ProductRS&apos;][&apos;labelName25&apos;].toString().trim();
-LabelItems.push(AltDispensedDrugName);
-
-var InventorySelector = {}
-InventorySelector.Name = &quot;InventorySelector&quot;;
-InventorySelector.Text =&quot;&quot; ;
-LabelItems.push(InventorySelector);
-
-var DispenseQuantity = {}
-DispenseQuantity.Name = &quot;DispenseQuantity&quot;;
-DispenseQuantity.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensedQty&apos;].toString().trim();
-LabelItems.push(DispenseQuantity);
-
-var Urgency = {}
-Urgency.Name = &quot;Urgency&quot;;//FOL
-Urgency.Text =&quot;&quot; ;
-LabelItems.push(Urgency);
-
-var Price = {}
-Price.Name = &quot;Price&quot;;
-Price.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;price&apos;].toString().trim();//not sure need to check(not found in xml)
-LabelItems.push(Price);
-
-var Liquid = {}
-Liquid.Name = &quot;Liquid&quot;;
-Liquid.Text =&quot;&quot; ; 
-LabelItems.push(Liquid);
-
-var Refrigerated = {}
-Refrigerated.Name = &quot;Refrigerated&quot;;//FOL
-Refrigerated.Text =&quot;&quot; ;
-LabelItems.push(Refrigerated);
-
-var RefillsLeft = {}
-RefillsLeft.Name = &quot;RefillsLeft&quot;;
-RefillsLeft.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;refillsRemaining&apos;].toString().trim();
-LabelItems.push(RefillsLeft);
-
-var TotalRefills = {}
-TotalRefills.Name = &quot;TotalRefills&quot;;
-TotalRefills.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;refillsAuthorized&apos;].toString().trim();
-LabelItems.push(TotalRefills);
-
-var RxOrigDate = {}
-RxOrigDate.Name = &quot;RxOrigDate&quot;;
-RxOrigDate.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensedProduct&apos;][&apos;ProductRS&apos;][&apos;dEAClass&apos;].toString().trim();
-LabelItems.push(RxOrigDate);
-
-var RefillDate = {}
-RefillDate.Name = &quot;RefillDate&quot;;
-RefillDate.Text =&quot;&quot; ;
-LabelItems.push(RefillDate);
-
-var DAW = {}
-DAW.Name = &quot;DAW&quot;;
-DAW.Text =&quot;&quot; ;
-LabelItems.push(DAW);
-
-var FillDate = {}
-FillDate.Name = &quot;FillDate&quot;;
-FillDate.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dateOfService&apos;][&apos;Date&apos;][&apos;year&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dateOfService&apos;][&apos;Date&apos;][&apos;month&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dateOfService&apos;][&apos;Date&apos;][&apos;day&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dateOfService&apos;][&apos;Date&apos;][&apos;hour&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dateOfService&apos;][&apos;Date&apos;][&apos;minute&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dateOfService&apos;][&apos;Date&apos;][&apos;second&apos;].toString().trim();
-LabelItems.push(FillDate);
-
-
-
-
-var RxExpirationDate = {}
-RxExpirationDate.Name = &quot;RxExpirationDate&quot;;
-RxExpirationDate.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;rxExpiryDate&apos;][&apos;Date&apos;][&apos;year&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;rxExpiryDate&apos;][&apos;Date&apos;][&apos;month&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;rxExpiryDate&apos;][&apos;Date&apos;][&apos;day&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;rxExpiryDate&apos;][&apos;Date&apos;][&apos;hour&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;rxExpiryDate&apos;][&apos;Date&apos;][&apos;minute&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;rxExpiryDate&apos;][&apos;Date&apos;][&apos;second&apos;].toString().trim();
-LabelItems.push(RxExpirationDate);
-
-
-
-var DiscardDate = {}
-DiscardDate.Name = &quot;DiscardDate&quot;;
-DiscardDate.Text = &quot;&quot; ;
-LabelItems.push(DiscardDate);
-
-var PreviousFillDate = {}
-PreviousFillDate.Name = &quot;PreviousFillDate&quot;;
-PreviousFillDate.Text = &quot;&quot; ;
-LabelItems.push(PreviousFillDate);
-
-var PrescribedDrugName = {}
-PrescribedDrugName.Name = &quot;PrescribedDrugName&quot;;
-PrescribedDrugName.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensedProduct&apos;][&apos;ProductRS&apos;][&apos;labelName&apos;].toString().trim();
-LabelItems.push(PrescribedDrugName);
-
-var PrescribedDrugChemicalName = {}
-PrescribedDrugChemicalName.Name = &quot;PrescribedDrugChemicalName&quot;;
-PrescribedDrugChemicalName.Text =&quot;&quot; ;
-LabelItems.push(PrescribedDrugChemicalName);
-
-var DrugSchedule = {}
-DrugSchedule.Name = &quot;DrugSchedule&quot;;
-DrugSchedule.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensedProduct&apos;][&apos;ProductRS&apos;][&apos;dEAClass&apos;].toString().trim(); // DrugClass (not sure)
-LabelItems.push(DrugSchedule);
-
-var CompoundCode = {}
-CompoundCode.Name = &quot;CompoundCode&quot;;
-CompoundCode.Text =&quot;&quot; ;
-LabelItems.push(CompoundCode);
-
-var DrugMfg = {}
-DrugMfg.Name = &quot;DrugMfg&quot;;
-DrugMfg.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;product&apos;][&apos;ProductRS&apos;][&apos;manufacturer&apos;].toString().trim();
-LabelItems.push(DrugMfg);
-
-var DrugImprint = {}
-DrugImprint.Name = &quot;DrugImprint&quot;;
-DrugImprint.Text =&quot;&quot; ;
-LabelItems.push(DrugImprint);
-
-var DrugForm = {}
-DrugForm.Name = &quot;DrugForm&quot;;
-DrugForm.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensedProduct&apos;][&apos;ProductRS&apos;][&apos;dosageFormDescription&apos;].toString().trim();
-LabelItems.push(DrugForm);
-
-var DrugStrength = {}
-DrugStrength.Name = &quot;DrugStrength&quot;;
-DrugStrength.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensedProduct&apos;][&apos;ProductRS&apos;][&apos;strength&apos;].toString().trim();
-LabelItems.push(DrugStrength);
-
-
-
-var DaysSupply = {}
-DaysSupply.Name = &quot;DaysSupply&quot;;
-DaysSupply.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;daysSupply&apos;].toString().trim();
-LabelItems.push(DaysSupply);
-
-var Warning1 = {}
-Warning1.Name = &quot;Warning1&quot;;
-Warning1.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;warningLabelText&apos;][&apos;WarningLabelText&apos;][0][&apos;priority&apos;].toString().trim();
-LabelItems.push(Warning1);
-
-
-var Warning2 = {}
-Warning2.Name = &quot;Warning2&quot;;
-Warning2.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;warningLabelText&apos;][&apos;WarningLabelText&apos;][1][&apos;priority&apos;].toString().trim();
-LabelItems.push(Warning2);
-
-
-var Warning3 = {}
-Warning3.Name = &quot;Warning3&quot;;
-Warning3.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;warningLabelText&apos;][&apos;WarningLabelText&apos;][2][&apos;priority&apos;].toString().trim();
-LabelItems.push(Warning3);
-
-var Warning4 = {}
-Warning4.Name = &quot;Warning4&quot;;
-Warning4.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;warningLabelText&apos;][&apos;WarningLabelText&apos;][3][&apos;priority&apos;].toString().trim();
-LabelItems.push(Warning4);
-
-
-var Warning5 = {}
-Warning5.Name = &quot;Warning5&quot;;
-Warning5.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;warningLabelText&apos;][&apos;WarningLabelText&apos;][4][&apos;priority&apos;].toString().trim();
-LabelItems.push(Warning5);
-
-var WarningBitmap1 = {}
-WarningBitmap1.Name = &quot;WarningBitmap1&quot;;//An image for the Warning
-WarningBitmap1.Text = null;
-LabelItems.push(WarningBitmap1);
-
-var WarningBitmap2 = {}
-WarningBitmap2.Name = &quot;WarningBitmap2&quot;;//An image for the Warning
-WarningBitmap2.Text = null;
-LabelItems.push(WarningBitmap2);
-
-
-var WarningBitmap3 = {}
-WarningBitmap3.Name = &quot;WarningBitmap3&quot;;//An image for the Warning
-WarningBitmap3.Text = null;
-LabelItems.push(WarningBitmap3);
-
-var WarningBitmap4 = {}
-WarningBitmap4.Name = &quot;WarningBitmap4&quot;;//An image for the Warning
-WarningBitmap4.Text = null;
-LabelItems.push(WarningBitmap4);
-
-var WarningBitmap5 = {}
-WarningBitmap5.Name = &quot;WarningBitmap5&quot;;//An image for the Warning
-WarningBitmap5.Text = &quot;&quot;;
-LabelItems.push(WarningBitmap5);
-
-
-var Sig = {}
-Sig.Name = &quot;Sig&quot;;
-Sig.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;patientSig&apos;].toString().trim();
-LabelItems.push(Sig);
-
-
-var UnicodeSig = {}
-UnicodeSig.Name = &quot;UnicodeSig&quot;;
-UnicodeSig.Text = &quot;&quot;;
-LabelItems.push(UnicodeSig);
-
-var SafetyCap = {}
-SafetyCap.Name = &quot;SafetyCap&quot;;
-SafetyCap.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;safetyCaps&apos;].toString().trim();
-LabelItems.push(SafetyCap);
-
-
-var StoreAddress1 = {}
-StoreAddress1.Name = &quot;StoreAddress1&quot;;
-StoreAddress1.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;pharmacy&apos;][&apos;PharmacyRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;street1&apos;].toString().trim();
-LabelItems.push(StoreAddress1);
-
-var StoreAddress2 = {}
-StoreAddress2.Name = &quot;StoreAddress2&quot;;
-StoreAddress2.Text = &quot;&quot;;
-LabelItems.push(StoreAddress2);
-
-var StoreCity = {};
-StoreCity.Name = &quot;StoreCity&quot;;
-StoreCity.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;pharmacy&apos;][&apos;PharmacyRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;city&apos;].toString().trim();
-LabelItems.push(StoreCity);
-
-
-var StoreDEA = {};
-StoreDEA.Name = &quot;StoreDEA&quot;;
-StoreDEA.Text = &quot;&quot;;
-LabelItems.push(StoreDEA);
-
-
-var StoreName = {}
-StoreName.Name = &quot;StoreName&quot;;
-StoreName.Text = &quot;&quot;;
-LabelItems.push(StoreName);
-
-
-var StoreNumber = {}
-StoreNumber.Name = &quot;StoreNumber&quot;;
-StoreNumber.Text = &quot;&quot;;
-LabelItems.push(StoreNumber);
-
-var StorePhoneNumber = {}
-StorePhoneNumber.Name = &quot;StorePhoneNumber&quot;;
-StorePhoneNumber.Text = &quot;&quot;;
-LabelItems.push(StorePhoneNumber);
-
-
-var StoreState = {}
-StoreState.Name = &quot;StoreState&quot;;
-StoreState.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;pharmacy&apos;][&apos;PharmacyRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;stateCode&apos;].toString().trim();
-LabelItems.push(StoreState);
-
-var StoreZip = {};
-StoreZip.Name = &quot;StoreZip&quot;
-StoreZip.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;pharmacy&apos;][&apos;PharmacyRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;postalCode&apos;].toString().trim();
-LabelItems.push(StoreZip);
-
-
-var TotalPillsPrescribed = {}
-TotalPillsPrescribed.Name = &quot;TotalPillsPrescribed&quot;;
-TotalPillsPrescribed.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensedQty&apos;].toString().trim();
-LabelItems.push(TotalPillsPrescribed);
-
-var TotalPillsRemaining = {}
-TotalPillsRemaining.Name = &quot;TotalPillsRemaining&quot;;
-TotalPillsRemaining.Text = &quot;&quot;;
-LabelItems.push(TotalPillsRemaining);
-
-var PharmacistTitle = {}
-PharmacistTitle.Name = &quot;PharmacistTitle&quot;;
-PharmacistTitle.Text = &quot;&quot;;
-LabelItems.push(PharmacistTitle);
-
-var PharmacistFirstName = {}
-PharmacistFirstName.Name = &quot;PharmacistFirstName&quot;;
-PharmacistFirstName.Text = &quot;&quot;;
-LabelItems.push(PharmacistFirstName);
-
-var PharmacistMiddleName = {};
-PharmacistMiddleName.Name = &quot;PharmacistMiddleName &quot;;
-PharmacistMiddleName.Text = &quot;&quot;;
-LabelItems.push(PharmacistMiddleName);
-
-var PharmacistLastName = {}
-PharmacistLastName.Name = &quot;PharmacistLastName&quot;;
-PharmacistLastName.Text = &quot;&quot;;
-LabelItems.push(PharmacistLastName);
-
-var RPhLicenseNumber = {}
-RPhLicenseNumber.Name = &quot;RPhLicenseNumber&quot;;
-RPhLicenseNumber.Text = &quot;&quot;;
-LabelItems.push(RPhLicenseNumber);
-
-var RPhInitials = {}
-RPhInitials.Name = &quot;RPhInitials&quot;;
-RPhInitials.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;pharmacy&apos;][&apos;PharmacyRS&apos;][&apos;pICInitials&apos;].toString().trim();
-LabelItems.push(RPhInitials);
-
-var RxOrigin = {}
-RxOrigin.Name = &quot;RxOrigin&quot;;
-RxOrigin.Text = &quot;&quot;;
-LabelItems.push(RxOrigin);
-
-var TechInitials = {}
-TechInitials.Name = &quot;TechInitials&quot;;
-TechInitials.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;verificationPharmacistInitials&apos;].toString().trim();
-LabelItems.push(TechInitials);
-
-var EntryInitials = {}
-EntryInitials.Name = &quot;EntryInitials&quot;;
-EntryInitials.Text = &quot;&quot;;
-LabelItems.push(EntryInitials);
-
-var EntryDate = {}
-EntryDate.Name = &quot;EntryDate&quot;;
-EntryDate.Text = &quot;&quot;;
-LabelItems.push(EntryDate);
-
-var SourceTerminal = {}
-SourceTerminal.Name = &quot;SourceTerminal&quot;;
-SourceTerminal.Text = &quot;&quot;;
-LabelItems.push(SourceTerminal);
-
-var PatientAddress1 = {}
-PatientAddress1.Name = &quot;PatientAddress1&quot;;
-PatientAddress1.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;street1&apos;].toString().trim();
-LabelItems.push(PatientAddress1);
-
-var PatientAddress2 = {}
-PatientAddress2.Name = &quot;PatientAddress2&quot;;
-PatientAddress2.Text = &quot;&quot;;
-LabelItems.push(PatientAddress2);
-
-var PatientCity = {}
-PatientCity.Name = &quot;PatientCity&quot;;
-PatientCity.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;city&apos;].toString().trim();
-LabelItems.push(PatientCity);
-
-var PatientState = {}
-PatientState.Name = &quot;PatientState&quot;;
-PatientState.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;stateCode&apos;].toString().trim();
-LabelItems.push(PatientState);
-
-var PatientZip = {}
-PatientZip.Name = &quot;PatientZip&quot;;
-PatientZip.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;postalCode&apos;].toString();
-LabelItems.push(PatientZip);
-
-var PatientSSN = {}
-PatientSSN.Name = &quot;PatientSSN&quot;;
-PatientSSN.Text = &quot;&quot;;
-LabelItems.push(PatientSSN);
-
-var PatientID = {}
-PatientID.Name = &quot;PatientID&quot;;
-PatientID.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;patientNumber&apos;].toString().trim();
-LabelItems.push(PatientID);
-
-var FamilyID = {}
-FamilyID.Name = &quot;FamilyID&quot;;
-FamilyID.Text = &quot;&quot;;
-LabelItems.push(FamilyID);
-
-var PatientDOB = {}
-PatientDOB.Name = &quot;PatientDOB&quot;;
-PatientDOB.Text = &quot;&quot;;
-LabelItems.push(PatientDOB);
-
-var PatientPhoneNumber = {}
-PatientPhoneNumber.Name = &quot;PatientPhoneNumber&quot;;
-PatientPhoneNumber.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;phoneNumber&apos;][&apos;TelephoneRS&apos;][&apos;areaCode&apos;].toString() + msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;phoneNumber&apos;][&apos;TelephoneRS&apos;][&apos;number&apos;].toString();
-LabelItems.push(PatientPhoneNumber);
-
-var PrescriberTitle = {}
-PrescriberTitle.Name = &quot;PrescriberTitle&quot;;
-PrescriberTitle.Text = &quot;&quot;;
-LabelItems.push(PrescriberTitle);
-
-var PrescriberFirstName = {}
-PrescriberFirstName.Name = &quot;PrescriberFirstName&quot;;
-PrescriberFirstName.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;prescriber&apos;][&apos;PrescriberRS&apos;][&apos;firstName&apos;].toString().trim();
-LabelItems.push(PrescriberFirstName);
-
-var PrescriberMiddleName = {}
-PrescriberMiddleName.Name = &quot;PrescriberMiddleName&quot;;
-PrescriberMiddleName.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;prescriber&apos;][&apos;PrescriberRS&apos;][&apos;middleName&apos;].toString().trim();
-LabelItems.push(PrescriberMiddleName);
-
-var PrescriberLastName = {}
-PrescriberLastName.Name = &quot;PrescriberLastName&quot;;
-PrescriberLastName.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;prescriber&apos;][&apos;PrescriberRS&apos;][&apos;lastName&apos;].toString().trim();
-LabelItems.push(PrescriberLastName);
-
-var PrescriberDEA = {}
-PrescriberDEA.Name = &quot;PrescriberDEA&quot;;
-PrescriberDEA.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;prescriber&apos;][&apos;PrescriberRS&apos;][&apos;dEANumber&apos;].toString().trim();
-LabelItems.push(PrescriberDEA);
-
-var PrescriberNPI = {}
-PrescriberNPI.Name = &quot;PrescriberNPI&quot;;
-PrescriberNPI.Text = &quot;&quot;;
-LabelItems.push(PrescriberNPI);
-
-var PrescriberAddress1 = {}
-PrescriberAddress1.Name = &quot;PrescriberAddress1&quot;;
-PrescriberAddress1.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;prescriber&apos;][&apos;PrescriberRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;street1&apos;].toString().trim();
-LabelItems.push(PrescriberAddress1);
-
-var PrescriberAddress2 = {}
-PrescriberAddress2.Name = &quot;PrescriberAddress2&quot;;
-PrescriberAddress2.Text = &quot;&quot;;
-LabelItems.push(PrescriberAddress2);
-
-var PrescriberCity = {}
-PrescriberCity.Name = &quot;PrescriberCity&quot;;
-PrescriberCity.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;prescriber&apos;][&apos;PrescriberRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;city&apos;].toString().trim();
-LabelItems.push(PrescriberCity);
-
-
-var PrescriberState = {}
-PrescriberState.Name = &quot;PrescriberState&quot;;
-PrescriberState.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;prescriber&apos;][&apos;PrescriberRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;stateCode&apos;].toString().trim();
-LabelItems.push(PrescriberState);
-
-var PrescriberZip = {}
-PrescriberZip.Name = &quot;PrescriberZip&quot;;
-PrescriberZip.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;prescriber&apos;][&apos;PrescriberRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;postalCode&apos;].toString().trim();
-LabelItems.push(PrescriberZip);
-
-var PrescriberPhoneNumber = {}
-PrescriberPhoneNumber.Name = &quot;PrescriberPhoneNumber&quot;;
-PrescriberPhoneNumber.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;prescriber&apos;][&apos;PrescriberRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;phoneNumber&apos;][&apos;TelephoneRS&apos;][&apos;areaCode&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;prescriber&apos;][&apos;PrescriberRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;phoneNumber&apos;][&apos;TelephoneRS&apos;][&apos;number&apos;].toString();
-LabelItems.push(PrescriberPhoneNumber);
-
-var PrescriberType = {}
-PrescriberType.Name = &quot;PrescriberType&quot;;
-PrescriberType.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;prescriber&apos;][&apos;PrescriberRS&apos;][&apos;specialty1&apos;].toString();//specialty1
-LabelItems.push(PrescriberType);
-
-var ScanCode = {}
-ScanCode.Name = &quot;ScanCode&quot;;
-ScanCode.Text = &quot;&quot;;//WorkflowBarCode
-LabelItems.push(ScanCode);
-
-var Affiliate = {}
-Affiliate.Name = &quot;Affiliate&quot;;
-Affiliate.Text = &quot;&quot;;
-LabelItems.push(Affiliate);
-
-var FillDateText = {}
-FillDateText.Name = &quot;FillDateText&quot;; //FillDateText present but not useable
-FillDateText.Text = &quot;&quot;;
-LabelItems.push(FillDateText);
-
-
-var RxExpirationDateText = {}
-RxExpirationDateText.Name = &quot;RxExpirationDateText&quot;;
-RxExpirationDateText.Text = &quot;&quot;;
-LabelItems.push(RxExpirationDateText);
-
-
-var ReasonPrescribed = {}
-ReasonPrescribed.Name = &quot;ReasonPrescribed&quot;;
-ReasonPrescribed.Text = &quot;&quot;;
-LabelItems.push(ReasonPrescribed);
-
-var DrugExpirationDateText = {}
-DrugExpirationDateText.Name = &quot;DrugExpirationDateText&quot;;
-DrugExpirationDateText.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;drugExpiryDate&apos;][&apos;Date&apos;][&apos;year&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;drugExpiryDate&apos;][&apos;Date&apos;][&apos;month&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;drugExpiryDate&apos;][&apos;Date&apos;][&apos;day&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;drugExpiryDate&apos;][&apos;Date&apos;][&apos;hour&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;drugExpiryDate&apos;][&apos;Date&apos;][&apos;minute&apos;].toString()+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;drugExpiryDate&apos;][&apos;Date&apos;][&apos;second&apos;].toString();
-LabelItems.push(DrugExpirationDateText);
-
-
-var WarningMessage = {}
-WarningMessage.Name = &quot;WarningMessage&quot;;
-WarningMessage.Text = &quot;&quot;;
-LabelItems.push(WarningMessage);
-
-var ServiceCode = {}
-ServiceCode.Name = &quot;ServiceCode&quot;;
-ServiceCode.Text = &quot;&quot;;
-LabelItems.push(ServiceCode);
-
-var BedNumber = {}
-BedNumber.Name = &quot;BedNumber&quot;;
-BedNumber.Text = &quot;&quot;;
-LabelItems.push(BedNumber);
-
-var BillingCode = {}
-BillingCode.Name = &quot;BillingCode&quot;;
-BillingCode.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;thirdPartyCashIndicator&apos;].toString().trim();
-LabelItems.push(BillingCode);
-
-var FacilityID = {}
-FacilityID.Name = &quot;FacilityID&quot;;
-FacilityID.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensingFacility&apos;][&apos;PharmacyRS&apos;][&apos;facilityID&apos;].toString().trim();
-LabelItems.push(FacilityID);
-
-var PillLineGroup = {}
-PillLineGroup.Name = &quot;PillLineGroup&quot;;
-PillLineGroup.Text = &quot;&quot;;
-LabelItems.push(PillLineGroup);
-
-var PatientFullName = {}
-PatientFullName.Name = &quot;PatientFullName&quot;;
-PatientFullName.Text = &quot;&quot;;
-LabelItems.push(PatientFullName);
-
-
-var PrescriberFullName = {}
-PrescriberFullName.Name = &quot;PrescriberFullName&quot;;
-PrescriberFullName.Text = &quot;&quot;;
-LabelItems.push(PrescriberFullName);
-
-var PharmacistFullName = {}
-PharmacistFullName.Name = &quot;PharmacistFullName&quot;;
-PharmacistFullName.Text = &quot;&quot;;
-LabelItems.push(PharmacistFullName);
-
-var SupvPrescriberFullName = {}
-SupvPrescriberFullName.Name = &quot;SupvPrescriberFullName&quot;;
-SupvPrescriberFullName.Text = &quot;&quot;;//not found
-LabelItems.push(SupvPrescriberFullName);
-
-var PrescriberCityStateZip = {}
-PrescriberCityStateZip.Name = &quot;PrescriberCityStateZip&quot;;
-PrescriberCityStateZip.Text = &quot;&quot;;
-LabelItems.push(PrescriberCityStateZip);
-
-var PatientCityStateZip = {}
-PatientCityStateZip.Name = &quot;PatientCityStateZip&quot;;
-PatientCityStateZip.Text = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;city&apos;].toString()+&quot; &quot;+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;stateCode&apos;].toString()+&quot; &quot;+msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;patient&apos;][&apos;PatientRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;postalCode&apos;].toString();
-LabelItems.push(PatientCityStateZip);
-
-
-
-
-var StoreCityStateZip = {}
-StoreCityStateZip.Name = &quot;StoreCityStateZip&quot;;
-StoreCityStateZip.Text = &quot;&quot;;
-LabelItems.push(StoreCityStateZip);
-
-var SecondaryStoreCityStateZip = {}
-SecondaryStoreCityStateZip.Name = &quot;SecondaryStoreCityStateZip&quot;;
-SecondaryStoreCityStateZip.Text = &quot;&quot;;
-LabelItems.push(SecondaryStoreCityStateZip);
-
-var PrescriberAddress = {}
-PrescriberAddress.Name = &quot;PrescriberAddress&quot;;
-PrescriberAddress.Text = &quot;&quot;;
-LabelItems.push(PrescriberAddress);
-
-
-var PatientAddress = {}
-PatientAddress.Name = &quot;PatientAddress&quot;;
-PatientAddress.Text = &quot;&quot;;
-LabelItems.push(PatientAddress);
-
-var RxNumberAlt = {}
-RxNumberAlt.Name = &quot;RxNumberAlt&quot;;
-RxNumberAlt.Text = &quot;&quot;;
-LabelItems.push(RxNumberAlt);
-
-var SecondaryStoreAddress1 = {}
-SecondaryStoreAddress1.Name = &quot;SecondaryStoreAddress1&quot;;
-SecondaryStoreAddress1.Text = &quot;&quot;;
-LabelItems.push(SecondaryStoreAddress1);
-
-var SecondaryStoreAddress2 = {}
-SecondaryStoreAddress2.Name = &quot;SecondaryStoreAddress2&quot;;
-SecondaryStoreAddress2.Text = &quot;&quot;;
-LabelItems.push(SecondaryStoreAddress2);
-
-
-var SecondaryStoreCity = {}
-SecondaryStoreCity.Name = &quot;SecondaryStoreCity&quot;;
-SecondaryStoreCity.Text = &quot;&quot;;
-LabelItems.push(SecondaryStoreCity);
-
-var SecondaryStoreDEA = {}
-SecondaryStoreDEA.Name = &quot;SecondaryStoreDEA&quot;;
-SecondaryStoreDEA.Text = &quot;&quot;;
-LabelItems.push(SecondaryStoreDEA);
-
-var SecondaryStoreName = {}
-SecondaryStoreName.Name = &quot;SecondaryStoreName&quot;;
-SecondaryStoreName.Text = &quot;&quot;;
-LabelItems.push(SecondaryStoreName);
-
-
-var SecondaryStoreNumber = {}
-SecondaryStoreNumber.Name = &quot;SecondaryStoreNumber&quot;;
-SecondaryStoreNumber.Text = &quot;&quot;;
-LabelItems.push(SecondaryStoreNumber);
-
-
-var SecondaryStorePhoneNumber = {}
-SecondaryStorePhoneNumber.Name = &quot;SecondaryStorePhoneNumber&quot;;
-SecondaryStorePhoneNumber.Text = &quot;&quot;;
-LabelItems.push(SecondaryStorePhoneNumber);
-
-var SecondaryStoreState = {}
-SecondaryStoreState.Name = &quot;SecondaryStoreState&quot;;
-SecondaryStoreState.Text = &quot;&quot;;
-LabelItems.push(SecondaryStoreState);
-
-var SecondaryStoreZip = {}
-SecondaryStoreZip.Name = &quot;SecondaryStoreZip&quot;;
-SecondaryStoreZip.Text = &quot;&quot;;
-LabelItems.push(SecondaryStoreZip);
-
-
-channelMap.put(&apos;LabelItems&apos;, LabelItems);
-
-
-// Med //
-
-var Med = {};
-Med.Description = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensedProduct&apos;][&apos;ProductRS&apos;][&apos;packageDescription&apos;].toString().trim();
-Med.Id = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;product&apos;][&apos;ProductRS&apos;][&apos;nDCMfgCode&apos;].toString().trim() + 
-	    msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;product&apos;][&apos;ProductRS&apos;][&apos;nDCProductCode&apos;].toString().trim() + 
-	    msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;product&apos;][&apos;ProductRS&apos;][&apos;nDCSize&apos;].toString().trim();
-Med.MedIdType = 0;
-Med.Name = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensedProduct&apos;][&apos;ProductRS&apos;][&apos;labelName&apos;].toString().trim();
-Med.InventorySelector = &quot;&quot;;
-
-channelMap.put(&apos;Med&apos;, Med);
-
-// Doses //
-var Doses = null;
-
-// HOA //
-
-var HOA = null;
-
-//Facilities
-var Facility = {};
-Facility.Id = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;facility&apos;][&apos;PharmacyRS&apos;][&apos;facilityID&apos;].toString().trim();
-Facility.Bed = &quot;&quot;;
-Facility.Cabinet = &quot;&quot;;
-Facility.Floor = &quot;&quot;;
-Facility.Name = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;facility&apos;][&apos;PharmacyRS&apos;][&apos;facilityName&apos;].toString().trim();
-Facility.NursingStationId = &quot;&quot;;
-Facility.Room = &quot;&quot;;
-Facility.Unit = &quot;&quot;;
-
-var FacilityAddresses = []
-var FacilityAddress = {}
-FacilityAddress.Street1 = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;facility&apos;][&apos;PharmacyRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;street1&apos;].toString().trim();
-FacilityAddress.Street2 = &quot;&quot;;
-FacilityAddress.City = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;facility&apos;][&apos;PharmacyRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;city&apos;].toString().trim();
-FacilityAddress.State = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;facility&apos;][&apos;PharmacyRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;stateCode&apos;].toString().trim();
-FacilityAddress.Zip = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;facility&apos;][&apos;PharmacyRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;postalCode&apos;].toString().trim();
-FacilityAddress.Country = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;facility&apos;][&apos;PharmacyRS&apos;][&apos;address&apos;][&apos;AddressRS&apos;][&apos;countryCode&apos;].toString().trim();
-FacilityAddress.AddressType = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;facility&apos;][&apos;PharmacyRS&apos;][&apos;facilityType&apos;].toString().trim();
-FacilityAddress.Primary = &quot;true&quot;;
-
-FacilityAddresses.push(FacilityAddress);
-Facility.Addresses = FacilityAddresses;
-
-
-
-
-
-// Scripts //
-var Script = {};
-Script.Action =  &quot;FILL&quot;;// msg[&apos;header&apos;][&apos;command&apos;].toString().trim(); //
-Script.Packaging = 5;
-Script.RxNumber = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;rxNumber&apos;].toString().trim();
-Script.RefillNumber = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;refillNumber&apos;].toString().trim();
-Script.TransactionId = Script.RxNumber + Script.RefillNumber + &quot;00&quot;;
-Script.Barcode = Script.TransactionId;//msg[&apos;EventData&apos;][&apos;PMSBarcode&apos;].toString();
-Script.DispenseQuantity = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dispensedQty&apos;].toString().trim();
-
-var BatchId = UUIDGenerator.getUUID();
-Script.BatchId = BatchId;
-
-Script.SequenceNumber = &quot;1&quot;;
-Script.PatientId = Patient.Id;
-Script.FacilityId = null;//Facility.Id;
-Script.Med = Med;
-Script.DAW = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;dAWCode&apos;].toString() == 0 ? false : true;
-Script.DaysSupply = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;daysSupply&apos;].toString();
-Script.HOA = null; //HOA; //FOL
-Script.LabelItems = LabelItems; //LabelItems; //FOL
-Script.RefillsRemaining = parseInt(msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;refillsRemaining&apos;].toString().trim());
-Script.RefillsTotal = parseInt(Script.RefillNumber) + parseInt(Script.RefillsRemaining); //FOL
-Script.PartialNumber = &quot;0&quot;;
-Script.RxExpirationDate = FormateDate(msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;rxExpiryDate&apos;][&apos;Date&apos;][&apos;year&apos;].toString()+ 
-					&quot;/&quot; + msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;rxExpiryDate&apos;][&apos;Date&apos;][&apos;month&apos;].toString() + 
-					&quot;/&quot; + msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;rxExpiryDate&apos;][&apos;Date&apos;][&apos;day&apos;].toString());
-Script.Sig = msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;rx&apos;][&apos;RxRS&apos;][&apos;directions&apos;].toString().trim();
-Script.Urgency = &quot;0&quot;;//CalculateUrgency(msg[&apos;body&apos;][&apos;SelectableData&apos;][&apos;businessData&apos;][&apos;RxFillRS&apos;][&apos;deliveryMethod&apos;].toString());
-
-channelMap.put(&apos;Script&apos;, Script);
-
-
-// Batch //
-var Batch = {};
-
-var Scripts = [];
-Scripts.push(Script);
-var Facilities = [];
-Facilities.push(Facility);
-var Patients = [];
-Patients.push(Patient);
-
-Batch.Id = BatchId;
-Batch.TransmissionId = &quot;&quot;;
-Batch.ScriptCount = Scripts.length;
-Batch.SourceTerminal = &quot;UNKNOWN&quot;;
-Batch.Scripts = Scripts;
-Batch.Facilities = Facilities;
-Batch.Patients = Patients;
-
-channelMap.put(&apos;Batch&apos;, Batch);
-
-
-//Utils function
-
-function CalculateUrgency(key){
-
-	var urgency = {
-			     WAITING : &quot;WA&quot;,
-		          PICK :&quot;PU&quot;,
-		          HIGH : &quot;HP&quot;,
-		          DELIVER : &quot;DE&quot;,
-		          SHIP :&quot;SH&quot;,
-		          DRIVE : &quot;DT&quot;,
-		          AUTO : &quot;AR&quot;       		
-			}
-		
-	if(urgency[key.toUpperCase()] !== undefined)
-		return urgency[key.toUpperCase()];
-	else
-		return &quot;AR&quot;;
-}</script>
-        </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
+          <scriptPath>C:\Projects\Mirth\MirthTransformation\JS\Kroger Interface.js</scriptPath>
+        </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
+        <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
+          <name>IpConfig</name>
+          <sequenceNumber>1</sequenceNumber>
+          <enabled>true</enabled>
+          <scriptPath>C:\Projects\Mirth\MirthTransformation\JS\IpConfig.js</scriptPath>
+        </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
       </elements>
       <inboundTemplate encoding="base64"></inboundTemplate>
       <outboundTemplate encoding="base64"></outboundTemplate>
@@ -945,7 +120,10 @@ function CalculateUrgency(key){
           <reattachAttachments>true</reattachAttachments>
         </destinationConnectorProperties>
         <script>try {
-	var tcp = new Packages.mirthSocket.TcpDestination(&quot;10.6.72.59&quot;, 2000);
+	var ip=$(&apos;ip&apos;);
+	var port=$(&apos;port&apos;);
+	
+	var tcp = new Packages.mirthSocket.TcpDestination(ip, port);
 
 	var batch = $(&apos;Batch&apos;);
 	batch.Scripts[0].LabelItems = $(&apos;LabelItems&apos;);
@@ -1056,7 +234,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1640075156665</time>
+        <time>1644146443583</time>
         <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>
@@ -1067,9 +245,9 @@ return;</undeployScript>
       <codeTemplateLibrary version="3.11.0">
         <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
         <name>Library</name>
-        <revision>9</revision>
+        <revision>2</revision>
         <lastModified>
-          <time>1640072875555</time>
+          <time>1644850128080</time>
           <timezone>UTC</timezone>
         </lastModified>
         <description></description>
@@ -1077,6 +255,7 @@ return;</undeployScript>
         <enabledChannelIds>
           <string>2c88923c-c42f-413f-890f-1b13b846eba3</string>
           <string>2552809d-7bda-4bd6-ac76-ba121c5f892e</string>
+          <string>1be8c69b-0ab1-4772-b037-5e9919eb0447</string>
           <string>27e7d67c-6b34-4f7c-b71a-16e31e75ae88</string>
           <string>24999a04-287c-4517-b7f6-a239dd1a2894</string>
           <string>3380104e-7dad-4454-86ca-8cb2af26a4ac</string>
@@ -1092,6 +271,7 @@ return;</undeployScript>
           <string>f5da6dfb-b808-4061-9274-fed0339bff1a</string>
           <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
           <string>16814b6e-2133-4c94-9c64-52f50db9c002</string>
+          <string>99e7a0b2-ec62-4333-9363-cb9c15e04910</string>
           <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
           <string>db8c015a-f11f-4133-992e-9b3277546cbb</string>
           <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
@@ -1101,6 +281,10 @@ return;</undeployScript>
           <string>feb1fe1c-0cd6-4082-83a6-3e92db15d3ec</string>
           <string>2fa392d7-8669-421e-81a3-1fc3100ee9c8</string>
           <string>427a148f-a043-48db-bce9-882cc1e6ccf8</string>
+          <string>2a593b1b-915f-4f8e-88fa-4daf8ed7a5dd</string>
+          <string>64b04136-25f1-40a3-b5d8-14379420f99a</string>
+          <string>4dfc5eb3-20a8-49f3-acb2-497224a4b224</string>
+          <string>e5a879a3-dddf-48d1-b69b-878152c0cb9e</string>
           <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
           <string>b742b188-ed4a-4495-bcf6-0468a1eef0c2</string>
         </enabledChannelIds>
@@ -1118,16 +302,16 @@ return;</undeployScript>
             <name>CheckingNullValue</name>
             <revision>1</revision>
             <lastModified>
-              <time>1638876371048</time>
+              <time>1643537038018</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1147,16 +331,16 @@ return;</undeployScript>
             <name>IsNullOrEmpty</name>
             <revision>1</revision>
             <lastModified>
-              <time>1638876371093</time>
+              <time>1643537038130</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1177,16 +361,16 @@ return;</undeployScript>
             <name>MomentJS</name>
             <revision>1</revision>
             <lastModified>
-              <time>1638876371211</time>
+              <time>1643537038385</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6867,18 +6051,18 @@ return;</undeployScript>
           <codeTemplate version="3.11.0">
             <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
             <name>Utils Function</name>
-            <revision>3</revision>
+            <revision>1</revision>
             <lastModified>
-              <time>1640032517568</time>
+              <time>1643537038214</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6908,6 +6092,18 @@ function FormateDate(dateString){
 		date = moment(dateString, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);				
 	}
 	return date;	
+}
+
+function FormatDate2(dateString){
+	date = moment(dateString, &apos;MMDDYYYYhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);
+	return date;
+}
+
+
+//&quot;Text&quot;: &quot;6/15/2007 5:12:14 PM&quot;
+function FormatDate3(dateString){
+	date = moment(dateString, &apos;MMDDYYYYhhmmss&apos;).format(&apos;MM/DD/YYYY hh:mm:ss A&apos;);
+	return date;
 }
 
 function DoesHOAExists(hoa){

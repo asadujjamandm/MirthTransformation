@@ -1,23 +1,23 @@
-<channel version="3.12.0">
+<channel version="3.11.0">
   <id>1be8c69b-0ab1-4772-b037-5e9919eb0447</id>
   <nextMetaDataId>2</nextMetaDataId>
   <name>Parata 66 API</name>
   <description></description>
-  <revision>8</revision>
-  <sourceConnector version="3.12.0">
+  <revision>4</revision>
+  <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
-    <properties class="com.mirth.connect.connectors.http.HttpReceiverProperties" version="3.12.0">
+    <properties class="com.mirth.connect.connectors.http.HttpReceiverProperties" version="3.11.0">
       <pluginProperties>
-        <com.mirth.connect.plugins.httpauth.NoneHttpAuthProperties version="3.12.0">
+        <com.mirth.connect.plugins.httpauth.NoneHttpAuthProperties version="3.11.0">
   <authType>NONE</authType>
         </com.mirth.connect.plugins.httpauth.NoneHttpAuthProperties>
       </pluginProperties>
-      <listenerConnectorProperties version="3.12.0">
+      <listenerConnectorProperties version="3.11.0">
         <host>0.0.0.0</host>
         <port>6680</port>
       </listenerConnectorProperties>
-      <sourceConnectorProperties version="3.12.0">
+      <sourceConnectorProperties version="3.11.0">
         <responseVariable>d1</responseVariable>
         <respondAfterProcessing>true</respondAfterProcessing>
         <processBatch>false</processBatch>
@@ -47,30 +47,868 @@
       <timeout>30000</timeout>
       <staticResources/>
     </properties>
-    <transformer version="3.12.0">
+    <transformer version="3.11.0">
       <elements>
-        <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.12.0">
-          <name>Parata66ExtInterface</name>
+        <com.mirth.connect.plugins.javascriptstep.JavaScriptStep version="3.11.0">
+          <name>Parata66Transformer</name>
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>C:\Mirth Project\MirthTransformation\JS\Parata66ExtInterface.js</scriptPath>
-        </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
-        <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.12.0">
-          <name>IPConfig</name>
+          <script>// Message Type //
+var type = msg[&apos;Msg_Header&apos;][&apos;MsgType&apos;].toString().trim();
+
+// Address //
+
+var Address = {};
+Address.Street1 = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Address1&apos;].toString().trim();
+Address.Street2 = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Address2&apos;].toString().trim();
+Address.City = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;City&apos;].toString().trim();
+Address.State = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;State&apos;].toString().trim();
+Address.ZIP = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Zip&apos;].toString().trim();
+Address.Country = null;
+Address.AddressType = &quot;Home&quot;;//msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.7&apos;].toString().trim();
+Address.Primary = &quot;true&quot;;
+
+var Addresses = [];
+
+Addresses.push(Address);
+
+//if((!IsNullOrEmpty(Address.Street1) || !IsNullOrEmpty(Address.Street2)) &amp;&amp; 
+//	(!IsNullOrEmpty(Address.City) || !IsNullOrEmpty(Address.State)) &amp;&amp;
+//	(!IsNullOrEmpty(Address.Country)))
+//{
+//	Addresses.push(Address);
+//}
+
+
+channelMap.put(&apos;Address&apos;, Address);
+channelMap.put(&apos;Addresses&apos;, Addresses);
+
+
+
+// PhoneNumber //
+
+var PhoneNumberH = {};
+PhoneNumberH.Number = msg[&apos;FillData&apos;][&apos;PatientPhoneNumber&apos;].toString().trim();
+PhoneNumberH.Type = &quot;Home&quot;;
+
+
+var PhoneNumbers = [];
+
+if(!IsNullOrEmpty(PhoneNumberH.Number)){
+	PhoneNumbers.push(PhoneNumberH);
+}
+
+
+// Patient //
+
+var Patient = {};
+
+Patient.Id = msg[&apos;FillData&apos;][&apos;PatientID&apos;].toString().trim();
+Patient.LastName = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;LastName&apos;].toString().trim();
+Patient.FirstName = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;FirstName&apos;].toString().trim();
+Patient.DOB = FormateDate(msg[&apos;FillData&apos;][&apos;PatientDOB&apos;].toString().trim());
+Patient.IdType = null;
+Patient.Initials = null;
+Patient.MiddleName = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;MiddleInitial&apos;].toString().trim();
+Patient.Addresses = Addresses;
+Patient.PhoneNumbers = PhoneNumbers;
+Patient.Sex = IsNullOrEmpty(msg[&apos;FillData&apos;][&apos;PatientGender&apos;].toString().trim()) ? &quot;Undeclared&quot; : msg[&apos;FillData&apos;][&apos;PatientGender&apos;].toString().trim();
+channelMap.put(&apos;Patient&apos;, Patient);
+
+// LabelItems //
+
+var LabelItems = [];
+
+var RxNumber = {}
+RxNumber.Name = &quot;RxNumber&quot;;
+RxNumber.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;RxNumber&apos;].toString().trim();
+LabelItems.push(RxNumber);
+
+var RefillNumber = {}
+RefillNumber.Name = &quot;RefillNumber&quot;;
+RefillNumber.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;RefillNumber&apos;].toString();
+LabelItems.push(RefillNumber);
+
+var PatientTitle = {}
+PatientTitle.Name = &quot;PatientTitle&quot;;
+PatientTitle.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;Title&apos;].toString();
+LabelItems.push(PatientTitle);
+
+var PatientFirstName = {}
+PatientFirstName.Name = &quot;PatientFirstName&quot;;
+PatientFirstName.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;FirstName&apos;].toString();
+LabelItems.push(PatientFirstName);
+
+var PatientMiddleName = {}
+PatientMiddleName.Name = &quot;PatientMiddleName&quot;;
+PatientMiddleName.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;MiddleInitial&apos;].toString();
+LabelItems.push(PatientMiddleName);
+
+var PatientLastName = {}
+PatientLastName.Name = &quot;PatientLastName&quot;;
+PatientLastName.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;LastName&apos;].toString();
+LabelItems.push(PatientLastName);
+
+var DrugNDC = {}
+DrugNDC.Name = &quot;DrugNDC&quot;;
+DrugNDC.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;DrugNDC&apos;].toString();
+LabelItems.push(DrugNDC);
+
+var DispensedDrugName = {}
+DispensedDrugName.Name = &quot;DispensedDrugName&quot;;
+DispensedDrugName.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;DispensedDrugName&apos;].toString();
+LabelItems.push(DispensedDrugName);
+
+var AltDispensedDrugName = {}
+AltDispensedDrugName.Name = &quot;AltDispensedDrugName&quot;;
+AltDispensedDrugName.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;AltDispensedDrugName&apos;].toString();
+LabelItems.push(AltDispensedDrugName);
+
+var InventorySelector = {}
+InventorySelector.Name = &quot;InventorySelector&quot;;
+InventorySelector.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;InventorySelector&apos;].toString();
+LabelItems.push(InventorySelector);
+
+var DispenseQuantity = {}
+DispenseQuantity.Name = &quot;DispenseQuantity&quot;;
+DispenseQuantity.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;DispenseQuantity&apos;].toString();
+LabelItems.push(DispenseQuantity);
+
+var Urgency = {}
+Urgency.Name = &quot;Urgency&quot;;
+Urgency.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;Urgency&apos;].toString();
+LabelItems.push(Urgency);
+
+var Price = {}
+Price.Name = &quot;Price&quot;;
+Price.Text = msg[&apos;FillData&apos;][&apos;Price&apos;].toString();
+LabelItems.push(Price);
+
+var Liquid = {}
+Liquid.Name = &quot;Liquid&quot;;
+Liquid.Text = msg[&apos;FillData&apos;][&apos;Liquid&apos;].toString(); 
+LabelItems.push(Liquid);
+
+var Refrigerated = {}
+Refrigerated.Name = &quot;Refrigerated&quot;;
+Refrigerated.Text = msg[&apos;FillData&apos;][&apos;Refrigerated&apos;].toString();
+LabelItems.push(Refrigerated);
+
+var RefillsLeft = {}
+RefillsLeft.Name = &quot;RefillsLeft&quot;;
+RefillsLeft.Text = msg[&apos;FillData&apos;][&apos;RefillsRemaining&apos;].toString();
+LabelItems.push(RefillsLeft);
+
+var TotalRefills = {}
+TotalRefills.Name = &quot;TotalRefills&quot;;
+TotalRefills.Text = msg[&apos;FillData&apos;][&apos;RefillsAuthorized&apos;].toString();
+LabelItems.push(TotalRefills);
+
+var RxOrigDate = {}
+RxOrigDate.Name = &quot;RxOrigDate&quot;;
+RxOrigDate.Text = FormateDate(msg[&apos;FillData&apos;][&apos;RxStartDate&apos;].toString());
+LabelItems.push(RxOrigDate);
+
+var RefillDate = {}
+RefillDate.Name = &quot;RefillDate&quot;;
+RefillDate.Text = FormateDate(msg[&apos;FillData&apos;][&apos;RefillDate&apos;].toString());
+LabelItems.push(RefillDate);
+
+var DAW = {}
+DAW.Name = &quot;DAW&quot;;
+DAW.Text = msg[&apos;FillData&apos;][&apos;DispenseAsWritten&apos;].toString();
+LabelItems.push(DAW);
+
+var FillDate = {}
+FillDate.Name = &quot;FillDate&quot;;
+FillDate.Text = FormateDate(msg[&apos;FillData&apos;][&apos;FillDate&apos;].toString());
+LabelItems.push(FillDate);
+
+var RxExpirationDate = {}
+RxExpirationDate.Name = &quot;RxExpirationDate&quot;;
+RxExpirationDate.Text = FormateDate(msg[&apos;FillData&apos;][&apos;RxExpirationDate&apos;].toString());
+LabelItems.push(RxExpirationDate);
+
+var DiscardDate = {}
+DiscardDate.Name = &quot;DiscardDate&quot;;
+DiscardDate.Text = FormateDate(msg[&apos;FillData&apos;][&apos;DiscardDate&apos;].toString());
+LabelItems.push(DiscardDate);
+
+var PreviousFillDate = {}
+PreviousFillDate.Name = &quot;PreviousFillDate&quot;;
+PreviousFillDate.Text = FormateDate(msg[&apos;FillData&apos;][&apos;PreviousFillDate&apos;].toString());
+LabelItems.push(PreviousFillDate);
+
+var PrescribedDrugName = {}
+PrescribedDrugName.Name = &quot;PrescribedDrugName&quot;;
+PrescribedDrugName.Text = msg[&apos;FillData&apos;][&apos;PrescribedDrugName&apos;].toString();
+LabelItems.push(PrescribedDrugName);
+
+var PrescribedDrugChemicalName = {}
+PrescribedDrugChemicalName.Name = &quot;PrescribedDrugChemicalName&quot;;
+PrescribedDrugChemicalName.Text = msg[&apos;FillData&apos;][&apos;PrescribedDrugChemicalName&apos;].toString();
+LabelItems.push(PrescribedDrugChemicalName);
+
+var DrugSchedule = {}
+DrugSchedule.Name = &quot;DrugSchedule&quot;;
+DrugSchedule.Text = msg[&apos;FillData&apos;][&apos;DrugClass&apos;].toString(); // DrugClass (not sure)
+LabelItems.push(DrugSchedule);
+
+var CompoundCode = {}
+CompoundCode.Name = &quot;CompoundCode&quot;;
+CompoundCode.Text = msg[&apos;FillData&apos;][&apos;CompoundCode&apos;].toString();
+LabelItems.push(CompoundCode);
+
+var DrugMfg = {}
+DrugMfg.Name = &quot;DrugMfg&quot;;
+DrugMfg.Text = msg[&apos;FillData&apos;][&apos;DrugMfg&apos;].toString();
+LabelItems.push(DrugMfg);
+
+var DrugImprint = {}
+DrugImprint.Name = &quot;DrugImprint&quot;;
+DrugImprint.Text = msg[&apos;FillData&apos;][&apos;DrugImprint&apos;].toString();
+LabelItems.push(DrugImprint);
+
+var DrugForm = {}
+DrugForm.Name = &quot;DrugForm&quot;;
+DrugForm.Text = msg[&apos;FillData&apos;][&apos;DrugFormulation&apos;].toString();
+LabelItems.push(DrugForm);
+
+var DrugStrength = {}
+DrugStrength.Name = &quot;DrugStrength&quot;;
+DrugStrength.Text = msg[&apos;FillData&apos;][&apos;DrugStrength&apos;].toString();
+LabelItems.push(DrugStrength);
+
+
+
+var DaysSupply = {}
+DaysSupply.Name = &quot;DaysSupply&quot;;
+DaysSupply.Text = msg[&apos;FillData&apos;][&apos;DaysSupply&apos;].toString();
+LabelItems.push(DaysSupply);
+
+var Warning1 = {}
+Warning1.Name = &quot;Warning1&quot;;
+Warning1.Text = msg[&apos;FillData&apos;][&apos;DrugWarningLabel1&apos;].toString();
+LabelItems.push(Warning1);
+
+
+var Warning2 = {}
+Warning2.Name = &quot;Warning2&quot;;
+Warning2.Text = msg[&apos;FillData&apos;][&apos;DrugWarningLabel2&apos;].toString();
+LabelItems.push(Warning2);
+
+
+var Warning3 = {}
+Warning3.Name = &quot;Warning3&quot;;
+Warning3.Text = msg[&apos;FillData&apos;][&apos;DrugWarningLabel3&apos;].toString();
+LabelItems.push(Warning3);
+
+var Warning4 = {}
+Warning4.Name = &quot;Warning4&quot;;
+Warning4.Text = msg[&apos;FillData&apos;][&apos;DrugWarningLabel4&apos;].toString();
+LabelItems.push(Warning4);
+
+
+var Warning5 = {}
+Warning5.Name = &quot;Warning5&quot;;
+Warning5.Text = msg[&apos;FillData&apos;][&apos;DrugWarningLabel5&apos;].toString();
+LabelItems.push(Warning5);
+
+var WarningBitmap1 = {}
+WarningBitmap1.Name = &quot;WarningBitmap1&quot;;//An image for the Warning
+WarningBitmap1.Text = null;
+LabelItems.push(WarningBitmap1);
+
+var WarningBitmap2 = {}
+WarningBitmap2.Name = &quot;WarningBitmap2&quot;;//An image for the Warning
+WarningBitmap2.Text = null;
+LabelItems.push(WarningBitmap2);
+
+
+var WarningBitmap3 = {}
+WarningBitmap3.Name = &quot;WarningBitmap3&quot;;//An image for the Warning
+WarningBitmap3.Text = null;
+LabelItems.push(WarningBitmap3);
+
+var WarningBitmap4 = {}
+WarningBitmap4.Name = &quot;WarningBitmap4&quot;;//An image for the Warning
+WarningBitmap4.Text = null;
+LabelItems.push(WarningBitmap4);
+
+var WarningBitmap5 = {}
+WarningBitmap5.Name = &quot;WarningBitmap5&quot;;//An image for the Warning
+WarningBitmap5.Text = null;
+LabelItems.push(WarningBitmap5);
+
+
+var Sig = {}
+Sig.Name = &quot;Sig&quot;;
+Sig.Text = msg[&apos;FillData&apos;][&apos;Sig&apos;].toString();
+LabelItems.push(Sig);
+
+
+var UnicodeSig = {}
+UnicodeSig.Name = &quot;UnicodeSig&quot;;
+UnicodeSig.Text = msg[&apos;FillData&apos;][&apos;UnicodeSig&apos;].toString();
+LabelItems.push(UnicodeSig);
+
+var SafetyCap = {}
+SafetyCap.Name = &quot;SafetyCap&quot;;
+SafetyCap.Text = msg[&apos;FillData&apos;][&apos;SafetyCap&apos;].toString();
+LabelItems.push(SafetyCap);
+
+
+var StoreAddress1 = {}
+StoreAddress1.Name = &quot;StoreAddress1&quot;;
+StoreAddress1.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Address1&apos;].toString();
+LabelItems.push(StoreAddress1);
+
+var StoreAddress2 = {}
+StoreAddress2.Name = &quot;StoreAddress2&quot;;
+StoreAddress2.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Address2&apos;].toString();
+LabelItems.push(StoreAddress2);
+
+var StoreCity = {};
+StoreCity.Name = &quot;StoreCity&quot;;
+StoreCity.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;City&apos;].toString()
+LabelItems.push(StoreCity);
+
+
+var StoreDEA = {};
+StoreDEA.Name = &quot;StoreDEA&quot;;
+StoreDEA.Text = msg[&apos;FillData&apos;][&apos;StoreDEA&apos;].toString().trim();
+LabelItems.push(StoreDEA);
+
+
+var StoreName = {}
+StoreName.Name = &quot;StoreName&quot;;
+StoreName.Text = msg[&apos;FillData&apos;][&apos;StoreName&apos;].toString().trim();
+LabelItems.push(StoreName);
+
+
+var StoreNumber = {}
+StoreNumber.Name = &quot;StoreNumber&quot;;
+StoreNumber.Text = msg[&apos;FillData&apos;][&apos;StoreNumber&apos;].toString().trim();
+LabelItems.push(StoreNumber);
+
+var StorePhoneNumber = {}
+StorePhoneNumber.Name = &quot;StorePhoneNumber&quot;;
+StorePhoneNumber.Text = msg[&apos;FillData&apos;][&apos;StorePhoneNumber&apos;].toString().trim();
+LabelItems.push(StorePhoneNumber);
+
+
+var StoreState = {}
+StoreState.Name = &quot;StoreState&quot;;
+StoreState.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;State&apos;].toString().trim();
+LabelItems.push(StoreState);
+
+var StoreZip = {};
+StoreZip.Name = &quot;StoreZip&quot;
+StoreZip.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Zip&apos;].toString().trim();
+LabelItems.push(StoreZip);
+
+
+var TotalPillsPrescribed = {}
+TotalPillsPrescribed.Name = &quot;TotalPillsPrescribed&quot;;
+TotalPillsPrescribed.Text = msg[&apos;FillData&apos;][&apos;TotalPillsPrescribed&apos;].toString().trim();
+LabelItems.push(TotalPillsPrescribed);
+
+var TotalPillsRemaining = {}
+TotalPillsRemaining.Name = &quot;TotalPillsRemaining&quot;;
+TotalPillsRemaining.Text = msg[&apos;FillData&apos;][&apos;TotalPillsRemaining&apos;].toString();
+LabelItems.push(TotalPillsRemaining);
+
+var PharmacistTitle = {}
+PharmacistTitle.Name = &quot;PharmacistTitle&quot;;
+PharmacistTitle.Text = msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;Title&apos;].toString();
+LabelItems.push(PharmacistTitle);
+
+var PharmacistFirstName = {}
+PharmacistFirstName.Name = &quot;PharmacistFirstName&quot;;
+PharmacistFirstName.Text = msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;FirstName&apos;].toString();
+LabelItems.push(PharmacistFirstName);
+
+var PharmacistMiddleName = {};
+PharmacistMiddleName.Name = &quot;PharmacistMiddleName&quot;;
+PharmacistMiddleName.Text = msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;MiddleInitial&apos;].toString().trim();
+LabelItems.push(PharmacistMiddleName);
+
+var PharmacistLastName = {}
+PharmacistLastName.Name = &quot;PharmacistLastName&quot;;
+PharmacistLastName.Text = msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;LastName&apos;].toString().trim();
+LabelItems.push(PharmacistLastName);
+
+var RPhLicenseNumber = {}
+RPhLicenseNumber.Name = &quot;RPhLicenseNumber&quot;;
+RPhLicenseNumber.Text = msg[&apos;FillData&apos;][&apos;RphLicenseNum&apos;].toString().trim();
+LabelItems.push(RPhLicenseNumber);
+
+var RPhInitials = {}
+RPhInitials.Name = &quot;RPhInitials&quot;;
+RPhInitials.Text = msg[&apos;FillData&apos;][&apos;RphInitials&apos;].toString().trim();
+LabelItems.push(RPhInitials);
+
+var RxOrigin = {}
+RxOrigin.Name = &quot;RxOrigin&quot;;
+RxOrigin.Text = msg[&apos;FillData&apos;][&apos;RxOrigin&apos;].toString().trim();
+LabelItems.push(RxOrigin);
+
+var TechInitials = {}
+TechInitials.Name = &quot;TechInitials&quot;;
+TechInitials.Text = msg[&apos;FillData&apos;][&apos;TechInitials&apos;].toString().trim();
+LabelItems.push(TechInitials);
+
+var EntryInitials = {}
+EntryInitials.Name = &quot;EntryInitials&quot;;
+EntryInitials.Text = msg[&apos;FillData&apos;][&apos;EntryInitials&apos;].toString().trim();
+LabelItems.push(EntryInitials);
+
+var EntryDate = {}
+EntryDate.Name = &quot;EntryDate&quot;;
+EntryDate.Text = FormateDate(msg[&apos;FillData&apos;][&apos;EntryDate&apos;].toString());
+LabelItems.push(EntryDate);
+
+var SourceTerminal = {}
+SourceTerminal.Name = &quot;SourceTerminal&quot;;
+SourceTerminal.Text = msg[&apos;FillData&apos;][&apos;SourceTerminal&apos;].toString();
+LabelItems.push(SourceTerminal);
+
+var PatientAddress1 = {}
+PatientAddress1.Name = &quot;PatientAddress1&quot;;
+PatientAddress1.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Address1&apos;].toString() ;
+LabelItems.push(PatientAddress1);
+
+var PatientAddress2 = {}
+PatientAddress2.Name = &quot;PatientAddress2&quot;;
+PatientAddress2.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Address2&apos;].toString();
+LabelItems.push(PatientAddress2);
+
+var PatientCity = {}
+PatientCity.Name = &quot;PatientCity&quot;;
+PatientCity.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;City&apos;].toString();
+LabelItems.push(PatientCity);
+
+var PatientState = {}
+PatientState.Name = &quot;PatientState&quot;;
+PatientState.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;State&apos;].toString();
+LabelItems.push(PatientState);
+
+var PatientZip = {}
+PatientZip.Name = &quot;PatientZip&quot;;
+PatientZip.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(PatientZip);
+
+var PatientSSN = {}
+PatientSSN.Name = &quot;PatientSSN&quot;;
+PatientSSN.Text = msg[&apos;FillData&apos;][&apos;PatientSSN&apos;].toString();
+LabelItems.push(PatientSSN);
+
+var PatientID = {}
+PatientID.Name = &quot;PatientID&quot;;
+PatientID.Text = msg[&apos;FillData&apos;][&apos;PatientID&apos;].toString();
+LabelItems.push(PatientID);
+
+var FamilyID = {}
+FamilyID.Name = &quot;FamilyID&quot;;
+FamilyID.Text = msg[&apos;FillData&apos;][&apos;FamilyID&apos;].toString().trim();
+LabelItems.push(FamilyID);
+
+var PatientDOB = {}
+PatientDOB.Name = &quot;PatientDOB&quot;;
+PatientDOB.Text = FormateDate(msg[&apos;FillData&apos;][&apos;PatientDOB&apos;].toString());
+LabelItems.push(PatientDOB);
+
+var PatientPhoneNumber = {}
+PatientPhoneNumber.Name = &quot;PatientPhoneNumber&quot;;
+PatientPhoneNumber.Text = msg[&apos;FillData&apos;][&apos;PatientPhoneNumber&apos;].toString();
+LabelItems.push(PatientPhoneNumber);
+
+var PrescriberTitle = {}
+PrescriberTitle.Name = &quot;PrescriberTitle&quot;;
+PrescriberTitle.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;Title&apos;].toString();
+LabelItems.push(PrescriberTitle);
+
+var PrescriberFirstName = {}
+PrescriberFirstName.Name = &quot;PrescriberFirstName&quot;;
+PrescriberFirstName.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;FirstName&apos;].toString();
+LabelItems.push(PrescriberFirstName);
+
+var PrescriberMiddleName = {}
+PrescriberMiddleName.Name = &quot;PrescriberMiddleName&quot;;
+PrescriberMiddleName.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;MiddleInitial&apos;].toString();
+LabelItems.push(PrescriberMiddleName);
+
+var PrescriberLastName = {}
+PrescriberLastName.Name = &quot;PrescriberLastName&quot;;
+PrescriberLastName.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;LastName&apos;].toString();
+LabelItems.push(PrescriberLastName);
+
+var PrescriberDEA = {}
+PrescriberDEA.Name = &quot;PrescriberDEA&quot;;
+PrescriberDEA.Text = msg[&apos;FillData&apos;][&apos;PrescriberDEA&apos;].toString();
+LabelItems.push(PrescriberDEA);
+
+var PrescriberNPI = {}
+PrescriberNPI.Name = &quot;PrescriberNPI&quot;;
+PrescriberNPI.Text = msg[&apos;FillData&apos;][&apos;PrescriberNPI&apos;].toString();
+LabelItems.push(PrescriberNPI);
+
+var PrescriberAddress1 = {}
+PrescriberAddress1.Name = &quot;PrescriberAddress1&quot;;
+PrescriberAddress1.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;Address1&apos;].toString();
+LabelItems.push(PrescriberAddress1);
+
+var PrescriberAddress2 = {}
+PrescriberAddress2.Name = &quot;PrescriberAddress2&quot;;
+PrescriberAddress2.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;Address2&apos;].toString();
+LabelItems.push(PrescriberAddress2);
+
+var PrescriberCity = {}
+PrescriberCity.Name = &quot;PrescriberCity&quot;;
+PrescriberCity.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;City&apos;].toString();
+LabelItems.push(PrescriberCity);
+
+
+var PrescriberState = {}
+PrescriberState.Name = &quot;PrescriberState&quot;;
+PrescriberState.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;State&apos;].toString();
+LabelItems.push(PrescriberState);
+
+var PrescriberZip = {}
+PrescriberZip.Name = &quot;PrescriberZip&quot;;
+PrescriberZip.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(PrescriberZip);
+
+var PrescriberPhoneNumber = {}
+PrescriberPhoneNumber.Name = &quot;PrescriberPhoneNumber&quot;;
+PrescriberPhoneNumber.Text = msg[&apos;FillData&apos;][&apos;PrescriberPhoneNumber&apos;].toString();
+LabelItems.push(PrescriberPhoneNumber);
+
+var PrescriberType = {}
+PrescriberType.Name = &quot;PrescriberType&quot;;
+PrescriberType.Text = msg[&apos;FillData&apos;][&apos;PrescriberType&apos;].toString();
+LabelItems.push(PrescriberType);
+
+var ScanCode = {}
+ScanCode.Name = &quot;ScanCode&quot;;
+ScanCode.Text = msg[&apos;FillData&apos;][&apos;WorkFlowBarcode&apos;].toString();//WorkflowBarCode
+LabelItems.push(ScanCode);
+
+var Affiliate = {}
+Affiliate.Name = &quot;Affiliate&quot;;
+Affiliate.Text = msg[&apos;FillData&apos;][&apos;Affiliate&apos;].toString();
+LabelItems.push(Affiliate);
+
+var FillDateText = {}
+FillDateText.Name = &quot;FillDateText&quot;;
+FillDateText.Text = msg[&apos;FillData&apos;][&apos;FillDateText&apos;].toString();
+LabelItems.push(FillDateText);
+
+
+var RxExpirationDateText = {}
+RxExpirationDateText.Name = &quot;RxExpirationDateText&quot;;
+RxExpirationDateText.Text = msg[&apos;FillData&apos;][&apos;RxExpirationDateText&apos;].toString();
+LabelItems.push(RxExpirationDateText);
+
+
+var ReasonPrescribed = {}
+ReasonPrescribed.Name = &quot;ReasonPrescribed&quot;;
+ReasonPrescribed.Text = msg[&apos;FillData&apos;][&apos;ReasonPrescribed&apos;].toString();
+LabelItems.push(ReasonPrescribed);
+
+var DrugExpirationDateText = {}
+DrugExpirationDateText.Name = &quot;DrugExpirationDateText&quot;;
+DrugExpirationDateText.Text = msg[&apos;FillData&apos;][&apos;DrugExpirationDateText&apos;].toString();
+LabelItems.push(DrugExpirationDateText);
+
+var WarningMessage = {}
+WarningMessage.Name = &quot;WarningMessage&quot;;
+WarningMessage.Text = msg[&apos;FillData&apos;][&apos;WarningMessage&apos;].toString();
+LabelItems.push(WarningMessage);
+
+var ServiceCode = {}
+ServiceCode.Name = &quot;ServiceCode&quot;;
+ServiceCode.Text = msg[&apos;FillData&apos;][&apos;ServiceCode&apos;].toString();
+LabelItems.push(ServiceCode);
+
+var BedNumber = {}
+BedNumber.Name = &quot;BedNumber&quot;;
+BedNumber.Text = msg[&apos;FillData&apos;][&apos;BedNumber&apos;].toString();
+LabelItems.push(BedNumber);
+
+var BillingCode = {}
+BillingCode.Name = &quot;BillingCode&quot;;
+BillingCode.Text = msg[&apos;FillData&apos;][&apos;BillingCode&apos;].toString();
+LabelItems.push(BillingCode);
+
+var FacilityID = {}
+FacilityID.Name = &quot;FacilityID&quot;;
+FacilityID.Text = msg[&apos;FillData&apos;][&apos;FacilityID&apos;].toString();
+LabelItems.push(FacilityID);
+
+var PillLineGroup = {}
+PillLineGroup.Name = &quot;PillLineGroup&quot;;
+PillLineGroup.Text = msg[&apos;FillData&apos;][&apos;PillLineGroup&apos;].toString();
+LabelItems.push(PillLineGroup);
+
+var PatientFullName = {}
+PatientFullName.Name = &quot;PatientFullName&quot;;
+PatientFullName.Text = null;
+//PatientFullName.Text = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;FirstName&apos;].toString()+&quot; &quot;+ msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;MiddleInitial&apos;].toString() +&quot; &quot;+ msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;PatientName&apos;][&apos;LastName&apos;].toString();
+LabelItems.push(PatientFullName);
+
+
+var PrescriberFullName = {}
+PrescriberFullName.Name = &quot;PrescriberFullName&quot;;
+PrescriberFullName.Text = null;
+//PrescriberFullName.Text = msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;FirstName&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;MiddleInitial&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;PrescriberName&apos;][&apos;LastName&apos;].toString();
+LabelItems.push(PrescriberFullName);
+
+var PharmacistFullName = {}
+PharmacistFullName.Name = &quot;PharmacistFullName&quot;;
+PharmacistFullName.Text = null;
+//PharmacistFullName.Text = msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;FirstName&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;MiddleInitial&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;PharmacistName&apos;][&apos;LastName&apos;].toString();
+LabelItems.push(PharmacistFullName);
+
+var SupvPrescriberFullName = {}
+SupvPrescriberFullName.Name = &quot;SupvPrescriberFullName&quot;;
+SupvPrescriberFullName.Text = null;//not found
+LabelItems.push(SupvPrescriberFullName);
+
+var PrescriberCityStateZip = {}
+PrescriberCityStateZip.Name = &quot;PrescriberCityStateZip&quot;;
+PrescriberCityStateZip.Text = null;
+//PrescriberCityStateZip.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;City&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;State&apos;].toString() +&quot; &quot;+msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(PrescriberCityStateZip);
+
+var PatientCityStateZip = {}
+PatientCityStateZip.Name = &quot;PatientCityStateZip&quot;;
+PatientCityStateZip.Text = null;
+//PatientCityStateZip.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;City&apos;].toString()+&quot; &quot;+ msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;State&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(PatientCityStateZip);
+
+var StoreCityStateZip = {}
+StoreCityStateZip.Name = &quot;StoreCityStateZip&quot;;
+StoreCityStateZip.Text = null;
+//StoreCityStateZip.Text = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;City&apos;].toString()+&quot; &quot;+ msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;State&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(StoreCityStateZip);
+
+var SecondaryStoreCityStateZip = {}
+SecondaryStoreCityStateZip.Name = &quot;SecondaryStoreCityStateZip&quot;;
+SecondaryStoreCityStateZip.Text = null;
+//SecondaryStoreCityStateZip.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;City&apos;].toString()+&quot; &quot;+msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;State&apos;].toString() +&quot; &quot;+msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(SecondaryStoreCityStateZip);
+
+var PrescriberAddress = {}
+PrescriberAddress.Name = &quot;PrescriberAddress&quot;;
+PrescriberAddress.Text = null;
+//PrescriberAddress.Text = msg[&apos;FillData&apos;][&apos;PrescriberAddress&apos;][&apos;Address1&apos;].toString();
+LabelItems.push(PrescriberAddress);
+
+
+var PatientAddress = {}
+PatientAddress.Name = &quot;PatientAddress&quot;;
+PatientAddress.Text = null;
+//PatientAddress.Text = msg[&apos;FillData&apos;][&apos;PatientAddress&apos;][&apos;Address1&apos;].toString();
+LabelItems.push(PatientAddress);
+
+var RxNumberAlt = {}
+RxNumberAlt.Name = &quot;RxNumberAlt&quot;;
+RxNumberAlt.Text = null;
+LabelItems.push(RxNumberAlt);
+
+var SecondaryStoreAddress1 = {}
+SecondaryStoreAddress1.Name = &quot;SecondaryStoreAddress1&quot;;
+SecondaryStoreAddress1.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;Address1&apos;].toString().trim();
+LabelItems.push(SecondaryStoreAddress1);
+
+var SecondaryStoreAddress2 = {}
+SecondaryStoreAddress2.Name = &quot;SecondaryStoreAddress2&quot;;
+SecondaryStoreAddress2.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;Address2&apos;].toString().trim();
+LabelItems.push(SecondaryStoreAddress2);
+
+
+var SecondaryStoreCity = {}
+SecondaryStoreCity.Name = &quot;SecondaryStoreCity&quot;;
+SecondaryStoreCity.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;City&apos;].toString().trim();
+LabelItems.push(SecondaryStoreCity);
+
+var SecondaryStoreDEA = {}
+SecondaryStoreDEA.Name = &quot;SecondaryStoreDEA&quot;;
+SecondaryStoreDEA.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreDEA&apos;].toString().trim();
+LabelItems.push(SecondaryStoreDEA);
+
+var SecondaryStoreName = {}
+SecondaryStoreName.Name = &quot;SecondaryStoreName&quot;;
+SecondaryStoreName.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreName&apos;].toString().trim();
+LabelItems.push(SecondaryStoreName);
+
+
+var SecondaryStoreNumber = {}
+SecondaryStoreNumber.Name = &quot;SecondaryStoreNumber&quot;;
+SecondaryStoreNumber.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreNumber&apos;].toString().trim();
+LabelItems.push(SecondaryStoreNumber);
+
+
+var SecondaryStorePhoneNumber = {}
+SecondaryStorePhoneNumber.Name = &quot;SecondaryStorePhoneNumber&quot;;
+SecondaryStorePhoneNumber.Text = msg[&apos;FillData&apos;][&apos;SecondaryStorePhoneNumber&apos;].toString();
+LabelItems.push(SecondaryStorePhoneNumber);
+
+var SecondaryStoreState = {}
+SecondaryStoreState.Name = &quot;SecondaryStoreState&quot;;
+SecondaryStoreState.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;State&apos;].toString();
+LabelItems.push(SecondaryStoreState);
+
+var SecondaryStoreZip = {}
+SecondaryStoreZip.Name = &quot;SecondaryStoreZip&quot;;
+SecondaryStoreZip.Text = msg[&apos;FillData&apos;][&apos;SecondaryStoreAddress&apos;][&apos;Zip&apos;].toString();
+LabelItems.push(SecondaryStoreZip);
+
+channelMap.put(&apos;LabelItems&apos;, LabelItems);
+
+// Med //
+
+var Med = {};
+Med.Description = msg[&apos;FillData&apos;][&apos;PrescribedDrugName&apos;].toString().trim();
+if(IsNullOrEmpty(Med.Description)){
+	Med.Description = msg[&apos;FillData&apos;][&apos;PrescribedDrugName&apos;].toString().trim();
+}
+Med.Id = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;DrugNDC&apos;].toString().trim();
+Med.MedIdType = 0;
+Med.Name = msg[&apos;FillData&apos;][&apos;PrescribedDrugName&apos;].toString().trim();
+Med.InventorySelector = &quot;&quot;;// msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;InventorySelector&apos;].toString().trim();
+channelMap.put(&apos;Med&apos;, Med);
+
+
+// Doses //
+var Doses = [];
+var Dose = {};
+
+Dose.AdminDateTime = FormateDate(msg[&apos;FillData&apos;][&apos;HOA&apos;][&apos;ExplicitSchedule&apos;][&apos;Dose&apos;][&apos;Date&apos;].toString().trim());
+var doseQuantity = msg[&apos;FillData&apos;][&apos;HOA&apos;][&apos;ExplicitSchedule&apos;][&apos;Dose&apos;][&apos;Quantity&apos;].toString().trim();
+Dose.Quantity = IsNullOrEmpty(doseQuantity) ? &apos;1&apos; : doseQuantity;
+Dose.Sig = msg[&apos;FillData&apos;][&apos;Sig&apos;].toString().trim();
+Dose.TimeName = msg[&apos;FillData&apos;][&apos;HOA&apos;][&apos;ExplicitSchedule&apos;][&apos;Dose&apos;][&apos;Time&apos;].toString().trim(); //FillData/HOA/ImplicitSchedule/Dose/Time
+
+Doses.push(Dose);
+
+// HOA //
+
+var HOA = {};
+
+HOA.StartDate = FormateDate(msg[&apos;FillData&apos;][&apos;HOA&apos;][&apos;StartDate&apos;].toString().trim());
+HOA.EndDate = FormateDate(msg[&apos;FillData&apos;][&apos;HOA&apos;][&apos;EndDate&apos;].toString().trim());
+HOA.Doses = Doses;
+HOA.ScheduleType = 0;
+
+channelMap.put(&apos;HOA&apos;, HOA);
+
+// Scripts //
+
+var Script = {};
+
+logger.info(msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;Action&apos;].toString());
+Script.Action = ProcessScriptAction(msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;Action&apos;].toString().trim());
+Script.Packaging = DoesHOAExists(HOA) === true ? 1:5; //Adherence 1; Blister 2; Manual 3; Pouch 4; Vial 5;
+Script.RxNumber = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;RxId&apos;].toString().trim();
+Script.RefillNumber = parseFloat(msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;RefillNumber&apos;].toString());
+Script.TransactionId = Script.RxNumber + Script.RefillNumber + &quot;00&quot;;
+Script.Barcode = Script.TransactionId
+Script.DispenseQuantity = parseFloat(msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;DispenseQuantity&apos;].toString());
+
+var BatchId = UUIDGenerator.getUUID();
+Script.BatchId = BatchId;
+
+Script.SequenceNumber = 1;
+Script.PatientId = Patient.Id;
+Script.FacilityId =msg[&apos;FillData&apos;][&apos;FacilityID&apos;].toString().trim();
+Script.Med = Med;
+Script.DAW = msg[&apos;FillData&apos;][&apos;DispenseAsWritten&apos;].toString().trim() === &quot;0&quot; ? false : true; //boolean
+Script.DaysSupply = IsNullOrEmpty(parseInt(msg[&apos;FillData&apos;][&apos;DaysSupply&apos;].toString())) ? 0 : parseInt(msg[&apos;FillData&apos;][&apos;DaysSupply&apos;].toString());
+Script.HOA = null;
+Script.LabelItems = LabelItems;
+Script.RefillsRemaining = parseFloat(msg[&apos;FillData&apos;][&apos;RefillsRemaining&apos;].toString());// numeric
+Script.RefillsTotal = parseFloat(Script.RefillNumber + Script.RefillsRemaining); // numeric
+Script.PartialNumber = 0;
+Script.RxExpirationDate = FormateDate(msg[&apos;FillData&apos;][&apos;RxExpirationDate&apos;].toString().trim());
+Script.SafetyCap = msg[&apos;FillData&apos;][&apos;SafetyCap&apos;].toString();
+Script.Sig = msg[&apos;FillData&apos;][&apos;Sig&apos;].toString().trim();
+Script.Urgency = msg[&apos;FillData&apos;][&apos;DispenseData&apos;][&apos;Urgency&apos;].toString().trim(); //numeric
+
+channelMap.put(&apos;Script&apos;, Script);
+
+// Facility //
+
+var Facility = {};
+Facility.Id = msg[&apos;FillData&apos;][&apos;FacilityID&apos;].toString();
+Facility.Bed = msg[&apos;FillData&apos;][&apos;BedNumber&apos;].toString();
+Facility.Cabinet = null;
+Facility.Floor = null;
+Facility.Name = null;
+Facility.NursingStationId = null;
+Facility.Room = null;
+Facility.Unit = null;
+Facility.Addresses = [];
+
+var FacilityAddress = {};
+FacilityAddress.Street1 = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Address1&apos;].toString().trim();
+FacilityAddress.Street2 = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Address2&apos;].toString().trim();
+FacilityAddress.City = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;City&apos;].toString().trim();
+FacilityAddress.State = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;State&apos;].toString().trim();
+FacilityAddress.Zip = msg[&apos;FillData&apos;][&apos;StoreAddress&apos;][&apos;Zip&apos;].toString().trim();;
+FacilityAddress.Country = &quot;&quot;;
+FacilityAddress.AddressType = &quot;Home&quot;;
+FacilityAddress.Primary = &quot;true&quot;;
+
+Facility.Addresses.push(FacilityAddress);
+
+
+// Batch //
+
+var Batch = {};
+
+var Scripts = [];
+Scripts.push(Script);
+var Facilities = [];
+Facilities.push(Facility);
+var Patients = [];
+Patients.push(Patient);
+
+
+
+Batch.Id = BatchId;
+Batch.TransmissionId = &quot;&quot;;
+Batch.ScriptCount = Scripts.length;
+Batch.SourceTerminal = msg[&apos;FillData&apos;][&apos;SourceTerminal&apos;].toString().trim();
+Batch.Scripts = Scripts;
+Batch.Facilities = Facilities;
+Batch.Patients = Patients;
+
+channelMap.put(&apos;Batch&apos;, Batch);</script>
+        </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
+        <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
+          <name>Parata66 Transformer</name>
           <sequenceNumber>1</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>C:\Mirth Project\MirthTransformation\JS\IPConfig.js</scriptPath>
+          <scriptPath>C:\Projects\Mirth\MirthTransformation\JS\Parata66ExtInterface.js</scriptPath>
+        </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
+        <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
+          <name>IpConfig</name>
+          <sequenceNumber>2</sequenceNumber>
+          <enabled>true</enabled>
+          <scriptPath>C:\Projects\Mirth\MirthTransformation\JS\IpConfig.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
       </elements>
       <inboundTemplate encoding="base64">PFBhcmF0YVJkc19Nc2c+Cgk8TXNnX0hlYWRlcj4KCQk8VmVyc2lvbj42LjY8L1ZlcnNpb24+CgkJPE1zZ19JRD4xPC9Nc2dfSUQ+CgkJPE1zZ1R5cGU+UkVRVUVTVDwvTXNnVHlwZT4KCQk8UmVxdWVzdFR5cGU+RWRpdFNjcmlwdDwvUmVxdWVzdFR5cGU+Cgk8L01zZ19IZWFkZXI+Cgk8RmlsbERhdGE+CgkJPERpc3BlbnNlRGF0YT4KCQkJPFJ4SWQ+MTAwMDAwMDA8L1J4SWQ+CgkJCTxSeE51bWJlcj4xMDAwPC9SeE51bWJlcj4KCQkJPERydWdOREM+MDAwMDYwNDAxMDE8L0RydWdOREM+CgkJCTxSZWZpbGxOdW1iZXI+MDA8L1JlZmlsbE51bWJlcj4KCQkJPEFjdGlvbj5FZGl0PC9BY3Rpb24+CgkJCTxQYXRpZW50TmFtZT4KCQkJCTxUaXRsZT5Nci48L1RpdGxlPgoJCQkgICAgPEZpcnN0TmFtZT5BTUlFRTwvRmlyc3ROYW1lPgoJCQkJPE1pZGRsZUluaXRpYWw+UTwvTWlkZGxlSW5pdGlhbD4KCQkJCTxMYXN0TmFtZT5BVEtJTlM8L0xhc3ROYW1lPgkJCQkJCQkJCgkJCTwvUGF0aWVudE5hbWU+CgkJCTxEaXNwZW5zZWREcnVnTmFtZT48L0Rpc3BlbnNlZERydWdOYW1lPgoJCQk8QWx0RGlzcGVuc2VkRHJ1Z05hbWU+TU9UUklOPC9BbHREaXNwZW5zZWREcnVnTmFtZT4KCQkJPEludmVudG9yeVNlbGVjdG9yPjE8L0ludmVudG9yeVNlbGVjdG9yPgoJCQk8RGlzcGVuc2VRdWFudGl0eT4zMDwvRGlzcGVuc2VRdWFudGl0eT4KCQkJPFVyZ2VuY3k+MTwvVXJnZW5jeT4JCQkKCQk8L0Rpc3BlbnNlRGF0YT4KCQk8UHJpY2U+MTkuOTU8L1ByaWNlPgoJCTxMaXF1aWQ+ZmFsc2U8L0xpcXVpZD4KCQk8UmVmcmlnZXJhdGVkPmZhbHNlPC9SZWZyaWdlcmF0ZWQ+CgkJPFJlZmlsbHNSZW1haW5pbmc+MzwvUmVmaWxsc1JlbWFpbmluZz4KCQk8UmVmaWxsc0F1dGhvcml6ZWQ+MzwvUmVmaWxsc0F1dGhvcml6ZWQ+CgkJPFJ4U3RhcnREYXRlPjA1LzAxLzE0PC9SeFN0YXJ0RGF0ZT4KCQk8UmVmaWxsRGF0ZT4wOC8wMS8xNDwvUmVmaWxsRGF0ZT4KCQk8RGlzcGVuc2VBc1dyaXR0ZW4+WTwvRGlzcGVuc2VBc1dyaXR0ZW4+CgkJPEZpbGxEYXRlPjA1LzAxLzE0PC9GaWxsRGF0ZT4KCQk8UnhFeHBpcmF0aW9uRGF0ZT4wNS8wMS8yMDwvUnhFeHBpcmF0aW9uRGF0ZT4KCQk8RGlzY2FyZERhdGU+MDUvMDIvMjA8L0Rpc2NhcmREYXRlPgoJCTxQcmV2aW91c0ZpbGxEYXRlPjAxLzAxLzE0PC9QcmV2aW91c0ZpbGxEYXRlPgoJCTxQcmVzY3JpYmVkRHJ1Z05hbWU+QWxkb21ldCAyNTAgbWcgVGFiPC9QcmVzY3JpYmVkRHJ1Z05hbWU+CgkJPFByZXNjcmliZWREcnVnQ2hlbWljYWxOYW1lPkFsZG9tZXQ8L1ByZXNjcmliZWREcnVnQ2hlbWljYWxOYW1lPgoJCTxEcnVnQ2xhc3M+MjwvRHJ1Z0NsYXNzPgoJCTxDb21wb3VuZENvZGU+Q29tcG91bmQ8L0NvbXBvdW5kQ29kZT4KCQk8RHJ1Z01mZz5EcnVnIEVtcG9yaXVtPC9EcnVnTWZnPgkJCgkJPERydWdJbXByaW50PkFMRC0yNTA8L0RydWdJbXByaW50PgoJCTxEcnVnRm9ybXVsYXRpb24+VGFibGV0PC9EcnVnRm9ybXVsYXRpb24+CgkJPERydWdTdHJlbmd0aD41MCBNRzwvRHJ1Z1N0cmVuZ3RoPgoJCTxEYXlzU3VwcGx5PjMwPC9EYXlzU3VwcGx5PgoJCTxEcnVnV2FybmluZ0xhYmVsMT5NYXkgQ2F1c2UgRHJvd3NpbmVzcyBPciBEaXp6aW5lc3M8L0RydWdXYXJuaW5nTGFiZWwxPgoJCTxEcnVnV2FybmluZ0xhYmVsMj5UYWtlIFRoaXMgTWVkaWNpbmUgV2l0aCBBIFNuYWNrIE9yIFNtYWxsIE1lYWwgSWYgU3RvbWFjaCBVcHNldCBPY2N1cnM8L0RydWdXYXJuaW5nTGFiZWwyPgoJCTxEcnVnV2FybmluZ0xhYmVsMz5SZWFkIFRoZSBNZWRpY2F0aW9uIEd1aWRlIFRoYXQgQ29tZXMgV2l0aCBUaGlzIE1lZGljaW5lLjwvRHJ1Z1dhcm5pbmdMYWJlbDM+CgkJPERydWdXYXJuaW5nTGFiZWw0PkxpbWl0IEFsY29ob2wgVXNlIFdoaWxlIFRha2luZyBUaGlzIERydWcuIERhaWx5IFVzZSBPZiBBbGNvaG9sIE1heSBJbmNyZWFzZSBUaGUgUmlzayBPZiBTdG9tYWNoIEJsZWVkaW5nLjwvRHJ1Z1dhcm5pbmdMYWJlbDQ+CgkJPERydWdXYXJuaW5nTGFiZWw1PkRvIE5vdCBUYWtlIE1lZGljaW5lIENvbnRhaW5pbmcgQXNwaXJpbiwgSWJ1cHJvZmVuLCBPciBOYXByb3hlbiBXaXRob3V0IENvbnNlbnQgT2YgWW91ciBEci48L0RydWdXYXJuaW5nTGFiZWw1PgoJCTxTaWc+VGFrZSBvbmUgKDEpIHRhYmxldCBieSBtb3V0aCBvbmNlIGRhaWx5PC9TaWc+CgkJPFVuaWNvZGVTaWc+VGVzdGluZyBVbmljb2RlIFNpZyA6IFx1MDIzNCBcdTIxMzQgXHU3NjU0PC9Vbmljb2RlU2lnPgoJCTxTYWZldHlDYXA+WTwvU2FmZXR5Q2FwPgoJCTxTdG9yZURFQT4xMTExU0RFQTwvU3RvcmVERUE+CgkJPFN0b3JlTmFtZT5TdXBlciBQaGFybWFjeTwvU3RvcmVOYW1lPgoJCTxTdG9yZU51bWJlcj4wMDAwMTwvU3RvcmVOdW1iZXI+CgkJPFN0b3JlQWRkcmVzcz4KCQkJPEFkZHJlc3MxPjEwMCBTdG9yZSBEcml2ZTwvQWRkcmVzczE+CgkJCTxBZGRyZXNzMj5TdWl0ZSA1MDwvQWRkcmVzczI+CgkJCTxDaXR5PlN0b3JlIENpdHk8L0NpdHk+CgkJCTxTdGF0ZT5TUzwvU3RhdGU+CgkJCTxaaXA+MTExMTE8L1ppcD4KCQk8L1N0b3JlQWRkcmVzcz4KCQk8U3RvcmVQaG9uZU51bWJlcj45MTktOTE5LTkxOTE8L1N0b3JlUGhvbmVOdW1iZXI+CgkJPFNlY29uZGFyeVN0b3JlREVBPjc4ODdTREVBPC9TZWNvbmRhcnlTdG9yZURFQT4KCQk8U2Vjb25kYXJ5U3RvcmVOYW1lPlN1cGVyIFBoYXJtYWN5ICMgNzg4NzwvU2Vjb25kYXJ5U3RvcmVOYW1lPgoJCTxTZWNvbmRhcnlTdG9yZU51bWJlcj4wNzg4NzwvU2Vjb25kYXJ5U3RvcmVOdW1iZXI+CgkJPFNlY29uZGFyeVN0b3JlQWRkcmVzcz4KCQkJPEFkZHJlc3MxPjc4ODcgU3RvcmUgRHJpdmU8L0FkZHJlc3MxPgoJCQk8QWRkcmVzczI+PC9BZGRyZXNzMj4KCQkJPENpdHk+U1N0b3JlQmVyZzwvQ2l0eT4KCQkJPFN0YXRlPlpBPC9TdGF0ZT4KCQkJPFppcD44Nzc3ODwvWmlwPgoJCTwvU2Vjb25kYXJ5U3RvcmVBZGRyZXNzPgoJCTxTZWNvbmRhcnlTdG9yZVBob25lTnVtYmVyPjkxOS01NTUtMTIxMjwvU2Vjb25kYXJ5U3RvcmVQaG9uZU51bWJlcj4KCQk8VG90YWxQaWxsc1ByZXNjcmliZWQ+MTIwPC9Ub3RhbFBpbGxzUHJlc2NyaWJlZD4KCQk8VG90YWxQaWxsc1JlbWFpbmluZz45MDwvVG90YWxQaWxsc1JlbWFpbmluZz4KCQk8UGhhcm1hY2lzdE5hbWU+CgkJICAgIDxUaXRsZT5SUEg8L1RpdGxlPgoJCQk8Rmlyc3ROYW1lPkphbmU8L0ZpcnN0TmFtZT4KCQkJPE1pZGRsZUluaXRpYWw+WDwvTWlkZGxlSW5pdGlhbD4KCQkJPExhc3ROYW1lPkRvZTwvTGFzdE5hbWU+CgkJPC9QaGFybWFjaXN0TmFtZT4KCQk8UnBoTGljZW5zZU51bT4xMjM0UkRFQTwvUnBoTGljZW5zZU51bT4KCQk8UnBoSW5pdGlhbHM+SlhEPC9ScGhJbml0aWFscz4KCQk8UnhPcmlnaW4+V3JpdHRlbjwvUnhPcmlnaW4+CgkJPFRlY2hJbml0aWFscz5BQkM8L1RlY2hJbml0aWFscz4KCQk8RW50cnlJbml0aWFscz5ERUY8L0VudHJ5SW5pdGlhbHM+CgkJPEVudHJ5RGF0ZT4wNS8wMS8xNDwvRW50cnlEYXRlPgoJCTxTb3VyY2VUZXJtaW5hbD5URVJNMTwvU291cmNlVGVybWluYWw+CgkJPFBhdGllbnRBZGRyZXNzPgoJCQk8QWRkcmVzczE+MjAwIFBhdGllbnQgUm9hZDwvQWRkcmVzczE+CgkJCTxBZGRyZXNzMj5TdWl0ZSAxMDA8L0FkZHJlc3MyPgoJCQk8Q2l0eT5QYXRpZW50IENpdHk8L0NpdHk+CgkJCTxTdGF0ZT5QUzwvU3RhdGU+CgkJCTxaaXA+MjIyMjI8L1ppcD4KCQk8L1BhdGllbnRBZGRyZXNzPgoJCTxQYXRpZW50U1NOPjEyMy00NS02Nzg5PC9QYXRpZW50U1NOPgoJCTxQYXRpZW50SUQ+MTA3ODQ3NDIzMTwvUGF0aWVudElEPgoJCTxGYW1pbHlJRD4xMjM0NTU0MzIxPC9GYW1pbHlJRD4KCQk8UGF0aWVudERPQj4xOTc1LTA2LTI4PC9QYXRpZW50RE9CPgoJCTxQYXRpZW50UGhvbmVOdW1iZXI+MzMzLTMzMy0zMzMzPC9QYXRpZW50UGhvbmVOdW1iZXI+CgkJPFByZXNjcmliZXJOYW1lPgoJCSAgICA8VGl0bGU+RHI8L1RpdGxlPgoJCQk8Rmlyc3ROYW1lPk1hcms8L0ZpcnN0TmFtZT4KCQkJPE1pZGRsZUluaXRpYWw+SjwvTWlkZGxlSW5pdGlhbD4KCQkJPExhc3ROYW1lPlByZXNjcmliZXI8L0xhc3ROYW1lPgoJCTwvUHJlc2NyaWJlck5hbWU+CgkJPFByZXNjcmliZXJERUE+MTIzNFBERUE8L1ByZXNjcmliZXJERUE+CgkJPFByZXNjcmliZXJOUEk+NTU1SEhIOTk5OTwvUHJlc2NyaWJlck5QST4KCQk8UHJlc2NyaWJlckFkZHJlc3M+CgkJCTxBZGRyZXNzMT4zMDAgUHJlc2NyaWJlciBSb2FkPC9BZGRyZXNzMT4KCQkJPEFkZHJlc3MyPlN1aXRlIDIwMDwvQWRkcmVzczI+CgkJCTxDaXR5PlByZXNjcmliZXIgQ2l0eTwvQ2l0eT4KCQkJPFN0YXRlPlBSUzwvU3RhdGU+CgkJCTxaaXA+MzMzMzM8L1ppcD4KCQk8L1ByZXNjcmliZXJBZGRyZXNzPgkJCgkJPFByZXNjcmliZXJQaG9uZU51bWJlcj42NjYtNjY2LTY2NjY8L1ByZXNjcmliZXJQaG9uZU51bWJlcj4KCQk8UHJlc2NyaWJlclR5cGU+TlA8L1ByZXNjcmliZXJUeXBlPgoJCTxXb3JrRmxvd0JhcmNvZGU+PC9Xb3JrRmxvd0JhcmNvZGU+CgkJPEFmZmlsaWF0ZT5KYW1lcyBEb2U8L0FmZmlsaWF0ZT4KCQk8RmlsbERhdGVUZXh0PkZpbGxEYXRlIEN1c3RvbSBUZXh0PC9GaWxsRGF0ZVRleHQ+CgkJPFJ4RXhwaXJhdGlvbkRhdGVUZXh0PlJ4RXhwaXJhdGlvbiBDdXN0b20gVGV4dDwvUnhFeHBpcmF0aW9uRGF0ZVRleHQ+CgkJPFJlYXNvblByZXNjcmliZWQ+QmVjYXVzZSBwZXJzb24gaXMgaWxsPC9SZWFzb25QcmVzY3JpYmVkPgoJCTxEcnVnRXhwaXJhdGlvbkRhdGVUZXh0PkRydWdFeHBpcmF0aW9uIEN1c3RvbSBUZXh0PC9EcnVnRXhwaXJhdGlvbkRhdGVUZXh0PgoJCTxXYXJuaW5nTWVzc2FnZT5MYXdzIHdpbGwgYmUgYnJva2VuIGlmIHlvdSB0YWtlIHRoaXMgaW5jb3JyZWN0bHk8L1dhcm5pbmdNZXNzYWdlPgoJCTxTZXJ2aWNlQ29kZT5aQ0I8L1NlcnZpY2VDb2RlPgoJCTxCZWROdW1iZXI+NTAwPC9CZWROdW1iZXI+CgkJPEJpbGxpbmdDb2RlPkJDNTU1PC9CaWxsaW5nQ29kZT4KCQk8RmFjaWxpdHlJRD5GSUQzNDU8L0ZhY2lsaXR5SUQ+CgkJPFBpbGxMaW5lR3JvdXA+RlJBTjwvUGlsbExpbmVHcm91cD4JCQogICAgPC9GaWxsRGF0YT4KPC9QYXJhdGFSZHNfTXNnPgo=</inboundTemplate>
       <outboundTemplate encoding="base64"></outboundTemplate>
       <inboundDataType>XML</inboundDataType>
       <outboundDataType>JSON</outboundDataType>
-      <inboundProperties class="com.mirth.connect.plugins.datatypes.xml.XMLDataTypeProperties" version="3.12.0">
-        <serializationProperties class="com.mirth.connect.plugins.datatypes.xml.XMLSerializationProperties" version="3.12.0">
+      <inboundProperties class="com.mirth.connect.plugins.datatypes.xml.XMLDataTypeProperties" version="3.11.0">
+        <serializationProperties class="com.mirth.connect.plugins.datatypes.xml.XMLSerializationProperties" version="3.11.0">
           <stripNamespaces>false</stripNamespaces>
         </serializationProperties>
-        <batchProperties class="com.mirth.connect.plugins.datatypes.xml.XMLBatchProperties" version="3.12.0">
+        <batchProperties class="com.mirth.connect.plugins.datatypes.xml.XMLBatchProperties" version="3.11.0">
           <splitType>Element_Name</splitType>
           <elementName></elementName>
           <level>1</level>
@@ -78,14 +916,14 @@
           <batchScript></batchScript>
         </batchProperties>
       </inboundProperties>
-      <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.12.0">
-        <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.12.0">
+      <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+        <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
           <splitType>JavaScript</splitType>
           <batchScript></batchScript>
         </batchProperties>
       </outboundProperties>
     </transformer>
-    <filter version="3.12.0">
+    <filter version="3.11.0">
       <elements/>
     </filter>
     <transportName>HTTP Listener</transportName>
@@ -94,12 +932,12 @@
     <waitForPrevious>true</waitForPrevious>
   </sourceConnector>
   <destinationConnectors>
-    <connector version="3.12.0">
+    <connector version="3.11.0">
       <metaDataId>1</metaDataId>
       <name>CallingAIMService</name>
-      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.12.0">
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.11.0">
         <pluginProperties/>
-        <destinationConnectorProperties version="3.12.0">
+        <destinationConnectorProperties version="3.11.0">
           <queueEnabled>false</queueEnabled>
           <sendFirst>false</sendFirst>
           <retryIntervalMillis>10000</retryIntervalMillis>
@@ -120,9 +958,10 @@
           <reattachAttachments>true</reattachAttachments>
         </destinationConnectorProperties>
         <script>try {
-	var IP = $(&apos;IP&apos;);
-	var Port = $(&apos;Port&apos;);
-	var tcp = new Packages.mirthSocket.TcpDestination(IP, Port);
+	var ip=$(&apos;ip&apos;);
+	var port=$(&apos;port&apos;);
+	
+	var tcp = new Packages.mirthSocket.TcpDestination(ip, port);
 	//var tcp = new Packages.mirthSocket.TcpDestination(&quot;10.12.72.6&quot;, 8071);
 
 	var batch = $(&apos;Batch&apos;);
@@ -145,41 +984,41 @@ catch(ex) {
 }
 </script>
       </properties>
-      <transformer version="3.12.0">
+      <transformer version="3.11.0">
         <elements/>
         <inboundDataType>JSON</inboundDataType>
         <outboundDataType>JSON</outboundDataType>
-        <inboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.12.0">
-          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.12.0">
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
             <splitType>JavaScript</splitType>
             <batchScript></batchScript>
           </batchProperties>
         </inboundProperties>
-        <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.12.0">
-          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.12.0">
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
             <splitType>JavaScript</splitType>
             <batchScript></batchScript>
           </batchProperties>
         </outboundProperties>
       </transformer>
-      <responseTransformer version="3.12.0">
+      <responseTransformer version="3.11.0">
         <elements/>
         <inboundDataType>JSON</inboundDataType>
         <outboundDataType>JSON</outboundDataType>
-        <inboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.12.0">
-          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.12.0">
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
             <splitType>JavaScript</splitType>
             <batchScript></batchScript>
           </batchProperties>
         </inboundProperties>
-        <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.12.0">
-          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.12.0">
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
             <splitType>JavaScript</splitType>
             <batchScript></batchScript>
           </batchProperties>
         </outboundProperties>
       </responseTransformer>
-      <filter version="3.12.0">
+      <filter version="3.11.0">
         <elements/>
       </filter>
       <transportName>JavaScript Writer</transportName>
@@ -199,7 +1038,7 @@ return;</deployScript>
   <undeployScript>// This script executes once when the channel is undeployed
 // You only have access to the globalMap and globalChannelMap here to persist data
 return;</undeployScript>
-  <properties version="3.12.0">
+  <properties version="3.11.0">
     <clearGlobalChannelMap>true</clearGlobalChannelMap>
     <messageStorageMode>PRODUCTION</messageStorageMode>
     <encryptData>false</encryptData>
@@ -220,7 +1059,7 @@ return;</undeployScript>
         <mappingName>mirth_type</mappingName>
       </metaDataColumn>
     </metaDataColumns>
-    <attachmentProperties version="3.12.0">
+    <attachmentProperties version="3.11.0">
       <type>None</type>
       <properties/>
     </attachmentProperties>
@@ -235,22 +1074,21 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1644130717204</time>
-        <timezone>Asia/Dhaka</timezone>
+        <time>1644849890236</time>
+        <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>
         <archiveEnabled>true</archiveEnabled>
-        <pruneErroredMessages>false</pruneErroredMessages>
       </pruningSettings>
     </metadata>
     <codeTemplateLibraries>
-      <codeTemplateLibrary version="3.12.0">
+      <codeTemplateLibrary version="3.11.0">
         <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
         <name>Library</name>
         <revision>2</revision>
         <lastModified>
-          <time>1644130134017</time>
-          <timezone>Asia/Dhaka</timezone>
+          <time>1644850128080</time>
+          <timezone>UTC</timezone>
         </lastModified>
         <description></description>
         <includeNewChannels>false</includeNewChannels>
@@ -258,17 +1096,13 @@ return;</undeployScript>
           <string>2c88923c-c42f-413f-890f-1b13b846eba3</string>
           <string>2552809d-7bda-4bd6-ac76-ba121c5f892e</string>
           <string>1be8c69b-0ab1-4772-b037-5e9919eb0447</string>
-          <string>d7a3d8f1-ddf2-43cf-a4c1-719ffd6a21f4</string>
-          <string>2172d069-cd38-45aa-a9c5-74a6e43df698</string>
           <string>27e7d67c-6b34-4f7c-b71a-16e31e75ae88</string>
-          <string>dfced1a0-d584-461f-926a-c42c372a11b6</string>
           <string>24999a04-287c-4517-b7f6-a239dd1a2894</string>
           <string>3380104e-7dad-4454-86ca-8cb2af26a4ac</string>
           <string>ec193f9b-00c1-4113-ba95-a25f53cc42f2</string>
           <string>859240df-fe33-456c-9793-ccdc4d58f333</string>
           <string>2f26ebf0-8b5b-45b1-88ae-0369e6045454</string>
           <string>79d329b4-b6d4-47ff-a481-eef7441aade8</string>
-          <string>b9174ba3-306c-4c94-81ea-ab3536dbd8f7</string>
           <string>1f8f7b98-91c6-47ba-a8b6-e2c5dede190e</string>
           <string>5ca5fda9-4abd-4426-ba3e-2a45b5cd6e79</string>
           <string>ddbe8266-b97e-4860-8dcc-b85c42c15d89</string>
@@ -280,7 +1114,6 @@ return;</undeployScript>
           <string>99e7a0b2-ec62-4333-9363-cb9c15e04910</string>
           <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
           <string>db8c015a-f11f-4133-992e-9b3277546cbb</string>
-          <string>dd2571d3-b0bd-4296-b00f-b097b5b2de7b</string>
           <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
           <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
           <string>0353744a-3498-4501-a324-a768adfbc8c5</string>
@@ -298,31 +1131,27 @@ return;</undeployScript>
         <disabledChannelIds>
           <string>69026bbe-b2a9-4629-8ba1-3bc4b91adfc2</string>
           <string>4778ade6-4fa9-40bb-a30d-fb5d4716f94d</string>
-          <string>7bed6fd2-a886-4c11-85d7-776c4c0b313c</string>
           <string>5bb52472-55db-4995-8422-f756b55b4ae3</string>
-          <string>4886ff73-c2a3-42cf-8af7-1f68144a92cf</string>
           <string>30e104b5-3fca-45bc-9a10-4bc559e81405</string>
           <string>e83c9f1d-04c8-4d50-adab-19d8e14e94b2</string>
-          <string>78339e60-4a65-4621-bf26-ade664e7bac1</string>
           <string>22f93589-a6e4-497d-894f-a05ce4a9ce6f</string>
-          <string>9c9942d7-1717-4933-b11e-4320b33fa02a</string>
         </disabledChannelIds>
         <codeTemplates>
-          <codeTemplate version="3.12.0">
+          <codeTemplate version="3.11.0">
             <id>64575436-4197-4ad7-b223-88693dbfe7f0</id>
             <name>CheckingNullValue</name>
             <revision>1</revision>
             <lastModified>
-              <time>1643873075183</time>
-              <timezone>Asia/Dhaka</timezone>
+              <time>1643537038018</time>
+              <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -337,62 +1166,21 @@ return;</undeployScript>
 }</code>
             </properties>
           </codeTemplate>
-          <codeTemplate version="3.12.0">
-            <id>b1d192d9-b017-4a6e-b760-db211f45bcf0</id>
-            <name>InterfaceLog</name>
-            <revision>3</revision>
-            <lastModified>
-              <time>1644248856656</time>
-              <timezone>Asia/Dhaka</timezone>
-            </lastModified>
-            <contextSet>
-              <delegate>
-                <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-              </delegate>
-            </contextSet>
-            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
-              <type>FUNCTION</type>
-              <code>
-function loggingTime() {
-	var date = new Date();	
-	var formatedDate = moment(date, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);	
-		//return logger.info(formatedDate);	
-	
-}
-
-function mirth_log(_msg, type) {
-	// Date : Error/Info : Message
-	var date = new Date();	
-	var	formatedDate = moment(date, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);	
-
-	if(type == &quot;&quot; || type == null){
-		type = &quot;info&quot;;
-	}
-	
-	var logMsg =  formatedDate + &quot;: &quot; + type + &quot;: &quot; + _msg + &quot;\n&quot;;
-	logger.info(logMsg);
-}</code>
-            </properties>
-          </codeTemplate>
-          <codeTemplate version="3.12.0">
+          <codeTemplate version="3.11.0">
             <id>9387eb90-f794-432f-9212-3c724c9cfffc</id>
             <name>IsNullOrEmpty</name>
             <revision>1</revision>
             <lastModified>
-              <time>1643873076034</time>
-              <timezone>Asia/Dhaka</timezone>
+              <time>1643537038130</time>
+              <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -408,55 +1196,21 @@ function mirth_log(_msg, type) {
 	}</code>
             </properties>
           </codeTemplate>
-          <codeTemplate version="3.12.0">
-            <id>d4c4e799-5460-4657-8fcd-3c6026127e48</id>
-            <name>LoggingTimestamp</name>
-            <revision>1</revision>
-            <lastModified>
-              <time>1643873075826</time>
-              <timezone>Asia/Dhaka</timezone>
-            </lastModified>
-            <contextSet>
-              <delegate>
-                <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-              </delegate>
-            </contextSet>
-            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
-              <type>FUNCTION</type>
-              <code>/**
-	Modify the description here. Modify the function name and parameters as needed. One function per
-	template is recommended; create a new code template for each new function.
-
-	@return {String} return description
-*/
-//Packages.lu.hrs.mirth.MetaAppender.setFocus(logger.info(&quot;Hello my time&quot;));
-function loggingTime() {
-	var date = new Date();	
-		formatedDate = moment(date, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);	
-		return logger.info(formatedDate);	
-	
-}</code>
-            </properties>
-          </codeTemplate>
-          <codeTemplate version="3.12.0">
+          <codeTemplate version="3.11.0">
             <id>5314a696-892a-463e-add6-4cdc0fbec2dd</id>
             <name>MomentJS</name>
             <revision>1</revision>
             <lastModified>
-              <time>1643873076665</time>
-              <timezone>Asia/Dhaka</timezone>
+              <time>1643537038385</time>
+              <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6134,37 +6888,42 @@ function loggingTime() {
 </code>
             </properties>
           </codeTemplate>
-          <codeTemplate version="3.12.0">
+          <codeTemplate version="3.11.0">
             <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
             <name>Utils Function</name>
-            <revision>8</revision>
+            <revision>1</revision>
             <lastModified>
-              <time>1644248945092</time>
-              <timezone>Asia/Dhaka</timezone>
+              <time>1643537038214</time>
+              <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
               <type>FUNCTION</type>
               <code>/// Utils Method Segments ///
-function ProcessScriptAction(key){
+function ProcessScriptAction(key){	
 	var Actions = {
-			NW: &quot;Fill&quot;, // New order 
-			RF: &quot;Fill&quot;, //Refill order 
-			CA: &quot;Cancel&quot;, //Cancel order 
-			HD: &quot;Hold&quot;, //Hold order 
-			XO: &quot;Edit&quot;, //Update order 
-			AF: &quot;Discard&quot; //Approve fill
-		};
-
-	return Actions[key];	
+		NW: &quot;Fill&quot;, // New order 
+		RF: &quot;Fill&quot;, //Refill order 
+		CA: &quot;Cancel&quot;, //Cancel order 
+		HD: &quot;Hold&quot;, //Hold order 
+		XO: &quot;Edit&quot;, //Update order 
+		AF: &quot;Discard&quot;, //Approve fill
+		F: &quot;Fill&quot;
+	};
+	
+	if(Actions[key.toUpperCase()] !== undefined)
+		return Actions[key.toUpperCase()];	
+	else
+		return key;
+	
 }
 
 function FormateDate(dateString){
@@ -6173,6 +6932,18 @@ function FormateDate(dateString){
 		date = moment(dateString, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);				
 	}
 	return date;	
+}
+
+function FormatDate2(dateString){
+	date = moment(dateString, &apos;MMDDYYYYhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);
+	return date;
+}
+
+
+//&quot;Text&quot;: &quot;6/15/2007 5:12:14 PM&quot;
+function FormatDate3(dateString){
+	date = moment(dateString, &apos;MMDDYYYYhhmmss&apos;).format(&apos;MM/DD/YYYY hh:mm:ss A&apos;);
+	return date;
 }
 
 function DoesHOAExists(hoa){
@@ -6215,6 +6986,15 @@ function JSONIndent(data){
 	catch(ex){
 		logger.error(ex)
 	}
+}
+
+function DAW(val){
+
+	if(val === 0 || val === &apos;&apos; || vall === null)
+		return false;
+	else
+		return true;
+	
 }</code>
             </properties>
           </codeTemplate>
