@@ -1,9 +1,9 @@
 <channel version="3.11.0">
-  <id>2e2b174a-69bd-4d02-a0d7-73c55c0ad5d2</id>
+  <id>b3221554-32a1-4f7f-ad51-7bd2ed492b4c</id>
   <nextMetaDataId>3</nextMetaDataId>
-  <name>QS1-NRx_API_PSIS</name>
+  <name>QS1-NRx_API_PSIS_v</name>
   <description></description>
-  <revision>8</revision>
+  <revision>1</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -15,7 +15,7 @@
       </pluginProperties>
       <listenerConnectorProperties version="3.11.0">
         <host>0.0.0.0</host>
-        <port>5678</port>
+        <port>6789</port>
       </listenerConnectorProperties>
       <sourceConnectorProperties version="3.11.0">
         <responseVariable>d1</responseVariable>
@@ -52,7 +52,7 @@
         <com.mirth.connect.plugins.javascriptstep.JavaScriptStep version="3.11.0">
           <name>BatchObjXML</name>
           <sequenceNumber>0</sequenceNumber>
-          <enabled>false</enabled>
+          <enabled>true</enabled>
           <script>// Address //
 
 var Address = {};
@@ -191,7 +191,12 @@ Med.Description = msg[&apos;EventData&apos;][&apos;DrugImprint&apos;].toString()
 Med.Id = msg[&apos;EventData&apos;][&apos;DrugNDC&apos;].toString()
 Med.MedIdType = 0;
 Med.Name = msg[&apos;EventData&apos;][&apos;DrugName&apos;].toString();
-Med.InventorySelector = &quot;&quot;;
+Med.InventorySelector = msg[&apos;EventData&apos;][&apos;B340B&apos;].toString();
+
+if(Med.InventorySelector == &quot;N&quot;){
+	Med.InventorySelector = &quot;&quot;;
+}
+
 
 channelMap.put(&apos;Med&apos;, Med);
 
@@ -210,7 +215,7 @@ Script.Packaging = 1; //Adherence 1; Blister 2; Manual 3; Pouch 4; Vial 5;
 Script.RxNumber = msg[&apos;EventData&apos;][&apos;RxNumber&apos;].toString();
 Script.RefillNumber = msg[&apos;EventData&apos;][&apos;RefillNumber&apos;].toString();
 Script.TransactionId = Script.RxNumber + Script.RefillNumber + &quot;00&quot;;
-Script.Barcode = msg[&apos;EventData&apos;][&apos;PMSBarcode&apos;].toString();//Script.TransactionId
+Script.Barcode = Script.RxNumber+Script.RefillNumber;//msg[&apos;EventData&apos;][&apos;PMSBarcode&apos;].toString();//Script.TransactionId
 Script.DispenseQuantity = msg[&apos;EventData&apos;][&apos;Quantity&apos;].toString();
 
 var BatchId = UUIDGenerator.getUUID();
@@ -259,7 +264,7 @@ channelMap.put(&apos;Batch&apos;, Batch);</script>
         <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
           <name>QS1 NRx Iterface Ex</name>
           <sequenceNumber>1</sequenceNumber>
-          <enabled>true</enabled>
+          <enabled>false</enabled>
           <scriptPath>C:\D Drive\Mirth\MirthTransformation\JS\QS1-NRxIterface_PSIS.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
       </elements>
@@ -563,7 +568,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1646061447939</time>
+        <time>1646145767218</time>
         <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>
@@ -574,9 +579,9 @@ return;</undeployScript>
       <codeTemplateLibrary version="3.11.0">
         <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
         <name>Library</name>
-        <revision>18</revision>
+        <revision>20</revision>
         <lastModified>
-          <time>1646060691130</time>
+          <time>1646145883663</time>
           <timezone>UTC</timezone>
         </lastModified>
         <description></description>
@@ -589,6 +594,7 @@ return;</undeployScript>
           <string>24999a04-287c-4517-b7f6-a239dd1a2894</string>
           <string>3380104e-7dad-4454-86ca-8cb2af26a4ac</string>
           <string>ec193f9b-00c1-4113-ba95-a25f53cc42f2</string>
+          <string>b3221554-32a1-4f7f-ad51-7bd2ed492b4c</string>
           <string>859240df-fe33-456c-9793-ccdc4d58f333</string>
           <string>2f26ebf0-8b5b-45b1-88ae-0369e6045454</string>
           <string>79d329b4-b6d4-47ff-a481-eef7441aade8</string>
@@ -605,6 +611,7 @@ return;</undeployScript>
           <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
           <string>db8c015a-f11f-4133-992e-9b3277546cbb</string>
           <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
+          <string>9cadc149-ad66-414d-b109-2929286e6ce5</string>
           <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
           <string>0353744a-3498-4501-a324-a768adfbc8c5</string>
           <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
