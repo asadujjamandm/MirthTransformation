@@ -55,7 +55,7 @@
           <name>CHCSTransformer</name>
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>D:\Project\Mirth\MirthTransformation\JS\CHCS Interface.js</scriptPath>
+          <scriptPath>C:\Project\Mirth\MirthTransformation\JS\CHCS Interface.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
         <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
           <name>IpConfig</name>
