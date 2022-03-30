@@ -3,25 +3,21 @@
   <nextMetaDataId>3</nextMetaDataId>
   <name>Flat File Generation - S74 v2</name>
   <description></description>
-  <revision>53</revision>
+  <revision>6</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
-    <properties class="com.mirth.connect.connectors.http.HttpReceiverProperties" version="3.11.0">
-      <pluginProperties>
-        <com.mirth.connect.plugins.httpauth.NoneHttpAuthProperties version="3.11.0">
-  <authType>NONE</authType>
-        </com.mirth.connect.plugins.httpauth.NoneHttpAuthProperties>
-      </pluginProperties>
+    <properties class="com.mirth.connect.connectors.tcp.TcpReceiverProperties" version="3.11.0">
+      <pluginProperties/>
       <listenerConnectorProperties version="3.11.0">
         <host>0.0.0.0</host>
-        <port>8091</port>
+        <port>6669</port>
       </listenerConnectorProperties>
       <sourceConnectorProperties version="3.11.0">
-        <responseVariable>None</responseVariable>
+        <responseVariable>Auto-generate (After source transformer)</responseVariable>
         <respondAfterProcessing>true</respondAfterProcessing>
         <processBatch>false</processBatch>
-        <firstResponse>false</firstResponse>
+        <firstResponse>true</firstResponse>
         <processingThreads>1</processingThreads>
         <resourceIds class="linked-hash-map">
           <entry>
@@ -31,21 +27,25 @@
         </resourceIds>
         <queueBufferSize>1000</queueBufferSize>
       </sourceConnectorProperties>
-      <xmlBody>false</xmlBody>
-      <parseMultipart>true</parseMultipart>
-      <includeMetadata>false</includeMetadata>
-      <binaryMimeTypes>application/.*(?&lt;!json|xml)$|image/.*|video/.*|audio/.*</binaryMimeTypes>
-      <binaryMimeTypesRegex>true</binaryMimeTypesRegex>
-      <responseContentType>text/plain</responseContentType>
-      <responseDataTypeBinary>false</responseDataTypeBinary>
-      <responseStatusCode></responseStatusCode>
-      <responseHeaders class="linked-hash-map"/>
-      <responseHeadersVariable></responseHeadersVariable>
-      <useResponseHeadersVariable>false</useResponseHeadersVariable>
-      <charset>UTF-8</charset>
-      <contextPath>api/flatFileGeneration</contextPath>
-      <timeout>30000</timeout>
-      <staticResources/>
+      <transmissionModeProperties class="com.mirth.connect.model.transmission.framemode.FrameModeProperties">
+        <pluginPointName>Basic</pluginPointName>
+        <startOfMessageBytes></startOfMessageBytes>
+        <endOfMessageBytes></endOfMessageBytes>
+      </transmissionModeProperties>
+      <serverMode>true</serverMode>
+      <remoteAddress></remoteAddress>
+      <remotePort></remotePort>
+      <overrideLocalBinding>false</overrideLocalBinding>
+      <reconnectInterval>5000</reconnectInterval>
+      <receiveTimeout>0</receiveTimeout>
+      <bufferSize>65536</bufferSize>
+      <maxConnections>10</maxConnections>
+      <keepConnectionOpen>true</keepConnectionOpen>
+      <dataTypeBinary>false</dataTypeBinary>
+      <charsetEncoding>DEFAULT_ENCODING</charsetEncoding>
+      <respondOnNewConnection>0</respondOnNewConnection>
+      <responseAddress></responseAddress>
+      <responsePort></responsePort>
     </properties>
     <transformer version="3.11.0">
       <elements>
@@ -58,17 +58,22 @@ var getHour = msg[&apos;ORC&apos;][&apos;ORC.7&apos;][&apos;ORC.7.4&apos;].toStr
 var getMin = msg[&apos;ORC&apos;][&apos;ORC.7&apos;][&apos;ORC.7.4&apos;].toString().trim().substr(10,2);
 var presGenerationTime = new Date(startDate +&quot; &quot;+ getHour +&quot;:&quot;+ getMin);
 
-logger.info(&quot;presGenerationTime &quot; + JSON.stringify(presGenerationTime));
+//logger.info(&quot;presGenerationTime &quot; + JSON.stringify(presGenerationTime));
 
 var skippedDays = msg[&apos;RXE&apos;][&apos;RXE.1&apos;][&apos;RXE.1.8&apos;].toString().trim();
+
+
+//logger.info(&quot;skippedDays: &quot; + JSON.stringify(skippedDays));
+
 var isSkippedDay = true;
 var isWeekDay = false;
 var weekDays = [];
 
 for(var i =0; i&lt;skippedDays.length-1; i++){
-	if(skippedDays[i] != 0){
+	if(skippedDays[i] != 0){		
 		isWeekDay = true;
 		weekDays.push(i);
+		
 	}
 }
 
@@ -133,16 +138,24 @@ PatientInfo.FreeForm4 = &quot;&quot;;
 PatientInfo.OrderType_Multi_Unit_dose = &quot;&quot;;
 PatientInfo.HOAReminderText = &quot;&quot;;
 
+PatientInfo.WrittenDate = !IsNullOrEmpty(msg[&apos;ZM2&apos;][&apos;ZM2.38&apos;][&apos;ZM2.38.2&apos;].toString().trim()) ? moment(msg[&apos;ZM2&apos;][&apos;ZM2.38&apos;][&apos;ZM2.38.2&apos;].toString().trim(),&apos;YYYYMMDD&apos;).format(&apos;MM/DD/YYYY&apos;) : &quot;&quot;;
+PatientInfo.Pharmacist = msg[&apos;ZM2&apos;][&apos;ZM2.2&apos;][&apos;ZM2.2.1&apos;].toString().trim();
+PatientInfo.ExpirationDate = moment(msg[&apos;ZMT&apos;][&apos;ZMT.53&apos;][&apos;ZMT.53.1&apos;].toString().trim(),&apos;YYYYMMDD&apos;).format(&apos;MM/DD/YYYY&apos;);
+PatientInfo.RefillsRemaining = msg[&apos;RXE&apos;][&apos;RXE.16&apos;][&apos;RXE.16.1&apos;].toString();
 
 //Last Name, First Name ~ PatientID~FacilityId~PatientUnit~PatientLocation~PatientRoom~PatientBed~NDC~Date~Time~Qty~Prescriber~OrderID~OrderComments~
 //SIG~FreeForm1~FreeForm2~FreeForm3~FreeForm4~OrderType(Multi/Unit dose)~HOAReminderText
+
+
+//Last Name, First Name ~ PatientID~FacilityId~PatientUnit~PatientLocation~PatientRoom~PatientBed~NDC~Date~Time~Qty~Prescriber~OrderID~OrderComments~
+//SIG~WrittenDate~StopDate~Pharmacist~RefillsRemaining~OrderType(Multi/Unit dose)~HOAReminderText
 var flatText = &quot;&quot;;
 
 var doseCounter = 0;
 var medCount = 0; 
 
-logger.info(JSON.stringify(arrDaysToTakeMeds));
-logger.info(JSON.stringify(medicineTakingTime));
+//logger.info(JSON.stringify(arrDaysToTakeMeds));
+//logger.info(JSON.stringify(medicineTakingTime));
 
 for(var i = 0; i &lt; arrDaysToTakeMeds.length; i++)
 {		
@@ -157,7 +170,7 @@ for(var i = 0; i &lt; arrDaysToTakeMeds.length; i++)
 			flatText = flatText + 
 			PatientInfo.LastName+&quot;, &quot;+PatientInfo.FirstName+&quot; ~ &quot;+PatientInfo.PatientID+&quot;~&quot;+PatientInfo.FacilityId+&quot;~&quot;+PatientInfo.PatientUnit+&quot;~&quot;+PatientInfo.PatientLocation+&quot;~&quot;+
 			PatientInfo.PatientRoom+&quot;~&quot;+PatientInfo.PatientBed+&quot;~&quot;+PatientInfo.NDC+&quot;~&quot;+arrDaysToTakeMeds[i]+&quot;~&quot;+medicineTakingTime[j]+&quot;~&quot;+PatientInfo.Qty+&quot;~&quot;+PatientInfo.Prescriber+&quot;~&quot;+
-			PatientInfo.OrderID+&quot;~&quot;+PatientInfo.OrderComments+&quot;~&quot;+PatientInfo.SIG+&quot;~&quot;+PatientInfo.FreeForm1+&quot;~&quot;+PatientInfo.FreeForm2+&quot;~&quot;+PatientInfo.FreeForm3+&quot;~&quot;+PatientInfo.FreeForm4+&quot;~&quot;+
+			PatientInfo.OrderID+&quot;~&quot;+PatientInfo.OrderComments+&quot;~&quot;+PatientInfo.SIG+&quot;~&quot;+PatientInfo.WrittenDate+&quot;~&quot;+PatientInfo.ExpirationDate+&quot;~&quot;+PatientInfo.Pharmacist+&quot;~&quot;+PatientInfo.RefillsRemaining+&quot;~&quot;+
 			PatientInfo.OrderType_Multi_Unit_dose+PatientInfo.HOAReminderText + &quot;\n&quot;;	
 			medCount++;
 		}			
@@ -171,7 +184,7 @@ channelMap.put(&quot;fileName&quot;,fileName);
 channelMap.put(&quot;FlatText&quot;,flatText);</script>
         </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
       </elements>
-      <inboundTemplate encoding="base64">TVNIfF5+XCZ8UVMxUEhBUk1BQ1l8fFFTMU9SREVSU3xSQ0FBfDIwMjIwMTEwMTE0NDM4fHxSREVeTzAxfDIwMjIwMTEwMTE0NDM4fFB8Mi4yfApQSUR8fDEwMTM1fHxHRUJFQXxHRUJFQVUsIEFMVklOfHx8TXx8fHx8fHx8fHwxMDEzNXwzNjkzMjUxMzd8ClBWMXx8fF5eXlJDQUF8Ck9SQ3xEQ3wxOTM1Nzk3MXx8fHx8XlJYMTkzNTc5NzEmMDUwMCAsMTMwMCAsMjEwMF5eMjAyMjAxMDUxNDAwXjIwMjIwMTEwMTE0NF5eXjAwMDAwMDAwXl58fHxPQ15MVEMsIE9ORUNBUkVeUnBoXkNPXk9MSVZFSVJBLCBDQV5UZWNoXnx8QkVBTCwgSkVOTklGRVJ8fHwyMDIyMDEwNXwKUlhFfF5ROEggMyAmMDUwMCAsMTMwMCAsMjEwMF5eMjAyMjAxMDUwNzAwXjIwMjIwMTEwMTE0NF5eXjAwMDAwMDAwXl4wNTAwICwxMzAwICwyMTAwfF5NQVBBUCA1MDAgTUcgQ0FQTEVUXk1BUEFQIDUwMCBNRyBDQVBMRVReQUNFVEE4MDk3XjAwOTA0NjcyMDQwXjAwOTA0NjcyMDQwfDJ8NnxeVEFCfHxUQUtFIDIgVEFCTEVUUyBCWSBNT1VUSCBFVkVSWSA4IEhPVVJTIFJFQ09NTUVOREVEOiBETyBOT1QgRVhDRUVEIDNHTSBPRiBBUEFQIElOIDI0IEhPVVJTfHxOfDJeODR8fFAwMHxGQjM3NzYzMTF8TjB8MTkzNTc5NzF8MDAxfDAxCk5URXx8fHwKUlhSfF5QT3x8fHwKWlJYfE98MjAyMjAxMDUwNzAwfEdFQkVBfDIwMjIwMTA1fHx8fApaTVR8fHx8fHx8MTR8TUFKT1J8T098b2Jsb25nfHdoaXRlfEw0ODRefDIwMjIwMTA1MDcwMHxCRUFMSkV8UkNBQXx8VEhFIFJFRElFUyBDRU5URVIgU0FMSU5FfF5eXnw3Qnx8MDB8fHwwMDAwMDAwMHx8fDE5MzU3OTcxMjIwMTA1fHx8fHx8fHx8fHx8fE58RkE2OHwxOTMzMDYxN3x8I3wwMDAwMDAwMHwyNTQ1OTAzfFJFQ09NTUVOREVEOiBETyBOT1QgRVhDRUVEIDNHTSBPRiBBUEFQIElOIDI0IEhPVVJTfHwwMXxOfDAwNDQ5MHwwOTA0NjcyMDQwfDIwMjIwNzA0fHwxXjRDOUVeQVVMfjJeNDA0MF5BVUx+M140MDQwXkFVTHxNQUpPUnxTWU58fDczNDY0Nzg1MzV8fApaTTJ8QUNFVEFNSU5PUEhFTnxPQ3wwMDAwMTU5XjAwMDAxQ0RefHw2MjMwIFNUQVRFIFJEIEFQVCAxNTZ8U0FMSU5FfE1JfDQ4MTc2OTgzNHx8fE58fHx8Tnx8fHwxOTM1Nzk3MTIyMDExMDExNDQzODUwfHw1MDAuMDAwMHw4NF5eXl58Tnx8fHx8OVBNfDE3OTA5MTgyOTB8fCAuMDAwMHxNRUQtQSBFVkFOR0VMSUNBfHx8fHx8MDEwNTIyfHx8fE58fHxOfDIzMDF8NzM0NzY0NjgzMXx8IC4wMDAwfDQ4MTA5MjcwMHwxfE58fDQyNjAgUExZTU9VVEggUkQgTEVWRUwgMV5FIEFOTiBBUkJPUiBIRUFMVEggQU5EIEdFXkFOTiBBUkJPUl5NSXwgODQuMDAwMHwKWlIxfHxBQ0VUQTgwOTd8fDAwMDAwMDAwfDUwMCBNR3x8ODR8fHwzfApaVE98fHx8fHx8fHx8fHx8</inboundTemplate>
+      <inboundTemplate encoding="base64">TVNIfF5+XCZ8UVMxUEhBUk1BQ1l8fFFTMU9SREVSU3xCVnwyMDE3MDMwOTExMDg0Nnx8UkRFXk8wMXwyMDE3MDMwOTExMDg0NnxQfDIuMnwKUElEfHwxMjEyfHxST0JCWXxUSE9NUFNPTiwgUk9CQlkgV3x8fE18fHx8fHx8fHx8NjE4MTQyfERPR3wKUFYxfHx8MUFeMDAzXkJeQlZ8Ck9SQ3xYT3wwNjAwMjI4Nnx8fHx8XlVEJjA4MDBeXjIwMTcwMzA5MDg0NF4yMDE4MDMwOTA4NDNeXl4wMDAwMEYwMF5efHx8UldUXlRIT01QU09OLCBST15ScGheXl5UZWNoXnx8QlJPV04sIEpBTUVTfHx8MjAxNzAzMDl8ClJYRXxeUjEmMDgwMF5eMjAxNzAzMDkwODQ0XjIwMTgwMzA5MDg0M15eXjAwMDAwRjAwXl4wODAwfDI0NDQ0NDQ0NDIxMjEyXkJBQlkgV0lQRVNeUFJBVkFDSE9MIDQwIE1HIFRBQkxFVF5CQUJZNDg2Ml4wMzYwMDAxODgyMV4wMDAwMzUxOTQxMHwxfDF8Xnx8VVNFIEFTIERJUkVDVEVEfHxHfDFeMzB8fDAwMHwxMjM0NTY3ODl8TjB8MDYwMDIyODZ8MDAwfDAwCk5URXx8fHwKUlhSfF58fHx8CkRHMXx8STl8NDQ0LjB8QUJET01JTkFMIEFPUlRJQyBFTUJPTElTTSBBTkQgVHx8fHx8fHx8fHx8MXwKREcxfHxJOXw3ODkuM3xBQkRPTUlOQUwgT1IgUEVMVklDIFNXRUxMSU5HLCBNfHx8fHx8fHx8fHwxfApERzF8fEk5fDc4OS45fEFCRE9NRU4gQU5EIFBFTFZJUyBTWU1QVE9NUyBOT1R8fHx8fHx8fHx8fDF8CkRHMXx8STB8SDA0LjUxfERBQ1JZT0xJVEh8fHx8fHx8fHx8fDF8CkRHMXx8STB8TDgxLjN8Q0FGRSBBVSBMQUlUIFNQT1RTfHx8fHx8fHx8fHwxfApaUlh8T3wyMDE3MDMwOTA4NDR8Uk9CQll8MjAxNzAzMDl8fHx8ClpNVHx8fHx8fHwzMHwwMzYwMHx8fHx8MjAxNzAzMDkxMTA4fEJST1dKfEJWfE18QlJPT0tWSUVXfFRISVMgUEFUSUVOVCBJUyBDUkFaWV5HUkFCIFRISVMgR1VZIEhFIE9XRVMgWU9VICQkJCR8U3x8MDB8fHwwMDAwMDAwMHxORVd8fDA2MDAyMjg2MTcwMzA5fHx8fHx8fHx8fHx8fE58OTg3NXwxOTgyMDkyMHwwfHwwMDAwMDAwMHx8RGVsZXRlIGZsYWcgcmVzZXQ6IGludmVudG9yeSBjbGVhbi11cCAwNS8yMi8wOXx8MDF8TnwwMjA3NDF8MzYwMDAxODgyMXwyMDE4MDMwOXxGRjAyLTI1NHwxXjM1ODReQVVMfjJeNDA0MF5BVUx+M140MDQwXkFVTHwwMzYwMHx8TDF8ODY0NDg5MTU2NXwKWk0yfHxSV1R8MDAwMDEzRl58fDExMSBBRERSRVNTIExJTkUgMXxHQUZGTkVZfFNDfDI5MzQwfHx8Tnx8LjAwfHxZfHx8fDA2MDAyMjg2MTcwMzA5MTEwODQ2MzB8fC4wMDAwfDMwfE58fHwwMDAwMTYyMHx8fHx8ICAgICAuMDAwMHwKWlIxfHxQUkFWQTMzNjB8TXwyMDE3MDMwOXx8fDMwfH5+fg==</inboundTemplate>
       <outboundTemplate encoding="base64"></outboundTemplate>
       <inboundDataType>HL7V2</inboundDataType>
       <outboundDataType>JSON</outboundDataType>
@@ -238,16 +251,23 @@ for(var i =0; i&lt;skippedDays.length-1; i++){
 		weekDays.push(i);
 	}
 }
+logger.info(&quot;isWeekDay: &quot;+isWeekDay);
 
-if(isWeekDay === true &amp;&amp; skippedDays[skippedDays.length-1] !== 0){
+logger.info(&quot;skippedDays[skippedDays.length-1]: &quot;+skippedDays[skippedDays.length-1]);
+if(isWeekDay === true &amp;&amp; skippedDays[skippedDays.length-1] != 0){
+	logger.info(false);
+	
 	return false;
+	
 }
+
+
 
 return true;</script>
         </com.mirth.connect.plugins.javascriptrule.JavaScriptRule>
       </elements>
     </filter>
-    <transportName>HTTP Listener</transportName>
+    <transportName>TCP Listener</transportName>
     <mode>SOURCE</mode>
     <enabled>true</enabled>
     <waitForPrevious>true</waitForPrevious>
@@ -456,7 +476,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1647856761627</time>
+        <time>1648487885421</time>
         <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>
@@ -467,9 +487,9 @@ return;</undeployScript>
       <codeTemplateLibrary version="3.11.0">
         <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
         <name>Library</name>
-        <revision>27</revision>
+        <revision>29</revision>
         <lastModified>
-          <time>1647759056622</time>
+          <time>1648483895352</time>
           <timezone>UTC</timezone>
         </lastModified>
         <description></description>
@@ -546,9 +566,9 @@ return;</undeployScript>
             <contextSet>
               <delegate>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
@@ -567,29 +587,29 @@ return;</undeployScript>
           <codeTemplate version="3.11.0">
             <id>0001531c-07c4-4f8e-8b02-30a0977271d2</id>
             <name>GetDateRange</name>
-            <revision>22</revision>
+            <revision>1</revision>
             <lastModified>
-              <time>1647855631152</time>
+              <time>1648483895411</time>
               <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
               <type>FUNCTION</type>
-              <code>function GetDates(presGenerationTime, daysToAdd, skippedDays, firstDoseTime) {	
+              <code>function GetDates(startDate, daysToAdd, skippedDays, firstDoseTime) {	
 
-	daysToAdd = getDaysToAdd(presGenerationTime, firstDoseTime, daysToAdd);
+	daysToAdd = getDaysToAdd(startDate, firstDoseTime, daysToAdd);
 	
 	var aryDates = [];
 	//var _startDate = new Date(startDate);
-	logger.info(startDate + &quot; &quot; + daysToAdd + &quot; &quot; + skippedDays)
+	//logger.info(startDate + &quot; &quot; + daysToAdd + &quot; &quot; + skippedDays)
 	
 	var currentDate = new Date(startDate);
 	//var currentDate = startDate.split(&quot;/&quot;);	
@@ -688,9 +708,9 @@ function GetWeekDay(number){
             <contextSet>
               <delegate>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
@@ -737,9 +757,9 @@ function mirth_log(_msg, type) {
             <contextSet>
               <delegate>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
@@ -757,6 +777,40 @@ function mirth_log(_msg, type) {
             </properties>
           </codeTemplate>
           <codeTemplate version="3.11.0">
+            <id>d4c4e799-5460-4657-8fcd-3c6026127e48</id>
+            <name>LoggingTimestamp</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1648483895370</time>
+              <timezone>UTC</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	Modify the description here. Modify the function name and parameters as needed. One function per
+	template is recommended; create a new code template for each new function.
+
+	@return {String} return description
+*/
+//Packages.lu.hrs.mirth.MetaAppender.setFocus(logger.info(&quot;Hello my time&quot;));
+function loggingTime() {
+	var date = new Date();	
+		formatedDate = moment(date, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);	
+		return logger.info(formatedDate);	
+	
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.11.0">
             <id>5314a696-892a-463e-add6-4cdc0fbec2dd</id>
             <name>MomentJS</name>
             <revision>1</revision>
@@ -767,9 +821,9 @@ function mirth_log(_msg, type) {
             <contextSet>
               <delegate>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
@@ -6459,9 +6513,9 @@ function mirth_log(_msg, type) {
             <contextSet>
               <delegate>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
               </delegate>
             </contextSet>
