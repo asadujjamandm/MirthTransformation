@@ -1,45 +1,44 @@
 <codeTemplateLibrary version="3.11.0">
   <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
   <name>Library</name>
-  <revision>12</revision>
+  <revision>29</revision>
   <lastModified>
-    <time>1641116243535</time>
+    <time>1648483895352</time>
     <timezone>UTC</timezone>
   </lastModified>
   <description></description>
   <includeNewChannels>false</includeNewChannels>
   <enabledChannelIds>
     <string>2c88923c-c42f-413f-890f-1b13b846eba3</string>
-    <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
     <string>1be8c69b-0ab1-4772-b037-5e9919eb0447</string>
+    <string>99e7a0b2-ec62-4333-9363-cb9c15e04910</string>
     <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
-    <string>db8c015a-f11f-4133-992e-9b3277546cbb</string>
     <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
-    <string>ec193f9b-00c1-4113-ba95-a25f53cc42f2</string>
-    <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
-    <string>0353744a-3498-4501-a324-a768adfbc8c5</string>
+    <string>b3221554-32a1-4f7f-ad51-7bd2ed492b4c</string>
+    <string>89c5c497-d1f9-4e0e-84bd-068487bdad87</string>
     <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
     <string>2f26ebf0-8b5b-45b1-88ae-0369e6045454</string>
-    <string>79d329b4-b6d4-47ff-a481-eef7441aade8</string>
-    <string>feb1fe1c-0cd6-4082-83a6-3e92db15d3ec</string>
-    <string>2fa392d7-8669-421e-81a3-1fc3100ee9c8</string>
-    <string>1f8f7b98-91c6-47ba-a8b6-e2c5dede190e</string>
+    <string>2e2b174a-69bd-4d02-a0d7-73c55c0ad5d2</string>
+    <string>2a593b1b-915f-4f8e-88fa-4daf8ed7a5dd</string>
+    <string>8126f325-9238-489a-9192-4f1c79346c02</string>
+    <string>64b04136-25f1-40a3-b5d8-14379420f99a</string>
     <string>ddbe8266-b97e-4860-8dcc-b85c42c15d89</string>
     <string>e5a879a3-dddf-48d1-b69b-878152c0cb9e</string>
+    <string>4dfc5eb3-20a8-49f3-acb2-497224a4b224</string>
     <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
-    <string>edbc9000-4a15-455d-9505-2deb0af95a9b</string>
     <string>f5da6dfb-b808-4061-9274-fed0339bff1a</string>
-    <string>cf597d0c-7b46-471d-9d11-d6e4946421a0</string>
-    <string>b742b188-ed4a-4495-bcf6-0468a1eef0c2</string>
   </enabledChannelIds>
   <disabledChannelIds>
     <string>69026bbe-b2a9-4629-8ba1-3bc4b91adfc2</string>
     <string>4778ade6-4fa9-40bb-a30d-fb5d4716f94d</string>
+    <string>b46c1c4e-b8ad-4948-bdf6-fe6126d9712b</string>
     <string>5bb52472-55db-4995-8422-f756b55b4ae3</string>
     <string>1106f5ac-f27d-44f1-bdad-1971420e070c</string>
     <string>30e104b5-3fca-45bc-9a10-4bc559e81405</string>
     <string>e83c9f1d-04c8-4d50-adab-19d8e14e94b2</string>
+    <string>b760c01f-7e58-4d06-a904-ee5e0c0baeca</string>
     <string>22f93589-a6e4-497d-894f-a05ce4a9ce6f</string>
+    <string>3676078a-68fb-475c-b9f5-c2ebac366c99</string>
   </disabledChannelIds>
   <codeTemplates>
     <codeTemplate version="3.11.0">
@@ -52,11 +51,11 @@
       </lastModified>
       <contextSet>
         <delegate>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_DISPATCHER</contextType>
           <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
           <contextType>SOURCE_RECEIVER</contextType>
           <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
         </delegate>
       </contextSet>
       <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -72,6 +71,168 @@
       </properties>
     </codeTemplate>
     <codeTemplate version="3.11.0">
+      <id>0001531c-07c4-4f8e-8b02-30a0977271d2</id>
+      <name>GetDateRange</name>
+      <revision>1</revision>
+      <lastModified>
+        <time>1648483895411</time>
+        <timezone>UTC</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>function GetDates(startDate, daysToAdd, skippedDays, firstDoseTime) {	
+
+	daysToAdd = getDaysToAdd(startDate, firstDoseTime, daysToAdd);
+	
+	var aryDates = [];
+	//var _startDate = new Date(startDate);
+	//logger.info(startDate + &quot; &quot; + daysToAdd + &quot; &quot; + skippedDays)
+	
+	var currentDate = new Date(startDate);
+	//var currentDate = startDate.split(&quot;/&quot;);	
+	
+	var day = currentDate.getDate();	
+	var month = currentDate.getMonth();
+	var year = currentDate.getFullYear();	
+
+	var skipped = 0;
+	    	
+	for (var i = 0; i &lt; daysToAdd; i++) {
+
+	   currentDate = new Date(year, month, day + skipped)	  	  	  
+	
+	   aryDates.push(moment(currentDate, &apos;YYYYMMDD&apos;).format(&quot;MM/DD/YYYY&quot;));
+	   skipped = skipped + skippedDays;
+	}     
+	
+	return aryDates;
+
+}
+
+function getDateOfWeekDay(strtDate, weekDays, daysToAdd, doseStartTime) {	
+	var aryDates = [];
+
+	daysToAdd = getDaysToAdd(strtDate, doseStartTime, daysToAdd);
+	
+	for (var i=0; i&lt;weekDays.length; i++){
+		var refDate = new Date(strtDate);	
+		var dys=weekDays[i];	     
+		if(dys===undefined){continue;}
+		//const dayOfWeek = [&quot;sun&quot;,&quot;mon&quot;,&quot;tue&quot;,&quot;wed&quot;,&quot;thu&quot;,&quot;fri&quot;,&quot;sat&quot;].indexOf(weekDays[i].slice(0,3).toLowerCase());	
+		logger.info(weekDays[i]);
+		//logger.info(dayOfWeek);
+		var skipped=0;
+		refDate.setDate(refDate.getDate() + (weekDays[i] + 7 - refDate.getDay() ) % 7);			
+		 
+		for (var j = 0; j &lt; daysToAdd; j++) {
+			var date=new Date(refDate);
+			date.setDate(refDate.getDate()+skipped);
+			skipped=skipped+7;
+			aryDates.push(moment(date, &apos;YYYYMMDD&apos;).format(&quot;MM/DD/YYYY&quot;));
+		}    		
+				
+	}
+	
+	aryDates.sort((a, b) =&gt; new Date(a) - new Date(b));	
+
+	aryDates.length = daysToAdd;
+	
+	return aryDates;
+}
+
+function getDaysToAdd(presGenerationTime, firstDoseTime, daysToAdd){
+	var startDate = new Date(presGenerationTime);
+	var _firstDoseTime = new Date(firstDoseTime);
+
+	if(startDate.getTime()&gt; _firstDoseTime.getTime())
+  	{
+  		daysToAdd = parseInt(daysToAdd) + 1;
+  	}
+
+  	return daysToAdd;
+}
+
+function GetWeekDay(number){
+
+	switch(number){
+		case 1:
+		return &quot;Sunday&quot;;		
+		case 2:
+		return &quot;Monday&quot;;				
+		case 3:
+		return &quot;Tuesday&quot;;		
+		case 4:
+		return &quot;Wednessday&quot;;		
+		case 5:
+		return &quot;Thrusday&quot;;		
+		case 6: 
+		return &quot;Friday&quot;;		
+		case 7:
+		return &quot;Saturday&quot;;		
+	}
+}
+</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.11.0">
+      <id>b1d192d9-b017-4a6e-b760-db211f45bcf0</id>
+      <name>InterfaceLog</name>
+      <revision>5</revision>
+      <lastModified>
+        <time>1643182652460</time>
+        <timezone>UTC</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/**
+	Modify the description here. Modify the function name and parameters as needed. One function per
+	template is recommended; create a new code template for each new function.
+
+	@param {String} arg1 - arg1 description
+	@return {String} return description
+*/
+function loggingTime() {
+	var date = new Date();	
+	var formatedDate = moment(date, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);	
+	
+	//return logger.info(formatedDate);
+
+	return formatedDate;
+}
+
+function mirth_log(_msg, type) {
+	// Date : Error/Info : Message
+	// var date = new Date();	
+	// formatedDate = moment(date, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);	
+
+	if(type == &quot;&quot; || type == null){
+		type = &quot;info&quot;;
+	}
+	
+	var logMsg =  loggingTime() + &quot;: &quot; + type + &quot;: &quot; + _msg + &quot;\n&quot;;
+	logger.info(logMsg);
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.11.0">
       <id>9387eb90-f794-432f-9212-3c724c9cfffc</id>
       <name>IsNullOrEmpty</name>
       <revision>1</revision>
@@ -81,11 +242,11 @@
       </lastModified>
       <contextSet>
         <delegate>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_DISPATCHER</contextType>
           <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
           <contextType>SOURCE_RECEIVER</contextType>
           <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
         </delegate>
       </contextSet>
       <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -102,6 +263,40 @@
       </properties>
     </codeTemplate>
     <codeTemplate version="3.11.0">
+      <id>d4c4e799-5460-4657-8fcd-3c6026127e48</id>
+      <name>LoggingTimestamp</name>
+      <revision>1</revision>
+      <lastModified>
+        <time>1648483895370</time>
+        <timezone>UTC</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/**
+	Modify the description here. Modify the function name and parameters as needed. One function per
+	template is recommended; create a new code template for each new function.
+
+	@return {String} return description
+*/
+//Packages.lu.hrs.mirth.MetaAppender.setFocus(logger.info(&quot;Hello my time&quot;));
+function loggingTime() {
+	var date = new Date();	
+		formatedDate = moment(date, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);	
+		return logger.info(formatedDate);	
+	
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.11.0">
       <id>5314a696-892a-463e-add6-4cdc0fbec2dd</id>
       <name>MomentJS</name>
       <revision>1</revision>
@@ -111,11 +306,11 @@
       </lastModified>
       <contextSet>
         <delegate>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_DISPATCHER</contextType>
           <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
           <contextType>SOURCE_RECEIVER</contextType>
           <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
         </delegate>
       </contextSet>
       <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -5803,11 +5998,11 @@
       </lastModified>
       <contextSet>
         <delegate>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_DISPATCHER</contextType>
           <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
           <contextType>SOURCE_RECEIVER</contextType>
           <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
         </delegate>
       </contextSet>
       <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
