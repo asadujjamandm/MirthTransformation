@@ -55,19 +55,19 @@
           <name>EpicSource Transformer</name>
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>C:\D Drive\Mirth\MirthTransformation\JS\EpicBatchInterface.js</scriptPath>
+          <scriptPath>D:\Project\Mirth\MirthTransformation\JS\EpicBatchInterface.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
         <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
           <name>Epic Aim Transformer</name>
           <sequenceNumber>1</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>C:\D Drive\Mirth\MirthTransformation\JS\EpicAIMInterface.js</scriptPath>
+          <scriptPath>D:\Project\Mirth\MirthTransformation\JS\EpicAIMInterface.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
         <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
           <name>IpConfig</name>
           <sequenceNumber>2</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>C:\D Drive\Mirth\MirthTransformation\JS\IpConfig.js</scriptPath>
+          <scriptPath>D:\Project\Mirth\MirthTransformation\JS\IpConfig.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
       </elements>
       <inboundTemplate encoding="base64">TVNIfF5+XCZ8TUhTIEdFTkVTSVN8MDEyN3xQQVJBVEF8TkhPSCBNYWluIE9QfDIwMTkwNjExMTQzNjQwfHxSRFNeTzAxfDF8VHwyLjMKUElEfDF8fEcxMDI5Xl5eXkVQSX4yMDA4NTdeXl5efHxQaWVycmVeVGhvbWFzXkN8fDE5NzkxMDE5fEZ8fHw0NTggTUlUQ0hFTEwgIFNUXl5CRUxMRVZJTExFXldJXjUzNTA4Xl5eXnx8KDQwOCkyNzEtOTAwMF5QXlBIfHx8fHx8fHx8fHx8fHx8fHxOfHx8fHx8fHwKT1JDfE5XfF5ITkFNX09SREVSSUR8ODg4MHwxNjUyODM2NF5ITkFNX1JVTklEfE9yZGVyZWR8fF5eRDkwXjIwMTkwNjAzMDcwMDAwXjIwMjAwNjAyMDY1OTU5XkNEOjIzMDA3NDQ3MV5eZ2VtZmlicm96aWwgNjAwIG1nIFRhYiAxIFRJRCBXTSBXSVRIIEZVTEwgR0xBU1MgT0YgV0FURVIgICM5MHx8MjAxOTA2MTExNDM2NDB8QzA1ODA3XkRoaW5ncmEgKENlcm5lcileQXNoaXNoXl5eQ2VybmVyIERldl5eXkVYVEVSTkFMSUReUGVyc29ubmVsXl5eRXh0ZXJuYWwgSWRlbnRpZmllcl5EaGluZ3JhIChDZXJuZXIpfHwyNDUwNDUzNjM2XkJST1dOXktBUkxeTC58RE9OT1RTRU5EXl5eMDEyNy0wMTI3Xl5QSEFSTUFDWV5ET05PVFNFTkR8fHxEaXNwZW5zZXxOSE9IIE9QIFBoYXJtYWN5fE9NfHx8fHx8NzMwMCBSZG9ob3JqamggSWJyaHhibl5eSGJ0a2JrIE9xeW5eUEReODY0NDFeV0sKUlhFfDkwXl45MF4yMDE5MDYwMzA3MDAwMF4yMDIwMDYwMjA2NTk1OV5Sb3V0aW5lXl5EYXJ2b2NldC1OIDEwMCBUQUJMRVQgMSBUSUQgV00gV0lUSCBGVUxMIEdMQVNTIE9GIFdBVEVSICAjOTB8MDA1NTUwMTM5MjZeXk5EQ15EYXJ2b2NldC1OIDEwMCBUQUJMRVR8fHx8VGFifF4oNy4xLjIpIFRha2UgMSB0YWJsZXQgYnkgbW91dGggdGhyZWUgdGltZXMgYSBkYXkgd2l0aCBtZWFscyBXSVRIIEZVTEwgR0xBU1MgT0YgV0FURVJ+Xig3LjIuMikgVGFrZSAxIHRhYmxldCBieSBtb3V0aCB0aHJlZSB0aW1lcyBhIGRheSB3aXRoIG1lYWxzIFdJVEggRlVMTCBHTEFTUyBPRiBXQVRFUnx8MHwzNHxFQXwwM3xLQjEyMzQ1NjdeQlJPV05eS0FSTF5MLnxDMDU4MDdBXkRoaW5ncmEgKENlcm5lcileQXNoaXNoXl5eQ2VybmVyIERldl5eXkVYVEVSTkFMSUR8MDAwMzYwMTIwNDAxfDN8MDB8MjAxOTA2MDMwNzAwMDB8fHwxM15UYWtlIG9yIHVzZSBleGFjdGx5IGFzIGRpcmVjdGVkLiBaWDN8TGVnZW5kfDYwMTIwNDAxfHx8fDN8WXx8MjAxOTA2MTExNDM2MjF8UGFyYXRhIE1heCBBfDAwMDItMDEzODM0NnwxfDF8OTB8TkhPSCBNYWluIE9QfGdlbWZpYnJvemlsfExvcGlkfEV4ZWxhbiBQaGFybWFjZXV0aWNhbHMgSW5jfHwwfHx8fHwzUkQgUEFSVFl8Q0Q6MjM0NzA4NDIzfDIxMXwwfDExLjYzfDAuMTN8MS43NXwwfDAgWkFQfExlZ2VuZHw2MDEyMDQwMXx8fHx8WXx8MjEx</inboundTemplate>

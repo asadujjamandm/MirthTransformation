@@ -55,13 +55,13 @@
           <name>CHCSTransformer</name>
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>C:\D Drive\Mirth\MirthTransformation\JS\CHCS Interface.js</scriptPath>
+          <scriptPath>D:\Project\Mirth\MirthTransformation\JS\CHCS Interface.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
         <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
           <name>IpConfig</name>
           <sequenceNumber>1</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>C:\D Drive\Mirth\MirthTransformation\JS\IpConfig.js</scriptPath>
+          <scriptPath>D:\Project\Mirth\MirthTransformation\JS\IpConfig.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
       </elements>
       <inboundTemplate encoding="base64">QVBTMSBTS0MgU0tDMDYxNTIwMDcxNzEyMTRZWVkzMUYxTjAwfFJYMTExIDEwNzg0NzQyMzEgQU1JRUUgWCBBVEtJTlMgMDYxNTIwMDcwMDAwMDAxMDAwIDAwMDA5OTI0ODg4MDAzMCAzMDAwMDAwNjA0MDEwMSBOMDUwIDYxMjM0NTY3ODkxMVRJVExFQkFVTSxTRUFNIEogODkwOTkwODA1IDAyMDA3MDYxNUxBTlNPUFJBWk9MRSAoUFJFVkFDSUQgRVEpIDMwTUcgQ0FQIDE4MDc1ODkxOTc1MDYyOHxTRzFHNjAwNzg5NiAwMzExMTExMjIyMjIzMzMzMzQ0NDQ0MDYwVEFLRSBPTkUgQ0FQU1VMRSBCWSBNT1VUSH5FVkVSWSBEQVkgQkVGT1JFIFlPVVIgRklSU1R+TUVBTH4gfFBBVDEwMCBQYXRpZW50IEFkZHJlc3MgTWV0cm9wb2xpcyBOQzEyMzQ1Njc4OTkxOTEyMzQ1Njk5IHxET0MxMDAgRG9jdG9yIFdheSBNZXRyb3BvbGlzIE5DMTIzNDU2Nzg5OTE5Nzg3ODEwNkJLOTk5OTk5OTl8RU5EMDYxNTIwMDcxNzEyNDYgMTAyMzkwOXx+</inboundTemplate>

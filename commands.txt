@@ -1,19 +1,32 @@
-codetemplate Library import "D:\Jenkins\workspace\mirth\Libraries\Mirth Library.xml" Force
-import "D:\Jenkins\workspace\mirth\XML\WebHooks.xml" Force
+codetemplate Library import "D:\Project\Mirth\MirthTransformation\Libraries\Mirth Library.xml" Force
+import "D:\Project\Mirth\MirthTransformation\XML\WebHooks.xml" Force
 channel deploy "WebHooks"
-import "D:\Jenkins\workspace\mirth\XML\QS1_API.xml" Force
+import "D:\Project\Mirth\MirthTransformation\XML\QS1_API.xml" Force
 channel deploy "QS1_API"
-import "D:\Jenkins\workspace\mirth\XML\EPIC Source API.xml" Force
+import "D:\Project\Mirth\MirthTransformation\XML\EPIC Source API.xml" Force
 channel deploy "EPIC Source API"
-import "D:\Jenkins\workspace\mirth\XML\QS1-NRx_API.xml" Force
+import "D:\Project\Mirth\MirthTransformation\XML\QS1-NRx_API.xml" Force
 channel deploy "QS1-NRx_API"
-import "D:\Jenkins\workspace\mirth\XML\Parata 66 API.xml" Force
+import "D:\Project\Mirth\MirthTransformation\XML\Parata 66 API.xml" Force
 channel deploy "Parata 66 API"
-import "D:\Jenkins\workspace\mirth\XML\Rx30 API.xml" Force
+import "D:\Project\Mirth\MirthTransformation\XML\Rx30 API.xml" Force
 channel deploy "Rx30 API"
-import "D:\Jenkins\workspace\mirth\XML\Kroger API.xml" Force
+import "D:\Project\Mirth\MirthTransformation\XML\Kroger API.xml" Force
 channel deploy "Kroger API"
-import "D:\Jenkins\workspace\mirth\XML\Chewy API.xml" Force
+import "D:\Project\Mirth\MirthTransformation\XML\Chewy API.xml" Force
 channel deploy "Chewy API"
+import "D:\Project\Mirth\MirthTransformation\XML\CHCS API.xml" Force
+channel deploy "CHCS API"
+import "D:\Project\Mirth\MirthTransformation\XML\QS1-NRx_API_PSIS.xml" Force
+channel deploy "QS1-NRx_API_PSIS"
+import "D:\Project\Mirth\MirthTransformation\XML\QS1-NRx_API_PSIS_v.xml" Force
+channel deploy "QS1-NRx_API_PSIS_v"
+import "D:\Project\Mirth\MirthTransformation\XML\BackTalkToCVSAPI.xml" Force
+channel deploy "BackTalkToCVSAPI"
+import "D:\Project\Mirth\MirthTransformation\XML\OAuth Server.xml" Force
+channel deploy "OAuth Server"
+import "D:\Project\Mirth\MirthTransformation\XML\Flat File Generation - S74 v2.xml" Force
+channel deploy "Flat File Generation - S74 v2"
+
 
 

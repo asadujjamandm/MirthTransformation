@@ -55,19 +55,19 @@
           <name>QS1 Map Xml External JS</name>
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>C:\D Drive\Mirth\MirthTransformation\JS\QS1Interface.js</scriptPath>
+          <scriptPath>D:\Project\Mirth\MirthTransformation\JS\QS1Interface.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
         <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
           <name>QS1 Map AIM External JS</name>
           <sequenceNumber>1</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>C:\D Drive\Mirth\MirthTransformation\JS\QS1AIMInterface.js</scriptPath>
+          <scriptPath>D:\Project\Mirth\MirthTransformation\JS\QS1AIMInterface.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
         <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
           <name>IpConfig</name>
           <sequenceNumber>2</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>C:\D Drive\Mirth\MirthTransformation\JS\IpConfig.js</scriptPath>
+          <scriptPath>D:\Project\Mirth\MirthTransformation\JS\IpConfig.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
       </elements>
       <inboundTemplate encoding="base64">TVNIfF5+XCZ8UVMxUEhBUk1BQ1l8MTIzfEFJTXwwfDIwMTIwMzAxMTYyMDAwfDIwMDAxMTI1MTgyNDAyfFJERV5PMDF8MnxQfDIuMy4xfHx8fHx8QVNDSUl8RU5eRW5nbGlzaHwKUElEfHwxMjM0NTY3ODkwfDEyMzQ1Njc4OTBefDIzNTg0NThefEFUS0lOU15HRU9SR0VeTUlERExFfHwxOTcyMDkxN3xGfHx8MzIwMyBOT0JMRVMgQVZFIEFQVCA5Xl5DSEFSTE9UVEVeTkNeMjgyMDgtMTIzNHx8KDEyMyk0NTYtNzg5MHx8fHx8Xnx8fHx8MV5QQVRJRU5UIENPTU1FTlQgMV5eUEFUSUVOVCBDT01NRU5UIDJeXlBBVElFTlQgQ09NTUVOVCAzfApPUkN8Tld8MDcyMTQ1OTR8MDAwMDAwMjV8TEJMXkwxflBHXkcxfDQzICAgICAgICAgNV4wMF58Tnx8fDIwMTIwMzAxMTYyMHxSSEJeQkVBTiwgUi5eUlBoXk5PXk5FSUwgT1dFTlNeVGVjaF58UkhCfF5CQUxEV0lOXkFMSVNPTl5NRHx8fDIwMDcwMjIxfHx8MDE1MS0zMzd8fHx8fHwxMDAwIEJMWVRIRSBCTFZEXl5DSEFSTE9UVEVeTkNeMjgyMDMtMTIzNHwKUlhFfDMwXl5EMzBeXjIwMTMwMzAxXjJ8MDAwMDYwNDAxMDFeXk5EQ15eQUxET01FVHwwMDAxMjB8fFRBQnxUQUJ8VEFLRSAxIFRBQkxFVCBEQUlMWXx8Tnx8fDAzfEFDNTM4NTU3OHxZMXwxMDAxfDAzfDAwfDIwMDcwMjE5MTY1M3x8fDFeNEM5RV5BVUx+Ml4yQTg5XkFVTH4zXjREQTFeQVVMfHx8fHx8fHx8VFJ8ClpBUHwzfDA3MjA2MjkyfHx8fFBBUl5XSElURS9PRkYtV0hJVEVeQ0hBTEtZXk9CTE9OR15EUlVHIEZPUk1eSU1QUklOVHxBTERPMjUwfHwxfE1eTi5DLiBNRURJQ0FJRF4yNDUxNTMyMzROXkxPViAxLzI3LzA1IEZQXi4wMHwxMy41MHwxNy4yNXwzfHwwMDY0Njg2N3x8MDQzMF4wMl4zfDA1MjAwNzA1MDA2ODE0OXxeXnwyMDEyMDMwNXwyMDAxMDMwNnx8RV5CTVMvT1JUSE8tTUNORUlML0FTVFJBWkVORUNBIFAvQz1CKioqKnxZfE58Tnx8KDk5OSk5OTktOTk5OXw2MDEzMTJ8fF5SSVZJRVJBXk5JQ0t8fDAwMDAxMzNeMDAwMDEzNF4wMDAwMTM1XjAwMDAxMzZeMDAwMDEzN15eXl5efDYzMDl8fEV8fFl8TnxDfHw0OTg4NDkyMTAxfDJ8QkM1NTQ5ODA1fHx8fDAxMDQwNzF8MC4wMXx8QUxET01FVCBIQ0x8MTIzNDU2Nzg5MEFCQ0R8UjAwNTJ8UnxSRUZJTEwgSVMgIDE2IERBWVMgTEFURXw0MTIzfHx8fHx8NTU1IE1haW4gU3R8RHVyaGFtfE5DfDI3NzEzfHx8fHxCdWxsJ3MgUGhhcm1hY3l8fHx8fHxUYWxsIE1hbiBEZXNjcmlwdGlvbgpSWFJ8XlBPfHx8fA==</inboundTemplate>
