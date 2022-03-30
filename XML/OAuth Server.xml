@@ -2,7 +2,8 @@
   <id>69026bbe-b2a9-4629-8ba1-3bc4b91adfc2</id>
   <nextMetaDataId>2</nextMetaDataId>
   <name>OAuth Server</name>
-  <description></description>
+  <description>
+  </description>
   <revision>22</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
@@ -10,11 +11,11 @@
     <properties class="com.mirth.connect.connectors.http.HttpReceiverProperties" version="3.11.0">
       <pluginProperties>
         <com.mirth.connect.plugins.httpauth.javascript.JavaScriptHttpAuthProperties version="3.11.0">
-  <authType>JAVASCRIPT</authType>
+          <authType>JAVASCRIPT</authType>
           <script>// Return an AuthenticationResult object to authenticate users.
 // Boolean return values may also be used.
 // You have access to the source map here.
-var authHeader = sourceMap.get(&apos;headers&apos;).getHeader(&apos;AUTHORIZATION&apos;);
+var authHeader = sourceMap.get('headers').getHeader('AUTHORIZATION');
 logger.info(authHeader);
 
 
@@ -66,14 +67,16 @@ if(isValid){
       <binaryMimeTypesRegex>true</binaryMimeTypesRegex>
       <responseContentType>text/plain</responseContentType>
       <responseDataTypeBinary>false</responseDataTypeBinary>
-      <responseStatusCode></responseStatusCode>
-      <responseHeaders class="linked-hash-map"/>
-      <responseHeadersVariable></responseHeadersVariable>
+      <responseStatusCode>
+      </responseStatusCode>
+      <responseHeaders class="linked-hash-map" />
+      <responseHeadersVariable>
+      </responseHeadersVariable>
       <useResponseHeadersVariable>false</useResponseHeadersVariable>
       <charset>UTF-8</charset>
       <contextPath>api/masum</contextPath>
       <timeout>30000</timeout>
-      <staticResources/>
+      <staticResources />
     </properties>
     <transformer version="3.11.0">
       <elements>
@@ -81,28 +84,33 @@ if(isValid){
           <name>Auth0</name>
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
-          <script></script>
+          <script>
+          </script>
         </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
       </elements>
-      <inboundTemplate encoding="base64"></inboundTemplate>
-      <outboundTemplate encoding="base64"></outboundTemplate>
+      <inboundTemplate encoding="base64">
+      </inboundTemplate>
+      <outboundTemplate encoding="base64">
+      </outboundTemplate>
       <inboundDataType>RAW</inboundDataType>
       <outboundDataType>JSON</outboundDataType>
       <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.11.0">
         <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.11.0">
           <splitType>JavaScript</splitType>
-          <batchScript></batchScript>
+          <batchScript>
+          </batchScript>
         </batchProperties>
       </inboundProperties>
       <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
         <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
           <splitType>JavaScript</splitType>
-          <batchScript></batchScript>
+          <batchScript>
+          </batchScript>
         </batchProperties>
       </outboundProperties>
     </transformer>
     <filter version="3.11.0">
-      <elements/>
+      <elements />
     </filter>
     <transportName>HTTP Listener</transportName>
     <mode>SOURCE</mode>
@@ -114,7 +122,7 @@ if(isValid){
       <metaDataId>1</metaDataId>
       <name>Destination 1</name>
       <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.11.0">
-        <pluginProperties/>
+        <pluginProperties />
         <destinationConnectorProperties version="3.11.0">
           <queueEnabled>false</queueEnabled>
           <sendFirst>false</sendFirst>
@@ -124,7 +132,8 @@ if(isValid){
           <rotate>false</rotate>
           <includeFilterTransformer>false</includeFilterTransformer>
           <threadCount>1</threadCount>
-          <threadAssignmentVariable></threadAssignmentVariable>
+          <threadAssignmentVariable>
+          </threadAssignmentVariable>
           <validateResponse>false</validateResponse>
           <resourceIds class="linked-hash-map">
             <entry>
@@ -137,44 +146,48 @@ if(isValid){
         </destinationConnectorProperties>
         <script>
 
-return {Success: &quot;True&quot;, Msg: &quot;Token Validated Successfully&quot;};</script>
+return {Success: "True", Msg: "Token Validated Successfully"};</script>
       </properties>
       <transformer version="3.11.0">
-        <elements/>
+        <elements />
         <inboundDataType>JSON</inboundDataType>
         <outboundDataType>JSON</outboundDataType>
         <inboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
           <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
             <splitType>JavaScript</splitType>
-            <batchScript></batchScript>
+            <batchScript>
+            </batchScript>
           </batchProperties>
         </inboundProperties>
         <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
           <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
             <splitType>JavaScript</splitType>
-            <batchScript></batchScript>
+            <batchScript>
+            </batchScript>
           </batchProperties>
         </outboundProperties>
       </transformer>
       <responseTransformer version="3.11.0">
-        <elements/>
+        <elements />
         <inboundDataType>JSON</inboundDataType>
         <outboundDataType>JSON</outboundDataType>
         <inboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
           <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
             <splitType>JavaScript</splitType>
-            <batchScript></batchScript>
+            <batchScript>
+            </batchScript>
           </batchProperties>
         </inboundProperties>
         <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
           <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
             <splitType>JavaScript</splitType>
-            <batchScript></batchScript>
+            <batchScript>
+            </batchScript>
           </batchProperties>
         </outboundProperties>
       </responseTransformer>
       <filter version="3.11.0">
-        <elements/>
+        <elements />
       </filter>
       <transportName>JavaScript Writer</transportName>
       <mode>DESTINATION</mode>
@@ -185,7 +198,7 @@ return {Success: &quot;True&quot;, Msg: &quot;Token Validated Successfully&quot;
   <preprocessingScript>// Modify the message variable below to pre process data
 return message;</preprocessingScript>
   <postprocessingScript>// This script executes once after a message has been processed
-// Responses returned from here will be stored as &quot;Postprocessor&quot; in the response map
+// Responses returned from here will be stored as "Postprocessor" in the response map
 return;</postprocessingScript>
   <deployScript>// This script executes once when the channel is deployed
 // You only have access to the globalMap and globalChannelMap here to persist data
@@ -216,7 +229,7 @@ return;</undeployScript>
     </metaDataColumns>
     <attachmentProperties version="3.11.0">
       <type>None</type>
-      <properties/>
+      <properties />
     </attachmentProperties>
     <resourceIds class="linked-hash-map">
       <entry>
