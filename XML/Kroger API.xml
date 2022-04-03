@@ -55,13 +55,13 @@
           <name>KrogerTransformer</name>
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>D:\Project\Mirth\MirthTransformation\JS\Kroger Interface.js</scriptPath>
+          <scriptPath>C:\D Drive\Mirth\MirthTransformation\JS\Kroger Interface.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
         <com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep version="3.11.0">
           <name>IpConfig</name>
           <sequenceNumber>1</sequenceNumber>
           <enabled>true</enabled>
-          <scriptPath>D:\Project\Mirth\MirthTransformation\JS\IpConfig.js</scriptPath>
+          <scriptPath>C:\D Drive\Mirth\MirthTransformation\JS\IpConfig.js</scriptPath>
         </com.mirth.connect.plugins.scriptfilestep.ExternalScriptStep>
       </elements>
       <inboundTemplate encoding="base64">
