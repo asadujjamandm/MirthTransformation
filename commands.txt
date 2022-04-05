@@ -1,34 +1,31 @@
-#!/bin/bash
-dir = "/home/centusadmin/mirth/MirthTransformation/"
-
-codetemplate Library import $dir"Libraries/Mirth Library.xml" Force
-import $dir"XML/WebHooks.xml" Force
+codetemplate Library import "/home/centusadmin/mirth/MirthTransformation/Libraries/Mirth Library.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/WebHooks.xml" Force
 channel deploy "WebHooks"
-import $dir"XML/QS1_API.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/QS1_API.xml" Force
 channel deploy "QS1_API"
-import $dir"XML/EPIC Source API.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/EPIC Source API.xml" Force
 channel deploy "EPIC Source API"
-import $dir"XML/QS1-NRx_API.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/QS1-NRx_API.xml" Force
 channel deploy "QS1-NRx_API"
-import $dir"XML/Parata 66 API.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/Parata 66 API.xml" Force
 channel deploy "Parata 66 API"
-import $dir"XML/Rx30 API.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/Rx30 API.xml" Force
 channel deploy "Rx30 API"
-import $dir"XML/Kroger API.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/Kroger API.xml" Force
 channel deploy "Kroger API"
-import $dir"XML/Chewy API.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/Chewy API.xml" Force
 channel deploy "Chewy API"
-import $dir"XML/CHCS API.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/CHCS API.xml" Force
 channel deploy "CHCS API"
-import $dir"XML/QS1-NRx_API_PSIS.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/QS1-NRx_API_PSIS.xml" Force
 channel deploy "QS1-NRx_API_PSIS"
-import $dir"XML/QS1-NRx_API_PSIS_v.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/QS1-NRx_API_PSIS_v.xml" Force
 channel deploy "QS1-NRx_API_PSIS_v"
-import $dir"XML/BackTalkToCVSAPI.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/BackTalkToCVSAPI.xml" Force
 channel deploy "BackTalkToCVSAPI"
-import $dir"XML/OAuth Server.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/OAuth Server.xml" Force
 channel deploy "OAuth Server"
-import $dir"XML/Flat File Generation - S74 v2.xml" Force
+import "/home/centusadmin/mirth/MirthTransformation/XML/Flat File Generation - S74 v2.xml" Force
 channel deploy "Flat File Generation - S74 v2"
 
 
