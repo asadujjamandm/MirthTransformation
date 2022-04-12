@@ -27,6 +27,8 @@ import "/home/centusadmin/mirth/MirthTransformation/XML/OAuth Server.xml" Force
 channel deploy "OAuth Server"
 import "/home/centusadmin/mirth/MirthTransformation/XML/Flat File Generation - S74 v2.xml" Force
 channel deploy "Flat File Generation - S74 v2"
+import "/home/centusadmin/mirth/MirthTransformation/XML/Synmed Flat File Nursing Home.xml" Force
+channel deploy "Flat File Generation - S74 v2"
 
 
 
