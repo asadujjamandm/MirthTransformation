@@ -1,9 +1,9 @@
 <channel version="3.11.0">
-  <id>e38a4e23-6bad-43ba-beb9-6362f6b26e14</id>
+  <id>0d07dfa3-4a05-4d40-bfbd-4a80250a32a9</id>
   <nextMetaDataId>2</nextMetaDataId>
   <name>OneCare Outbound - 1013394378 - 30396</name>
   <description></description>
-  <revision>14</revision>
+  <revision>3</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -130,7 +130,7 @@
           <script>tmp[&apos;NTE&apos;][&apos;NTE.4&apos;][&apos;NTE.4.1&apos;] = moment(msg[&apos;row&apos;][1][&apos;column21&apos;].toString(),&apos;YYYY-MM-DD&apos;).format(&apos;YYYYMMDD&apos;);</script>
         </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
       </elements>
-      <inboundTemplate encoding="base64">dG90ZTttYW5pZmVzdDtyeDtwYXRpZW50X2ZpcnN0X25hbWU7cGF0aWVudF9sYXN0X25hbWU7cXVhbnRpdHk7bWVkaWNhdGlvbl9kZXNjcmlwdGlvbjt0b3RlX2RhdGVfb2ZfZGVsaXZlcnk7c3RvcF9jb2RlO3N0b3BfbmFtZTtzdG9wX2FkZHJlc3NfMTtzdG9wX2FkZHJlc3NfMjtzdG9wX2NpdHk7c3RvcF9zdGF0ZTtzdG9wX3ppcDtjb19wYXlfYW1vdW50X2R1ZTtkcml2ZXJfbmFtZTtkcml2ZXJfdW5pcXVlX2lkZW50aWZpZXI7cm91dGVfbmFtZTtyb3V0ZV91bmlxdWVfaWRlbnRpZmllcjtzdGFydF9kYXRlO2ZpbGxfaWQ7dHJhbl9pZApSMS04NzA1OTA7UjEtODcwNTkwOzAxNzg1NjI4O1NhYWQgVjtQZXRlcjszMDtHRVJJLUtPVCA4LjYgTUcgVEFCTEVUOzIwMjItMDQtMDQgMTY6NTQ6MTcuNy0wNDs7Ozs7Ozs7Ozs7R1JBQ0UgVklMTEFHRSBTRU5JT1IgTElWSTs7MjAyMi0wNDA0OzAxNzg1NjI4OzYyNzE1OA==</inboundTemplate>
+      <inboundTemplate encoding="base64">dG90ZSxtYW5pZmVzdCxyeCxwYXRpZW50X2ZpcnN0X25hbWUscGF0aWVudF9sYXN0X25hbWUscXVhbnRpdHksbWVkaWNhdGlvbl9kZXNjcmlwdGlvbix0b3RlX2RhdGVfb2ZfZGVsaXZlcnksc3RvcF9jb2RlLHN0b3BfbmFtZSxzdG9wX2FkZHJlc3NfMSxzdG9wX2FkZHJlc3NfMixzdG9wX2NpdHksc3RvcF9zdGF0ZSxzdG9wX3ppcCxjb19wYXlfYW1vdW50X2R1ZSxkcml2ZXJfbmFtZSxkcml2ZXJfdW5pcXVlX2lkZW50aWZpZXIscm91dGVfbmFtZSxyb3V0ZV91bmlxdWVfaWRlbnRpZmllcixzdGFydF9kYXRlLGZpbGxfaWQsdHJhbl9pZCxwb3NvbG9neWNvZGUKUjEtODcwNTkwLFIxLTg3MDU5MCwwMTc4NTYyOCxTYWFkIFYsUGV0ZXIsMzAsR0VSSS1LT1QgOC42IE1HIFRBQkxFVCwyMDIyLTA0LTA0IDE2OjU0OjE3LjctMDQsLCwsLCwsLCwsLEdSQUNFIFZJTExBR0UgU0VOSU9SIExJVkksLDIwMjItMDQwNCwwMTc4NTYyOCw2MjcxNTgsQUwwMTc4NTYyODA1MTEyMDIyMDk1MA==</inboundTemplate>
       <outboundTemplate encoding="base64">TVNIfF5+XCZ8UVMxfHxRUzFQSEFSTUFDWXx8MjAxOTExMDUwMzM5MDJ8fFJERV5PMDF8MjQ5MnxQfDIuMgpQSUR8MXx8fHxTSU1QU09OXiBCQVJUCk5URXx8Uk9CT1R8fDIwMTktMDctMDh8fHwwfHx8fHx8fHx8fDAxMTMwMzEyClpXUXxEVg==</outboundTemplate>
       <inboundDataType>DELIMITED</inboundDataType>
       <outboundDataType>HL7V2</outboundDataType>
@@ -201,7 +201,56 @@
       </outboundProperties>
     </transformer>
     <filter version="3.11.0">
-      <elements/>
+      <elements>
+        <com.mirth.connect.plugins.javascriptrule.JavaScriptRule version="3.11.0">
+          <name>CheckRxNumber</name>
+          <sequenceNumber>0</sequenceNumber>
+          <enabled>true</enabled>
+          <script>var source = &quot;localhost:1433&quot;;
+var dbname = &quot;SynmedNursingHome&quot;;
+var username = &quot;sa1&quot;;
+var pass = &quot;ABcd12!@&quot;;
+var dbConn = CreateSQLConnection(source, dbname, username, pass);
+//var posologyDateTime = moment(new Date().toString()).format(&quot;MMDDYYYYHHMM&quot;) ;
+
+var posologyCode = msg[&apos;row&apos;][1][&apos;column23&apos;].toString().trim();
+//var posologyCode = msg[&apos;row&apos;][0][&apos;column24&apos;].toString();
+
+if(dbConn)
+{
+	logger.info(&quot;Yes Connected&quot;);
+}
+else{
+	logger.info(&quot;Failed to Connect&quot;);
+}
+var rxNumber = msg[&apos;row&apos;][1][&apos;column3&apos;].toString();
+
+function FindRxNUmber(){
+	try{		
+		var _rxNumber = 0;
+		var query = &quot;Select RxNumber from Messages where PosologyCode = &apos;&quot; + posologyCode +&quot;&apos;  and Datetime Between DATEADD(day,-7,GETDATE()) AND GETDATE();&quot;;		
+		logger.info(query);
+		var result = dbConn.executeCachedQuery(query);
+		while(result.next()){
+			_rxNumber = result.getString(&apos;RxNumber&apos;);						
+		}					
+		logger.info(&quot;&quot; + _rxNumber);
+		return _rxNumber;
+	}
+	catch(ex){
+		mirth_log(&quot;GetUpdateStatusIDByRxNumber &quot; + ex, &quot;Error&quot;);	
+		throw ex;	
+	}
+}
+
+if(FindRxNUmber() == 0){
+	return false;
+}
+else{
+	return true;
+}</script>
+        </com.mirth.connect.plugins.javascriptrule.JavaScriptRule>
+      </elements>
     </filter>
     <transportName>File Reader</transportName>
     <mode>SOURCE</mode>
@@ -479,7 +528,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1650451467519</time>
+        <time>1652340292245</time>
         <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>
@@ -490,9 +539,9 @@ return;</undeployScript>
       <codeTemplateLibrary version="3.11.0">
         <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
         <name>Library</name>
-        <revision>34</revision>
+        <revision>38</revision>
         <lastModified>
-          <time>1650450727395</time>
+          <time>1652273723258</time>
           <timezone>UTC</timezone>
         </lastModified>
         <description>
@@ -525,6 +574,7 @@ return;</undeployScript>
           <string>24999a04-287c-4517-b7f6-a239dd1a2894</string>
           <string>3380104e-7dad-4454-86ca-8cb2af26a4ac</string>
           <string>b3221554-32a1-4f7f-ad51-7bd2ed492b4c</string>
+          <string>858c16dc-3913-4e35-93f1-46c2acb479ce</string>
           <string>859240df-fe33-456c-9793-ccdc4d58f333</string>
           <string>79d329b4-b6d4-47ff-a481-eef7441aade8</string>
           <string>b9174ba3-306c-4c94-81ea-ab3536dbd8f7</string>
@@ -536,7 +586,9 @@ return;</undeployScript>
           <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
           <string>db8c015a-f11f-4133-992e-9b3277546cbb</string>
           <string>f69c75b8-8b0e-4cd6-a0b4-6dd142318522</string>
+          <string>99787b3f-ec38-4604-937a-ac820bf51cf4</string>
           <string>b29f2d8e-cc25-4025-a361-bb2552333e12</string>
+          <string>0d07dfa3-4a05-4d40-bfbd-4a80250a32a9</string>
           <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
           <string>9cadc149-ad66-414d-b109-2929286e6ce5</string>
           <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
@@ -547,8 +599,8 @@ return;</undeployScript>
           <string>8126f325-9238-489a-9192-4f1c79346c02</string>
           <string>64b04136-25f1-40a3-b5d8-14379420f99a</string>
           <string>e5a879a3-dddf-48d1-b69b-878152c0cb9e</string>
-          <string>b742b188-ed4a-4495-bcf6-0468a1eef0c2</string>
           <string>34afe5e8-977a-4006-a736-597693aeaf05</string>
+          <string>b742b188-ed4a-4495-bcf6-0468a1eef0c2</string>
         </enabledChannelIds>
         <disabledChannelIds>
           <string>7bed6fd2-a886-4c11-85d7-776c4c0b313c</string>
@@ -572,16 +624,16 @@ return;</undeployScript>
             <name>CheckingNullValue</name>
             <revision>1</revision>
             <lastModified>
-              <time>1638876371048</time>
-              <timezone>UTC</timezone>
+              <time>1652080345362</time>
+              <timezone>Asia/Dhaka</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -601,16 +653,16 @@ return;</undeployScript>
             <name>GetDateRange</name>
             <revision>1</revision>
             <lastModified>
-              <time>1648483895411</time>
-              <timezone>UTC</timezone>
+              <time>1652080345523</time>
+              <timezone>Asia/Dhaka</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -722,8 +774,8 @@ function GetWeekDay(number){
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -771,8 +823,8 @@ function mirth_log(_msg, type) {
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -793,16 +845,16 @@ function mirth_log(_msg, type) {
             <name>LoggingTimestamp</name>
             <revision>1</revision>
             <lastModified>
-              <time>1648483895370</time>
-              <timezone>UTC</timezone>
+              <time>1652080345432</time>
+              <timezone>Asia/Dhaka</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -827,16 +879,16 @@ function loggingTime() {
             <name>MomentJS</name>
             <revision>1</revision>
             <lastModified>
-              <time>1638876371211</time>
-              <timezone>UTC</timezone>
+              <time>1652080345659</time>
+              <timezone>Asia/Dhaka</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6515,6 +6567,54 @@ function loggingTime() {
             </properties>
           </codeTemplate>
           <codeTemplate version="3.11.0">
+            <id>e136431f-8d8a-42ec-b74b-1e091128f73c</id>
+            <name>SQLDBConnection</name>
+            <revision>5</revision>
+            <lastModified>
+              <time>1651043150771</time>
+              <timezone>UTC</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>function CreatePostgresConnection(source, dbname, user, pass){
+	try{
+		//source=&gt; localhost:5432/
+		// dbname =&gt; TestDB
+		// user =&gt; postgres
+		// pass =&gt; ABcd12!@
+		var dbConn = DatabaseConnectionFactory.createDatabaseConnection(&quot;org.postgresql.Driver&quot;, &quot;jdbc:postgresql://&quot; + source + &quot;/&quot; + dbname, user, pass);
+		return dbConn;
+	}
+	catch(e){
+		logger.info(e);
+	}	
+}
+
+function CreateSQLConnection(source, dbname, user, pass){
+	try{
+		//source=&gt; localhost:5432/
+		// dbname =&gt; TestDB
+		// user =&gt; postgres
+		// pass =&gt; ABcd12!@
+		var dbConn = DatabaseConnectionFactory.createDatabaseConnection(&quot;com.microsoft.sqlserver.jdbc.SQLServerDriver&quot;, &quot;jdbc:jtds:sqlserver://&quot;  + source + &quot;/&quot; + dbname, user, pass);		
+		return dbConn;
+	}
+	catch(e){
+		logger.info(e);
+	}	
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.11.0">
             <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
             <name>Utils Function</name>
             <revision>4</revision>
@@ -6527,8 +6627,8 @@ function loggingTime() {
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">

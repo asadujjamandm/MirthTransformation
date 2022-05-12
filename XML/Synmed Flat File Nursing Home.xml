@@ -1,10 +1,10 @@
 <channel version="3.11.0">
-  <id>5f4b98b8-ba49-439a-bd75-a6a6397cd1a7</id>
+  <id>99787b3f-ec38-4604-937a-ac820bf51cf4</id>
   <nextMetaDataId>4</nextMetaDataId>
   <name>Synmed Flat File Nursing Home</name>
   <description>
   </description>
-  <revision>3</revision>
+  <revision>2</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -12,7 +12,7 @@
       <pluginProperties/>
       <listenerConnectorProperties version="3.11.0">
         <host>0.0.0.0</host>
-        <port>7669</port>
+        <port>7670</port>
       </listenerConnectorProperties>
       <sourceConnectorProperties version="3.11.0">
         <responseVariable>Auto-generate (After source transformer)</responseVariable>
@@ -43,10 +43,10 @@
       <maxConnections>10</maxConnections>
       <keepConnectionOpen>true</keepConnectionOpen>
       <dataTypeBinary>false</dataTypeBinary>
-      <charsetEncoding>DEFAULT_ENCODING</charsetEncoding>
-      <respondOnNewConnection>0</respondOnNewConnection>
-      <responseAddress></responseAddress>
-      <responsePort></responsePort>
+      <charsetEncoding>UTF-8</charsetEncoding>
+      <respondOnNewConnection>1</respondOnNewConnection>
+      <responseAddress>127.0.0.1</responseAddress>
+      <responsePort>2100</responsePort>
     </properties>
     <transformer version="3.11.0">
       <elements>
@@ -78,7 +78,7 @@ if(nursingType == &quot;AL&quot;){
 
 channelMap.put(&quot;DirectoryPath&quot;,directoryPath);
 channelMap.put(&quot;skippDay&quot;,skippDay.toString());
-
+channelMap.put(&quot;NursingType&quot;,nursingType);
 //logger.info(&quot;directoryPath &quot;+directoryPath);
 //logger.info(&quot;skippDay 1 &quot;+skippDay);</script>
         </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
@@ -93,13 +93,6 @@ var presGenerationTime = new Date(startDate +&quot; &quot;+ getHour +&quot;:&quo
 
 //var skippedDays = msg[&apos;RXE&apos;][&apos;RXE.1&apos;][&apos;RXE.1.8&apos;].toString().trim();
 var skippedDays = $(&apos;skippDay&apos;).split(&quot;&quot;);//$(&apos;SkippedDays&apos;);
-
-
-
-
-
-
-
 
 
 var isSkippedDay = true;
@@ -163,7 +156,12 @@ PatientInfo.PatientBed = msg[&apos;PV1&apos;][&apos;PV1.3&apos;][&apos;PV1.3.3&a
 
 PatientInfo.NDC = msg[&apos;RXE&apos;][&apos;RXE.2&apos;][&apos;RXE.2.6&apos;].toString();
 PatientInfo.Date = moment(msg[&apos;RXE&apos;][&apos;RXE.1&apos;][&apos;RXE.1.5&apos;].toString(),&quot;YYYYMMDD&quot;).format(&quot;YYYY/MM/DD&quot;);  
-PatientInfo.Time = msg[&apos;ORC&apos;][&apos;ORC.7&apos;][&apos;ORC.7.1&apos;].toString().trim();
+PatientInfo.Time = msg[&apos;ORC&apos;][&apos;ORC.7&apos;][&apos;ORC.7.1&apos;].toString();
+
+PatientInfo.PosologyDateTime =  moment(new Date().toString()).format(&quot;MMDDYYYYHHMM&quot;);  
+//PatientInfo.PosologyTime = msg[&apos;ORC&apos;][&apos;ORC.7&apos;][&apos;ORC.7.1&apos;].toString();
+
+
 PatientInfo.Qty = msg[&apos;RXE&apos;][&apos;RXE.3&apos;][&apos;RXE.3.1&apos;].toString().trim();
 PatientInfo.Prescriber = msg[&apos;ORC&apos;][&apos;ORC.12&apos;][&apos;ORC.12.1&apos;].toString().trim();
 
@@ -184,6 +182,10 @@ PatientInfo.Pharmacist = msg[&apos;ORC&apos;][&apos;ORC.10&apos;][&apos;ORC.10.2
 PatientInfo.ExpirationDate = moment(msg[&apos;ZMT&apos;][&apos;ZMT.53&apos;][&apos;ZMT.53.1&apos;].toString().trim(),&apos;YYYYMMDD&apos;).format(&apos;MM/DD/YYYY&apos;);
 PatientInfo.RefillsRemaining = msg[&apos;RXE&apos;][&apos;RXE.16&apos;][&apos;RXE.16.1&apos;].toString();
 
+//PatientInfo.PosologyCode = &quot;PosologyCode&quot;;
+PatientInfo.RxNumber = msg[&apos;RXE&apos;][&apos;RXE.15&apos;][&apos;RXE.15.1&apos;].toString();
+PatientInfo.PosologyCode = $(&apos;NursingType&apos;)+PatientInfo.RxNumber+PatientInfo.PosologyDateTime;
+
 
 var flatText = &quot;&quot;;
 
@@ -203,11 +205,33 @@ for(var i = 0; i &lt; arrDaysToTakeMeds.length; i++)
 		
 		//logger.info(&quot;doseTime&quot; + JSON.stringify(doseTime));		
 		if(presGenerationTime.getTime() &lt; doseTime.getTime() &amp;&amp; medCount &lt; totalNumberOfDose){
+			var medTakingTime = &quot;&quot;;
+			if($(&apos;NursingType&apos;) == &quot;SN&quot;){
+				medTakingTime = &quot;0800&quot;; // Skilled Nursing
+			}
+			else{
+				logger.info(&quot;Assisted Living&quot;);
+				medTakingTime = medicineTakingTime[j]; // Assisted Living
+			}
+			
 			flatText = flatText + 
 			PatientInfo.LastName+&quot;, &quot;+PatientInfo.FirstName+&quot; ~ &quot;+PatientInfo.PatientID+&quot;~&quot;+PatientInfo.FacilityId+&quot;~&quot;+PatientInfo.PatientUnit+&quot;~&quot;+PatientInfo.PatientLocation+&quot;~&quot;+
-			PatientInfo.PatientRoom+&quot;~&quot;+PatientInfo.PatientBed+&quot;~&quot;+PatientInfo.NDC+&quot;~&quot;+arrDaysToTakeMeds[i]+&quot;~&quot;+medicineTakingTime[j]+&quot;~&quot;+PatientInfo.Qty+&quot;~&quot;+PatientInfo.Prescriber+&quot;~&quot;+
-			PatientInfo.OrderID+&quot;~&quot;+PatientInfo.OrderComments+&quot;~&quot;+PatientInfo.SIG+&quot;~&quot;+PatientInfo.WrittenDate+&quot;~&quot;+PatientInfo.ExpirationDate+&quot;~&quot;+PatientInfo.Pharmacist+&quot;~&quot;+PatientInfo.RefillsRemaining+&quot;~&quot;+
-			PatientInfo.OrderType_Multi_Unit_dose+PatientInfo.HOAReminderText + &quot;\n&quot;;	
+			PatientInfo.PatientRoom+&quot;~&quot;+PatientInfo.PatientBed+&quot;~&quot;
+			+PatientInfo.NDC+&quot;~&quot;
+			+arrDaysToTakeMeds[i]+&quot;~&quot;
+			+medTakingTime+&quot;~&quot;
+			+PatientInfo.Qty+&quot;~&quot;
+			+PatientInfo.Prescriber+&quot;~&quot;
+			+PatientInfo.OrderID+&quot;~&quot;
+			+PatientInfo.OrderComments+&quot;~&quot;
+			+PatientInfo.SIG+&quot;~&quot;
+			+PatientInfo.WrittenDate+&quot;~&quot;
+			+PatientInfo.ExpirationDate+&quot;~&quot;
+			+PatientInfo.Pharmacist+&quot;~&quot;
+			+PatientInfo.RefillsRemaining+&quot;~&quot;
+			+PatientInfo.PosologyCode+&quot;~&quot;
+			+PatientInfo.OrderType_Multi_Unit_dose+&quot;~&quot;
+			+PatientInfo.HOAReminderText + &quot;\n&quot;;	
 			medCount++;
 		}			
 	}		 	 				
@@ -216,7 +240,48 @@ for(var i = 0; i &lt; arrDaysToTakeMeds.length; i++)
 
 var fileName = moment(new Date(),&apos;YYYYMMDD HH:MM:SS&apos;).format(&apos;YYYY_MM_DD HH_MM_SS&apos;) + PatientInfo.LastName;
 channelMap.put(&quot;fileName&quot;,fileName);
-channelMap.put(&quot;FlatText&quot;,flatText);</script>
+channelMap.put(&quot;FlatText&quot;,flatText);
+channelMap.put(&quot;Patient&quot;, PatientInfo);
+logger.info(flatText);
+responseMap.put(&apos;FileName&apos;, fileName);
+channelMap.put(&apos;PosologyCode&apos;,PatientInfo.PosologyCode);
+//globalChannelMap.put(&apos;PosologyCode&apos;,PatientInfo.PosologyCode);</script>
+        </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
+        <com.mirth.connect.plugins.javascriptstep.JavaScriptStep version="3.11.0">
+          <name>StoreMessage</name>
+          <sequenceNumber>2</sequenceNumber>
+          <enabled>true</enabled>
+          <script>logger.info(&quot;&quot;);
+
+var source = &quot;localhost:1433&quot;;
+var dbname = &quot;SynmedNursingHome&quot;;
+var username = &quot;sa1&quot;;
+var pass = &quot;ABcd12!@&quot;;
+
+var dbConn = CreateSQLConnection(source, dbname, username, pass);
+logger.info(dbConn);
+var Patient = $(&apos;Patient&apos;);
+var incomingIP = channelMap.get(&apos;remoteAddress&apos;);
+
+
+function Insert(){
+	try {			
+
+		var curDate = moment(new Date().toDateString()).format(&apos;MM/DD/YYYY hh:mm:ss&apos;);
+		logger.info(curDate);
+		var query = &apos;INSERT INTO Messages (&quot;RxNumber&quot;, &quot;HL7Message&quot;, &quot;NursingCode&quot;, &quot;PMSIP&quot;, &quot;Datetime&quot;,&quot;PosologyCode&quot;)&apos; +  
+					&quot; VALUES (&apos;&quot;+Patient.RxNumber+&quot;&apos;,&apos;&quot;+connectorMessage.getRawData()+&quot;&apos;, &apos;&quot;+$(&apos;NursingType&apos;)+&quot;&apos;,&apos;&quot;+incomingIP+&quot;&apos;, &apos;&quot;+curDate+&quot;&apos;,&apos;&quot;+$(&apos;PosologyCode&apos;)+&quot;&apos;);&quot;;									
+		var result = dbConn.executeUpdate(query);
+		logger.info(&quot;result&quot;);
+			
+	} 
+	catch(ex) {		
+		logger.info(&quot;Insert &quot; + ex);	
+		throw ex;
+	}	
+}
+
+Insert();</script>
         </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
       </elements>
       <inboundTemplate encoding="base64">TVNIfF5+XCZ8UVMxUEhBUk1BQ1l8fFFTMU9SREVSU3xCVnwyMDE3MDMwOTExMDg0Nnx8UkRFXk8wMXwyMDE3MDMwOTExMDg0NnxQfDIuMnwKUElEfHwxMjEyfHxST0JCWXxUSE9NUFNPTiwgUk9CQlkgV3x8fE18fHx8fHx8fHx8NjE4MTQyfERPR3wKUFYxfHx8MUFeMDAzXkJeQlZ8Ck9SQ3xYT3wwNjAwMjI4Nnx8fHx8XlVEJjA4MDBeXjIwMTcwMzA5MDg0NF4yMDE4MDMwOTA4NDNeXl4wMDAwMEYwMF5efHx8UldUXlRIT01QU09OLCBST15ScGheXl5UZWNoXnx8QlJPV04sIEpBTUVTfHx8MjAxNzAzMDl8ClJYRXxeUjEmMDgwMF5eMjAxNzAzMDkwODQ0XjIwMTgwMzA5MDg0M15eXjAwMDAwRjAwXl4wODAwfDI0NDQ0NDQ0NDIxMjEyXkJBQlkgV0lQRVNeUFJBVkFDSE9MIDQwIE1HIFRBQkxFVF5CQUJZNDg2Ml4wMzYwMDAxODgyMV4wMDAwMzUxOTQxMHwxfDF8Xnx8VVNFIEFTIERJUkVDVEVEfHxHfDFeMzB8fDAwMHwxMjM0NTY3ODl8TjB8MDYwMDIyODZ8MDAwfDAwCk5URXx8fHwKUlhSfF58fHx8CkRHMXx8STl8NDQ0LjB8QUJET01JTkFMIEFPUlRJQyBFTUJPTElTTSBBTkQgVHx8fHx8fHx8fHx8MXwKREcxfHxJOXw3ODkuM3xBQkRPTUlOQUwgT1IgUEVMVklDIFNXRUxMSU5HLCBNfHx8fHx8fHx8fHwxfApERzF8fEk5fDc4OS45fEFCRE9NRU4gQU5EIFBFTFZJUyBTWU1QVE9NUyBOT1R8fHx8fHx8fHx8fDF8CkRHMXx8STB8SDA0LjUxfERBQ1JZT0xJVEh8fHx8fHx8fHx8fDF8CkRHMXx8STB8TDgxLjN8Q0FGRSBBVSBMQUlUIFNQT1RTfHx8fHx8fHx8fHwxfApaUlh8T3wyMDE3MDMwOTA4NDR8Uk9CQll8MjAxNzAzMDl8fHx8ClpNVHx8fHx8fHwzMHwwMzYwMHx8fHx8MjAxNzAzMDkxMTA4fEJST1dKfEJWfE18QlJPT0tWSUVXfFRISVMgUEFUSUVOVCBJUyBDUkFaWV5HUkFCIFRISVMgR1VZIEhFIE9XRVMgWU9VICQkJCR8U3x8MDB8fHwwMDAwMDAwMHxORVd8fDA2MDAyMjg2MTcwMzA5fHx8fHx8fHx8fHx8fE58OTg3NXwxOTgyMDkyMHwwfHwwMDAwMDAwMHx8RGVsZXRlIGZsYWcgcmVzZXQ6IGludmVudG9yeSBjbGVhbi11cCAwNS8yMi8wOXx8MDF8TnwwMjA3NDF8MzYwMDAxODgyMXwyMDE4MDMwOXxGRjAyLTI1NHwxXjM1ODReQVVMfjJeNDA0MF5BVUx+M140MDQwXkFVTHwwMzYwMHx8TDF8ODY0NDg5MTU2NXwKWk0yfHxSV1R8MDAwMDEzRl58fDExMSBBRERSRVNTIExJTkUgMXxHQUZGTkVZfFNDfDI5MzQwfHx8Tnx8LjAwfHxZfHx8fDA2MDAyMjg2MTcwMzA5MTEwODQ2MzB8fC4wMDAwfDMwfE58fHwwMDAwMTYyMHx8fHx8ICAgICAuMDAwMHwKWlIxfHxQUkFWQTMzNjB8TXwyMDE3MDMwOXx8fDMwfH5+fg==</inboundTemplate>
@@ -626,7 +691,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1649754214465</time>
+        <time>1652274153961</time>
         <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>
@@ -637,52 +702,59 @@ return;</undeployScript>
       <codeTemplateLibrary version="3.11.0">
         <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
         <name>Library</name>
-        <revision>31</revision>
+        <revision>38</revision>
         <lastModified>
-          <time>1649738131974</time>
+          <time>1652273723258</time>
           <timezone>UTC</timezone>
         </lastModified>
         <description>
         </description>
         <includeNewChannels>false</includeNewChannels>
         <enabledChannelIds>
-          <string>2c88923c-c42f-413f-890f-1b13b846eba3</string>
           <string>2552809d-7bda-4bd6-ac76-ba121c5f892e</string>
           <string>1be8c69b-0ab1-4772-b037-5e9919eb0447</string>
-          <string>d7a3d8f1-ddf2-43cf-a4c1-719ffd6a21f4</string>
-          <string>2172d069-cd38-45aa-a9c5-74a6e43df698</string>
           <string>27e7d67c-6b34-4f7c-b71a-16e31e75ae88</string>
-          <string>24999a04-287c-4517-b7f6-a239dd1a2894</string>
-          <string>3380104e-7dad-4454-86ca-8cb2af26a4ac</string>
           <string>ec193f9b-00c1-4113-ba95-a25f53cc42f2</string>
-          <string>b3221554-32a1-4f7f-ad51-7bd2ed492b4c</string>
           <string>9ab209a2-a0f8-41a3-ae10-935c1ad7f069</string>
-          <string>859240df-fe33-456c-9793-ccdc4d58f333</string>
           <string>89c5c497-d1f9-4e0e-84bd-068487bdad87</string>
           <string>2f26ebf0-8b5b-45b1-88ae-0369e6045454</string>
+          <string>ddbe8266-b97e-4860-8dcc-b85c42c15d89</string>
+          <string>cf597d0c-7b46-471d-9d11-d6e4946421a0</string>
+          <string>16814b6e-2133-4c94-9c64-52f50db9c002</string>
+          <string>99e7a0b2-ec62-4333-9363-cb9c15e04910</string>
+          <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
+          <string>e38a4e23-6bad-43ba-beb9-6362f6b26e14</string>
+          <string>dd2571d3-b0bd-4296-b00f-b097b5b2de7b</string>
+          <string>5f4b98b8-ba49-439a-bd75-a6a6397cd1a7</string>
+          <string>d37cefac-312a-462a-be44-186e946d9c29</string>
+          <string>0353744a-3498-4501-a324-a768adfbc8c5</string>
+          <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
+          <string>4dfc5eb3-20a8-49f3-acb2-497224a4b224</string>
+          <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
+          <string>2c88923c-c42f-413f-890f-1b13b846eba3</string>
+          <string>d7a3d8f1-ddf2-43cf-a4c1-719ffd6a21f4</string>
+          <string>2172d069-cd38-45aa-a9c5-74a6e43df698</string>
+          <string>24999a04-287c-4517-b7f6-a239dd1a2894</string>
+          <string>3380104e-7dad-4454-86ca-8cb2af26a4ac</string>
+          <string>b3221554-32a1-4f7f-ad51-7bd2ed492b4c</string>
+          <string>858c16dc-3913-4e35-93f1-46c2acb479ce</string>
+          <string>859240df-fe33-456c-9793-ccdc4d58f333</string>
           <string>79d329b4-b6d4-47ff-a481-eef7441aade8</string>
           <string>b9174ba3-306c-4c94-81ea-ab3536dbd8f7</string>
           <string>2e2b174a-69bd-4d02-a0d7-73c55c0ad5d2</string>
           <string>1f8f7b98-91c6-47ba-a8b6-e2c5dede190e</string>
           <string>5ca5fda9-4abd-4426-ba3e-2a45b5cd6e79</string>
-          <string>ddbe8266-b97e-4860-8dcc-b85c42c15d89</string>
           <string>f5da6dfb-b808-4061-9274-fed0339bff1a</string>
           <string>edbc9000-4a15-455d-9505-2deb0af95a9b</string>
-          <string>cf597d0c-7b46-471d-9d11-d6e4946421a0</string>
           <string>fa49cd65-3538-49fc-b87a-22f831974d43</string>
-          <string>16814b6e-2133-4c94-9c64-52f50db9c002</string>
-          <string>99e7a0b2-ec62-4333-9363-cb9c15e04910</string>
-          <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
           <string>db8c015a-f11f-4133-992e-9b3277546cbb</string>
-          <string>dd2571d3-b0bd-4296-b00f-b097b5b2de7b</string>
+          <string>f69c75b8-8b0e-4cd6-a0b4-6dd142318522</string>
+          <string>99787b3f-ec38-4604-937a-ac820bf51cf4</string>
           <string>b29f2d8e-cc25-4025-a361-bb2552333e12</string>
-          <string>5f4b98b8-ba49-439a-bd75-a6a6397cd1a7</string>
+          <string>0d07dfa3-4a05-4d40-bfbd-4a80250a32a9</string>
           <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
           <string>9cadc149-ad66-414d-b109-2929286e6ce5</string>
           <string>721cae17-81a0-4baf-a29b-2b2d4b4e5070</string>
-          <string>d37cefac-312a-462a-be44-186e946d9c29</string>
-          <string>0353744a-3498-4501-a324-a768adfbc8c5</string>
-          <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
           <string>feb1fe1c-0cd6-4082-83a6-3e92db15d3ec</string>
           <string>2fa392d7-8669-421e-81a3-1fc3100ee9c8</string>
           <string>2a593b1b-915f-4f8e-88fa-4daf8ed7a5dd</string>
@@ -690,8 +762,7 @@ return;</undeployScript>
           <string>8126f325-9238-489a-9192-4f1c79346c02</string>
           <string>64b04136-25f1-40a3-b5d8-14379420f99a</string>
           <string>e5a879a3-dddf-48d1-b69b-878152c0cb9e</string>
-          <string>4dfc5eb3-20a8-49f3-acb2-497224a4b224</string>
-          <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
+          <string>34afe5e8-977a-4006-a736-597693aeaf05</string>
           <string>b742b188-ed4a-4495-bcf6-0468a1eef0c2</string>
         </enabledChannelIds>
         <disabledChannelIds>
@@ -716,16 +787,16 @@ return;</undeployScript>
             <name>CheckingNullValue</name>
             <revision>1</revision>
             <lastModified>
-              <time>1637057370303</time>
+              <time>1652080345362</time>
               <timezone>Asia/Dhaka</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -745,16 +816,16 @@ return;</undeployScript>
             <name>GetDateRange</name>
             <revision>1</revision>
             <lastModified>
-              <time>1648483895411</time>
-              <timezone>UTC</timezone>
+              <time>1652080345523</time>
+              <timezone>Asia/Dhaka</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -863,11 +934,11 @@ function GetWeekDay(number){
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -907,16 +978,16 @@ function mirth_log(_msg, type) {
             <name>IsNullOrEmpty</name>
             <revision>1</revision>
             <lastModified>
-              <time>1636964659058</time>
-              <timezone>Asia/Dhaka</timezone>
+              <time>1638876371093</time>
+              <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -937,16 +1008,16 @@ function mirth_log(_msg, type) {
             <name>LoggingTimestamp</name>
             <revision>1</revision>
             <lastModified>
-              <time>1648483895370</time>
-              <timezone>UTC</timezone>
+              <time>1652080345432</time>
+              <timezone>Asia/Dhaka</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -971,16 +1042,16 @@ function loggingTime() {
             <name>MomentJS</name>
             <revision>1</revision>
             <lastModified>
-              <time>1635927628676</time>
+              <time>1652080345659</time>
               <timezone>Asia/Dhaka</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6659,6 +6730,54 @@ function loggingTime() {
             </properties>
           </codeTemplate>
           <codeTemplate version="3.11.0">
+            <id>e136431f-8d8a-42ec-b74b-1e091128f73c</id>
+            <name>SQLDBConnection</name>
+            <revision>5</revision>
+            <lastModified>
+              <time>1651043150771</time>
+              <timezone>UTC</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>function CreatePostgresConnection(source, dbname, user, pass){
+	try{
+		//source=&gt; localhost:5432/
+		// dbname =&gt; TestDB
+		// user =&gt; postgres
+		// pass =&gt; ABcd12!@
+		var dbConn = DatabaseConnectionFactory.createDatabaseConnection(&quot;org.postgresql.Driver&quot;, &quot;jdbc:postgresql://&quot; + source + &quot;/&quot; + dbname, user, pass);
+		return dbConn;
+	}
+	catch(e){
+		logger.info(e);
+	}	
+}
+
+function CreateSQLConnection(source, dbname, user, pass){
+	try{
+		//source=&gt; localhost:5432/
+		// dbname =&gt; TestDB
+		// user =&gt; postgres
+		// pass =&gt; ABcd12!@
+		var dbConn = DatabaseConnectionFactory.createDatabaseConnection(&quot;com.microsoft.sqlserver.jdbc.SQLServerDriver&quot;, &quot;jdbc:jtds:sqlserver://&quot;  + source + &quot;/&quot; + dbname, user, pass);		
+		return dbConn;
+	}
+	catch(e){
+		logger.info(e);
+	}	
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.11.0">
             <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
             <name>Utils Function</name>
             <revision>4</revision>
@@ -6668,11 +6787,11 @@ function loggingTime() {
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
