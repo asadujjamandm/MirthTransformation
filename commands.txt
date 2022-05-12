@@ -28,7 +28,9 @@ channel deploy "OAuth Server"
 import "/home/centusadmin/mirth/MirthTransformation/XML/Flat File Generation - S74 v2.xml" Force
 channel deploy "Flat File Generation - S74 v2"
 import "/home/centusadmin/mirth/MirthTransformation/XML/Synmed Flat File Nursing Home.xml" Force
-channel deploy "Flat File Generation - S74 v2"
+channel deploy "Synmed Flat File Nursing Home"
+import "/home/centusadmin/mirth/MirthTransformation/XML/OneCare Outbound - 1013394378 - 30396.xml" Force
+channel deploy "OneCare Outbound - 1013394378 - 30396"
 
 
 
