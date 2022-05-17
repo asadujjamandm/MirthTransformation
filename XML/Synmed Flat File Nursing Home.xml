@@ -4,7 +4,7 @@
   <name>Synmed Flat File Nursing Home</name>
   <description>
   </description>
-  <revision>2</revision>
+  <revision>14</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -251,9 +251,7 @@ channelMap.put(&apos;PosologyCode&apos;,PatientInfo.PosologyCode);
           <name>StoreMessage</name>
           <sequenceNumber>2</sequenceNumber>
           <enabled>true</enabled>
-          <script>logger.info(&quot;&quot;);
-
-var source = &quot;localhost:1433&quot;;
+          <script>var source = &quot;localhost:1433&quot;;
 var dbname = &quot;SynmedNursingHome&quot;;
 var username = &quot;sa1&quot;;
 var pass = &quot;ABcd12!@&quot;;
@@ -267,9 +265,12 @@ var incomingIP = channelMap.get(&apos;remoteAddress&apos;);
 function Insert(){
 	try {			
 
-		var curDate = moment(new Date().toDateString()).format(&apos;MM/DD/YYYY hh:mm:ss&apos;);
-		logger.info(curDate);
-		var query = &apos;INSERT INTO Messages (&quot;RxNumber&quot;, &quot;HL7Message&quot;, &quot;NursingCode&quot;, &quot;PMSIP&quot;, &quot;Datetime&quot;,&quot;PosologyCode&quot;)&apos; +  
+		var localDateString = new Date().toLocaleDateString();
+		var localTimeString = new Date().toLocaleTimeString();
+		var curDate = localDateString + &quot; &quot; + localTimeString;
+		curDate = moment(curDate).format(&apos;MM/DD/YYYY hh:mm:ss&apos;);
+
+		var query = &apos;INSERT INTO Messages (&quot;RxNumber&quot;, &quot;HL7Message&quot;, &quot;NursingCode&quot;, &quot;PMSIP&quot;, &quot;EntryDatetime&quot;,&quot;PosologyCode&quot;)&apos; +  
 					&quot; VALUES (&apos;&quot;+Patient.RxNumber+&quot;&apos;,&apos;&quot;+connectorMessage.getRawData()+&quot;&apos;, &apos;&quot;+$(&apos;NursingType&apos;)+&quot;&apos;,&apos;&quot;+incomingIP+&quot;&apos;, &apos;&quot;+curDate+&quot;&apos;,&apos;&quot;+$(&apos;PosologyCode&apos;)+&quot;&apos;);&quot;;									
 		var result = dbConn.executeUpdate(query);
 		logger.info(&quot;result&quot;);
@@ -691,7 +692,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1652274153961</time>
+        <time>1652692876767</time>
         <timezone>UTC</timezone>
       </lastModified>
       <pruningSettings>
@@ -787,16 +788,16 @@ return;</undeployScript>
             <name>CheckingNullValue</name>
             <revision>1</revision>
             <lastModified>
-              <time>1652080345362</time>
-              <timezone>Asia/Dhaka</timezone>
+              <time>1638876371048</time>
+              <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -816,16 +817,16 @@ return;</undeployScript>
             <name>GetDateRange</name>
             <revision>1</revision>
             <lastModified>
-              <time>1652080345523</time>
-              <timezone>Asia/Dhaka</timezone>
+              <time>1648483895411</time>
+              <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -934,11 +935,11 @@ function GetWeekDay(number){
             </lastModified>
             <contextSet>
               <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -983,11 +984,11 @@ function mirth_log(_msg, type) {
             </lastModified>
             <contextSet>
               <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1008,16 +1009,16 @@ function mirth_log(_msg, type) {
             <name>LoggingTimestamp</name>
             <revision>1</revision>
             <lastModified>
-              <time>1652080345432</time>
-              <timezone>Asia/Dhaka</timezone>
+              <time>1648483895370</time>
+              <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1042,16 +1043,16 @@ function loggingTime() {
             <name>MomentJS</name>
             <revision>1</revision>
             <lastModified>
-              <time>1652080345659</time>
-              <timezone>Asia/Dhaka</timezone>
+              <time>1638876371211</time>
+              <timezone>UTC</timezone>
             </lastModified>
             <contextSet>
               <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6739,11 +6740,11 @@ function loggingTime() {
             </lastModified>
             <contextSet>
               <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6787,11 +6788,11 @@ function CreateSQLConnection(source, dbname, user, pass){
             </lastModified>
             <contextSet>
               <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
