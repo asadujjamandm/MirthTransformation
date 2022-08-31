@@ -1,0 +1,110 @@
+<codeTemplate version="3.11.0">
+  <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
+  <name>Utils Function</name>
+  <revision>4</revision>
+  <lastModified>
+    <time>1641116243558</time>
+    <timezone>UTC</timezone>
+  </lastModified>
+  <contextSet>
+    <delegate>
+      <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+      <contextType>SOURCE_RECEIVER</contextType>
+      <contextType>DESTINATION_DISPATCHER</contextType>
+      <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+      <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+    </delegate>
+  </contextSet>
+  <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+    <type>FUNCTION</type>
+    <code>/// Utils Method Segments ///
+function ProcessScriptAction(key){	
+	var Actions = {
+		NW: &quot;Fill&quot;, // New order 
+		RF: &quot;Fill&quot;, //Refill order 
+		CA: &quot;Cancel&quot;, //Cancel order 
+		HD: &quot;Hold&quot;, //Hold order 
+		XO: &quot;Edit&quot;, //Update order 
+		AF: &quot;Discard&quot;, //Approve fill
+		F: &quot;Fill&quot;
+	};
+	
+	if(Actions[key.toUpperCase()] !== undefined)
+		return Actions[key.toUpperCase()];	
+	else
+		return key;
+	
+}
+
+function FormateDate(dateString){
+	var date = new Date();
+	if(!IsNullOrEmpty(dateString)) {
+		date = moment(dateString, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);				
+	}
+	return date;	
+}
+
+function FormatDate2(dateString){
+	date = moment(dateString, &apos;MMDDYYYYhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);
+	return date;
+}
+
+
+//&quot;Text&quot;: &quot;6/15/2007 5:12:14 PM&quot;
+function FormatDate3(dateString){
+	date = moment(dateString, &apos;MMDDYYYYhhmmss&apos;).format(&apos;MM/DD/YYYY hh:mm:ss A&apos;);
+	return date;
+}
+
+function DoesHOAExists(hoa){
+	if( (hoa.StartDate !=null &amp;&amp; hoa.StartDate != &quot;&quot;) &amp;&amp; 
+		(hoa.EndDate !=null &amp;&amp; hoa.EndDatertDate != &quot;&quot;)){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+function CalculateUrgency(orderDate){
+	if(!IsNullOrEmpty(orderDate)){
+		var currentDate = FormateDate(new Date().toJSON().slice(0,10).replace(/-/g,&apos;/&apos;));	
+		var orderDate = FormateDate(orderDate);	
+		var diffTime = new Date(currentDate) - new Date(orderDate);	
+		var diffDays = parseInt(diffTime / (1000 * 60 * 60 * 24), 10);	
+	
+		//logger.info(&apos;diffDays: &apos; + JSON.stringify(diffDays));
+	
+		return IsNullOrEmpty(diffDays) === true ? diffDays : diffDays.toString();	
+	}
+	else{
+		return 0;	
+	}	
+}
+
+function JSONIndent(data){
+	try{
+		var batchString = JSON.stringify(data, null, 2);
+			
+
+		//channelMap.put(&apos;BatchString&apos;, batchString.trim());
+
+		//logger.info(&quot;json intend: &quot;+ batchString.trim());
+
+		return data	
+	}	
+	catch(ex){
+		logger.error(ex)
+	}
+}
+
+function DAW(val){
+
+	if(val === 0 || val === &apos;&apos; || vall === null)
+		return false;
+	else
+		return true;
+	
+}</code>
+  </properties>
+</codeTemplate>

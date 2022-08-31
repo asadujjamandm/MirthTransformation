@@ -1,44 +1,58 @@
 <codeTemplateLibrary version="3.11.0">
   <id>7cc23118-e580-485b-878b-a5849b5fbe31</id>
   <name>Library</name>
-  <revision>29</revision>
+  <revision>49</revision>
   <lastModified>
-    <time>1648483895352</time>
+    <time>1658994905611</time>
     <timezone>UTC</timezone>
   </lastModified>
-  <description></description>
+  <description>
+        </description>
   <includeNewChannels>false</includeNewChannels>
   <enabledChannelIds>
     <string>2c88923c-c42f-413f-890f-1b13b846eba3</string>
     <string>1be8c69b-0ab1-4772-b037-5e9919eb0447</string>
-    <string>99e7a0b2-ec62-4333-9363-cb9c15e04910</string>
-    <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
-    <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
     <string>b3221554-32a1-4f7f-ad51-7bd2ed492b4c</string>
+    <string>848172cc-1ffe-4f5e-92b5-6c53811cb34b</string>
     <string>89c5c497-d1f9-4e0e-84bd-068487bdad87</string>
-    <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
     <string>2f26ebf0-8b5b-45b1-88ae-0369e6045454</string>
     <string>2e2b174a-69bd-4d02-a0d7-73c55c0ad5d2</string>
+    <string>4c935ff1-3584-4db6-8ad4-3dc913087746</string>
+    <string>e6e8f642-1d73-49f4-9ede-d7ceab14c4ee</string>
+    <string>ddbe8266-b97e-4860-8dcc-b85c42c15d89</string>
+    <string>f5da6dfb-b808-4061-9274-fed0339bff1a</string>
+    <string>fc807840-08fc-408e-ab44-d2e59901c7cb</string>
+    <string>99e7a0b2-ec62-4333-9363-cb9c15e04910</string>
+    <string>b3b4f637-126c-474e-a6ef-8c6dc617baec</string>
+    <string>e38a4e23-6bad-43ba-beb9-6362f6b26e14</string>
+    <string>99787b3f-ec38-4604-937a-ac820bf51cf4</string>
+    <string>0d07dfa3-4a05-4d40-bfbd-4a80250a32a9</string>
+    <string>5f4b98b8-ba49-439a-bd75-a6a6397cd1a7</string>
+    <string>345fc7a2-5b09-4bfb-a2e5-8c679a7c1860</string>
+    <string>4520f540-7ab3-48b2-a49a-b2b2f98bd3c2</string>
+    <string>1a4fdb02-93a6-4445-a37e-6ed213115ed3</string>
+    <string>9d0bf9c5-57de-4cf3-9213-ba029df23cc4</string>
     <string>2a593b1b-915f-4f8e-88fa-4daf8ed7a5dd</string>
     <string>8126f325-9238-489a-9192-4f1c79346c02</string>
     <string>64b04136-25f1-40a3-b5d8-14379420f99a</string>
-    <string>ddbe8266-b97e-4860-8dcc-b85c42c15d89</string>
     <string>e5a879a3-dddf-48d1-b69b-878152c0cb9e</string>
     <string>4dfc5eb3-20a8-49f3-acb2-497224a4b224</string>
     <string>5b280e3c-2aaa-486f-a820-656195f7faae</string>
-    <string>f5da6dfb-b808-4061-9274-fed0339bff1a</string>
+    <string>34afe5e8-977a-4006-a736-597693aeaf05</string>
   </enabledChannelIds>
   <disabledChannelIds>
-    <string>69026bbe-b2a9-4629-8ba1-3bc4b91adfc2</string>
-    <string>4778ade6-4fa9-40bb-a30d-fb5d4716f94d</string>
-    <string>b46c1c4e-b8ad-4948-bdf6-fe6126d9712b</string>
-    <string>5bb52472-55db-4995-8422-f756b55b4ae3</string>
     <string>1106f5ac-f27d-44f1-bdad-1971420e070c</string>
     <string>30e104b5-3fca-45bc-9a10-4bc559e81405</string>
     <string>e83c9f1d-04c8-4d50-adab-19d8e14e94b2</string>
     <string>b760c01f-7e58-4d06-a904-ee5e0c0baeca</string>
+    <string>07a724f5-3d67-46a9-bdc3-1a17f6855c9c</string>
+    <string>69026bbe-b2a9-4629-8ba1-3bc4b91adfc2</string>
+    <string>4778ade6-4fa9-40bb-a30d-fb5d4716f94d</string>
+    <string>b46c1c4e-b8ad-4948-bdf6-fe6126d9712b</string>
+    <string>5bb52472-55db-4995-8422-f756b55b4ae3</string>
     <string>22f93589-a6e4-497d-894f-a05ce4a9ce6f</string>
     <string>3676078a-68fb-475c-b9f5-c2ebac366c99</string>
+    <string>0223e9d9-b5e8-4ffa-b288-eb80bba97222</string>
   </disabledChannelIds>
   <codeTemplates>
     <codeTemplate version="3.11.0">
@@ -52,10 +66,10 @@
       <contextSet>
         <delegate>
           <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
           <contextType>SOURCE_RECEIVER</contextType>
-          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
           <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
         </delegate>
       </contextSet>
       <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -73,18 +87,18 @@
     <codeTemplate version="3.11.0">
       <id>0001531c-07c4-4f8e-8b02-30a0977271d2</id>
       <name>GetDateRange</name>
-      <revision>1</revision>
+      <revision>24</revision>
       <lastModified>
-        <time>1648483895411</time>
+        <time>1655288391235</time>
         <timezone>UTC</timezone>
       </lastModified>
       <contextSet>
         <delegate>
           <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
           <contextType>SOURCE_RECEIVER</contextType>
-          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
           <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
         </delegate>
       </contextSet>
       <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -109,9 +123,9 @@
 	for (var i = 0; i &lt; daysToAdd; i++) {
 
 	   currentDate = new Date(year, month, day + skipped)	  	  	  
-	
+		logger.info(&quot;Dat in GetDate Forloop &quot;+currentDate);
 	   aryDates.push(moment(currentDate, &apos;YYYYMMDD&apos;).format(&quot;MM/DD/YYYY&quot;));
-	   skipped = skipped + skippedDays;
+	   skipped = parseInt(skipped) + parseInt(skippedDays);	   
 	}     
 	
 	return aryDates;
@@ -128,11 +142,11 @@ function getDateOfWeekDay(strtDate, weekDays, daysToAdd, doseStartTime) {
 		var dys=weekDays[i];	     
 		if(dys===undefined){continue;}
 		//const dayOfWeek = [&quot;sun&quot;,&quot;mon&quot;,&quot;tue&quot;,&quot;wed&quot;,&quot;thu&quot;,&quot;fri&quot;,&quot;sat&quot;].indexOf(weekDays[i].slice(0,3).toLowerCase());	
-		logger.info(weekDays[i]);
+		//logger.info(weekDays[i]);
 		//logger.info(dayOfWeek);
 		var skipped=0;
 		refDate.setDate(refDate.getDate() + (weekDays[i] + 7 - refDate.getDay() ) % 7);			
-		 
+		//logger.info(refDate.toString());
 		for (var j = 0; j &lt; daysToAdd; j++) {
 			var date=new Date(refDate);
 			date.setDate(refDate.getDate()+skipped);
@@ -149,15 +163,16 @@ function getDateOfWeekDay(strtDate, weekDays, daysToAdd, doseStartTime) {
 	return aryDates;
 }
 
-function getDaysToAdd(presGenerationTime, firstDoseTime, daysToAdd){
-	var startDate = new Date(presGenerationTime);
+function getDaysToAdd(presGenerationTime, firstDoseTime, daysToAdd){	
+	var startDate = new Date(presGenerationTime);	
 	var _firstDoseTime = new Date(firstDoseTime);
+	
 
 	if(startDate.getTime()&gt; _firstDoseTime.getTime())
   	{
   		daysToAdd = parseInt(daysToAdd) + 1;
   	}
-
+  		
   	return daysToAdd;
 }
 
@@ -165,22 +180,108 @@ function GetWeekDay(number){
 
 	switch(number){
 		case 1:
-		return &quot;Sunday&quot;;		
+		return 0;		
 		case 2:
-		return &quot;Monday&quot;;				
+		return 1;				
 		case 3:
-		return &quot;Tuesday&quot;;		
+		return 2;		
 		case 4:
-		return &quot;Wednessday&quot;;		
+		return 3;		
 		case 5:
-		return &quot;Thrusday&quot;;		
+		return 4;		
 		case 6: 
-		return &quot;Friday&quot;;		
+		return 5;		
 		case 7:
-		return &quot;Saturday&quot;;		
+		return 6;		
 	}
 }
+
+function getDayTime(time){
+    switch(time.toLowerCase()){
+        case &apos;qam&apos;:
+            return &apos;0800&apos;;
+        case &apos;qaf&apos;:
+            return &apos;1200&apos;; 
+        case &apos;qpm&apos;:
+            return &apos;2000&apos;;
+        case &apos;qhs&apos;:
+            return &apos;2200&apos;;
+        case &apos;prn&apos;:
+            return &apos;0800&apos;;
+        case &apos;qd&apos;:
+            return &apos;0800&apos;;
+    }
+}
+function getDailyOccurence(occure){
+    switch(occure.toLowerCase()){
+        case &apos;qd&apos;:
+            return 1;
+        case &apos;bid&apos;:
+            return 2; 
+        case &apos;tid&apos;:
+            return 3;
+        case &apos;qid&apos;:
+            return 4;
+    }
+}
+function getSkipDays(skip){	
+    switch(skip.toLowerCase()){
+        case &apos;qd&apos;:
+            return 1;
+        case &apos;qod&apos;:
+            return 2; 
+        default:
+        	//logger.info(&quot;Code Template &quot; + skip.slice(1, 2));
+            //return skip.slice(1, 2);
+            return skip.match(/\d+/g);
+    }
+}
+
+
+
+
+
+
+
+
+
 </code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.11.0">
+      <id>0bc213f3-708d-4088-9461-31ce3d278171</id>
+      <name>GUID_UUID</name>
+      <revision>1</revision>
+      <lastModified>
+        <time>1654584301265</time>
+        <timezone>UTC</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>function generateUUID() { // Public Domain/MIT
+    var d = new Date().getTime();//Timestamp
+    var d2 = ((typeof performance !== &apos;undefined&apos;) &amp;&amp; performance.now &amp;&amp; (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+    return &apos;xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx&apos;.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16;//random number between 0 and 16
+        if(d &gt; 0){//Use timestamp until depleted
+            r = (d + r)%16 | 0;
+            d = Math.floor(d/16);
+        } else {//Use microseconds since page-load if supported
+            r = (d2 + r)%16 | 0;
+            d2 = Math.floor(d2/16);
+        }
+        return (c === &apos;x&apos; ? r : (r &amp; 0x3 | 0x8)).toString(16);
+    });
+}</code>
       </properties>
     </codeTemplate>
     <codeTemplate version="3.11.0">
@@ -194,10 +295,10 @@ function GetWeekDay(number){
       <contextSet>
         <delegate>
           <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
           <contextType>SOURCE_RECEIVER</contextType>
-          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
           <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
         </delegate>
       </contextSet>
       <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -243,10 +344,10 @@ function mirth_log(_msg, type) {
       <contextSet>
         <delegate>
           <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
           <contextType>SOURCE_RECEIVER</contextType>
-          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
           <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
         </delegate>
       </contextSet>
       <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -273,10 +374,10 @@ function mirth_log(_msg, type) {
       <contextSet>
         <delegate>
           <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
           <contextType>SOURCE_RECEIVER</contextType>
-          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
           <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
         </delegate>
       </contextSet>
       <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -307,10 +408,10 @@ function loggingTime() {
       <contextSet>
         <delegate>
           <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
           <contextType>SOURCE_RECEIVER</contextType>
-          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
           <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
         </delegate>
       </contextSet>
       <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -5989,6 +6090,54 @@ function loggingTime() {
       </properties>
     </codeTemplate>
     <codeTemplate version="3.11.0">
+      <id>e136431f-8d8a-42ec-b74b-1e091128f73c</id>
+      <name>SQLDBConnection</name>
+      <revision>5</revision>
+      <lastModified>
+        <time>1651043150771</time>
+        <timezone>UTC</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>function CreatePostgresConnection(source, dbname, user, pass){
+	try{
+		//source=&gt; localhost:5432/
+		// dbname =&gt; TestDB
+		// user =&gt; postgres
+		// pass =&gt; ABcd12!@
+		var dbConn = DatabaseConnectionFactory.createDatabaseConnection(&quot;org.postgresql.Driver&quot;, &quot;jdbc:postgresql://&quot; + source + &quot;/&quot; + dbname, user, pass);
+		return dbConn;
+	}
+	catch(e){
+		logger.info(e);
+	}	
+}
+
+function CreateSQLConnection(source, dbname, user, pass){
+	try{
+		//source=&gt; localhost:5432/
+		// dbname =&gt; TestDB
+		// user =&gt; postgres
+		// pass =&gt; ABcd12!@
+		var dbConn = DatabaseConnectionFactory.createDatabaseConnection(&quot;com.microsoft.sqlserver.jdbc.SQLServerDriver&quot;, &quot;jdbc:jtds:sqlserver://&quot;  + source + &quot;/&quot; + dbname, user, pass);		
+		return dbConn;
+	}
+	catch(e){
+		logger.info(e);
+	}	
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.11.0">
       <id>0af5ba9c-e631-4d18-8170-bfe84dde7a9c</id>
       <name>Utils Function</name>
       <revision>4</revision>
@@ -5999,10 +6148,10 @@ function loggingTime() {
       <contextSet>
         <delegate>
           <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
           <contextType>SOURCE_RECEIVER</contextType>
-          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
           <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
         </delegate>
       </contextSet>
       <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -6096,6 +6245,50 @@ function DAW(val){
 		return true;
 	
 }</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.11.0">
+      <id>82c1e622-9b8b-420b-b7cc-0cbbc3e1387a</id>
+      <name>xml2json</name>
+      <revision>10</revision>
+      <lastModified>
+        <time>1659606667554</time>
+        <timezone>UTC</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>function LoadConfig(){
+		
+	try {
+		
+		var reader = new Packages.mirth.xml2json.convert.XMLReader(&quot;C:\\XML Config\\ServiceConfiguration.xml&quot;);
+
+		var jsonString = reader.Convert2JSONString();
+
+		//logger.info(&quot;JSON String :&quot; + jsonString);
+		
+		//channelMap.put(&apos;aim_config&apos;, jsonString);
+		
+		//globalChannelMap.put(&apos;aim_config1&apos;, jsonString);
+		return jsonString;
+		
+	}
+	catch(ex) {
+		logger.info(ex)
+	}
+	
+}
+
+</code>
       </properties>
     </codeTemplate>
   </codeTemplates>

@@ -1,0 +1,44 @@
+<codeTemplate version="3.11.0">
+  <id>82c1e622-9b8b-420b-b7cc-0cbbc3e1387a</id>
+  <name>xml2json</name>
+  <revision>10</revision>
+  <lastModified>
+    <time>1659606667554</time>
+    <timezone>UTC</timezone>
+  </lastModified>
+  <contextSet>
+    <delegate>
+      <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+      <contextType>SOURCE_RECEIVER</contextType>
+      <contextType>DESTINATION_DISPATCHER</contextType>
+      <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+      <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+    </delegate>
+  </contextSet>
+  <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+    <type>FUNCTION</type>
+    <code>function LoadConfig(){
+		
+	try {
+		
+		var reader = new Packages.mirth.xml2json.convert.XMLReader(&quot;C:\\XML Config\\ServiceConfiguration.xml&quot;);
+
+		var jsonString = reader.Convert2JSONString();
+
+		//logger.info(&quot;JSON String :&quot; + jsonString);
+		
+		//channelMap.put(&apos;aim_config&apos;, jsonString);
+		
+		//globalChannelMap.put(&apos;aim_config1&apos;, jsonString);
+		return jsonString;
+		
+	}
+	catch(ex) {
+		logger.info(ex)
+	}
+	
+}
+
+</code>
+  </properties>
+</codeTemplate>

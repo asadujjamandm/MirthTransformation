@@ -1,0 +1,164 @@
+<codeTemplate version="3.11.0">
+  <id>0001531c-07c4-4f8e-8b02-30a0977271d2</id>
+  <name>GetDateRange</name>
+  <revision>24</revision>
+  <lastModified>
+    <time>1655288391235</time>
+    <timezone>UTC</timezone>
+  </lastModified>
+  <contextSet>
+    <delegate>
+      <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+      <contextType>SOURCE_RECEIVER</contextType>
+      <contextType>DESTINATION_DISPATCHER</contextType>
+      <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+      <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+    </delegate>
+  </contextSet>
+  <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+    <type>FUNCTION</type>
+    <code>function GetDates(startDate, daysToAdd, skippedDays, firstDoseTime) {	
+
+	daysToAdd = getDaysToAdd(startDate, firstDoseTime, daysToAdd);
+	
+	var aryDates = [];
+	//var _startDate = new Date(startDate);
+	//logger.info(startDate + &quot; &quot; + daysToAdd + &quot; &quot; + skippedDays)
+	
+	var currentDate = new Date(startDate);
+	//var currentDate = startDate.split(&quot;/&quot;);	
+	
+	var day = currentDate.getDate();	
+	var month = currentDate.getMonth();
+	var year = currentDate.getFullYear();	
+
+	var skipped = 0;
+	    	
+	for (var i = 0; i &lt; daysToAdd; i++) {
+
+	   currentDate = new Date(year, month, day + skipped)	  	  	  
+		logger.info(&quot;Dat in GetDate Forloop &quot;+currentDate);
+	   aryDates.push(moment(currentDate, &apos;YYYYMMDD&apos;).format(&quot;MM/DD/YYYY&quot;));
+	   skipped = parseInt(skipped) + parseInt(skippedDays);	   
+	}     
+	
+	return aryDates;
+
+}
+
+function getDateOfWeekDay(strtDate, weekDays, daysToAdd, doseStartTime) {	
+	var aryDates = [];
+
+	daysToAdd = getDaysToAdd(strtDate, doseStartTime, daysToAdd);
+	
+	for (var i=0; i&lt;weekDays.length; i++){
+		var refDate = new Date(strtDate);	
+		var dys=weekDays[i];	     
+		if(dys===undefined){continue;}
+		//const dayOfWeek = [&quot;sun&quot;,&quot;mon&quot;,&quot;tue&quot;,&quot;wed&quot;,&quot;thu&quot;,&quot;fri&quot;,&quot;sat&quot;].indexOf(weekDays[i].slice(0,3).toLowerCase());	
+		//logger.info(weekDays[i]);
+		//logger.info(dayOfWeek);
+		var skipped=0;
+		refDate.setDate(refDate.getDate() + (weekDays[i] + 7 - refDate.getDay() ) % 7);			
+		//logger.info(refDate.toString());
+		for (var j = 0; j &lt; daysToAdd; j++) {
+			var date=new Date(refDate);
+			date.setDate(refDate.getDate()+skipped);
+			skipped=skipped+7;
+			aryDates.push(moment(date, &apos;YYYYMMDD&apos;).format(&quot;MM/DD/YYYY&quot;));
+		}    		
+				
+	}
+	
+	aryDates.sort((a, b) =&gt; new Date(a) - new Date(b));	
+
+	aryDates.length = daysToAdd;
+	
+	return aryDates;
+}
+
+function getDaysToAdd(presGenerationTime, firstDoseTime, daysToAdd){	
+	var startDate = new Date(presGenerationTime);	
+	var _firstDoseTime = new Date(firstDoseTime);
+	
+
+	if(startDate.getTime()&gt; _firstDoseTime.getTime())
+  	{
+  		daysToAdd = parseInt(daysToAdd) + 1;
+  	}
+  		
+  	return daysToAdd;
+}
+
+function GetWeekDay(number){
+
+	switch(number){
+		case 1:
+		return 0;		
+		case 2:
+		return 1;				
+		case 3:
+		return 2;		
+		case 4:
+		return 3;		
+		case 5:
+		return 4;		
+		case 6: 
+		return 5;		
+		case 7:
+		return 6;		
+	}
+}
+
+function getDayTime(time){
+    switch(time.toLowerCase()){
+        case &apos;qam&apos;:
+            return &apos;0800&apos;;
+        case &apos;qaf&apos;:
+            return &apos;1200&apos;; 
+        case &apos;qpm&apos;:
+            return &apos;2000&apos;;
+        case &apos;qhs&apos;:
+            return &apos;2200&apos;;
+        case &apos;prn&apos;:
+            return &apos;0800&apos;;
+        case &apos;qd&apos;:
+            return &apos;0800&apos;;
+    }
+}
+function getDailyOccurence(occure){
+    switch(occure.toLowerCase()){
+        case &apos;qd&apos;:
+            return 1;
+        case &apos;bid&apos;:
+            return 2; 
+        case &apos;tid&apos;:
+            return 3;
+        case &apos;qid&apos;:
+            return 4;
+    }
+}
+function getSkipDays(skip){	
+    switch(skip.toLowerCase()){
+        case &apos;qd&apos;:
+            return 1;
+        case &apos;qod&apos;:
+            return 2; 
+        default:
+        	//logger.info(&quot;Code Template &quot; + skip.slice(1, 2));
+            //return skip.slice(1, 2);
+            return skip.match(/\d+/g);
+    }
+}
+
+
+
+
+
+
+
+
+
+</code>
+  </properties>
+</codeTemplate>

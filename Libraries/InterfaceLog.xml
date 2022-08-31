@@ -1,0 +1,49 @@
+<codeTemplate version="3.11.0">
+  <id>b1d192d9-b017-4a6e-b760-db211f45bcf0</id>
+  <name>InterfaceLog</name>
+  <revision>5</revision>
+  <lastModified>
+    <time>1643182652460</time>
+    <timezone>UTC</timezone>
+  </lastModified>
+  <contextSet>
+    <delegate>
+      <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+      <contextType>SOURCE_RECEIVER</contextType>
+      <contextType>DESTINATION_DISPATCHER</contextType>
+      <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+      <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+    </delegate>
+  </contextSet>
+  <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+    <type>FUNCTION</type>
+    <code>/**
+	Modify the description here. Modify the function name and parameters as needed. One function per
+	template is recommended; create a new code template for each new function.
+
+	@param {String} arg1 - arg1 description
+	@return {String} return description
+*/
+function loggingTime() {
+	var date = new Date();	
+	var formatedDate = moment(date, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);	
+	
+	//return logger.info(formatedDate);
+
+	return formatedDate;
+}
+
+function mirth_log(_msg, type) {
+	// Date : Error/Info : Message
+	// var date = new Date();	
+	// formatedDate = moment(date, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);	
+
+	if(type == &quot;&quot; || type == null){
+		type = &quot;info&quot;;
+	}
+	
+	var logMsg =  loggingTime() + &quot;: &quot; + type + &quot;: &quot; + _msg + &quot;\n&quot;;
+	logger.info(logMsg);
+}</code>
+  </properties>
+</codeTemplate>

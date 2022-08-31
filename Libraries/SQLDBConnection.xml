@@ -1,0 +1,48 @@
+<codeTemplate version="3.11.0">
+  <id>e136431f-8d8a-42ec-b74b-1e091128f73c</id>
+  <name>SQLDBConnection</name>
+  <revision>5</revision>
+  <lastModified>
+    <time>1651043150771</time>
+    <timezone>UTC</timezone>
+  </lastModified>
+  <contextSet>
+    <delegate>
+      <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+      <contextType>SOURCE_RECEIVER</contextType>
+      <contextType>DESTINATION_DISPATCHER</contextType>
+      <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+      <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+    </delegate>
+  </contextSet>
+  <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+    <type>FUNCTION</type>
+    <code>function CreatePostgresConnection(source, dbname, user, pass){
+	try{
+		//source=&gt; localhost:5432/
+		// dbname =&gt; TestDB
+		// user =&gt; postgres
+		// pass =&gt; ABcd12!@
+		var dbConn = DatabaseConnectionFactory.createDatabaseConnection(&quot;org.postgresql.Driver&quot;, &quot;jdbc:postgresql://&quot; + source + &quot;/&quot; + dbname, user, pass);
+		return dbConn;
+	}
+	catch(e){
+		logger.info(e);
+	}	
+}
+
+function CreateSQLConnection(source, dbname, user, pass){
+	try{
+		//source=&gt; localhost:5432/
+		// dbname =&gt; TestDB
+		// user =&gt; postgres
+		// pass =&gt; ABcd12!@
+		var dbConn = DatabaseConnectionFactory.createDatabaseConnection(&quot;com.microsoft.sqlserver.jdbc.SQLServerDriver&quot;, &quot;jdbc:jtds:sqlserver://&quot;  + source + &quot;/&quot; + dbname, user, pass);		
+		return dbConn;
+	}
+	catch(e){
+		logger.info(e);
+	}	
+}</code>
+  </properties>
+</codeTemplate>

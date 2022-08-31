@@ -1,0 +1,34 @@
+<codeTemplate version="3.11.0">
+  <id>d4c4e799-5460-4657-8fcd-3c6026127e48</id>
+  <name>LoggingTimestamp</name>
+  <revision>1</revision>
+  <lastModified>
+    <time>1648483895370</time>
+    <timezone>UTC</timezone>
+  </lastModified>
+  <contextSet>
+    <delegate>
+      <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+      <contextType>SOURCE_RECEIVER</contextType>
+      <contextType>DESTINATION_DISPATCHER</contextType>
+      <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+      <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+    </delegate>
+  </contextSet>
+  <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+    <type>FUNCTION</type>
+    <code>/**
+	Modify the description here. Modify the function name and parameters as needed. One function per
+	template is recommended; create a new code template for each new function.
+
+	@return {String} return description
+*/
+//Packages.lu.hrs.mirth.MetaAppender.setFocus(logger.info(&quot;Hello my time&quot;));
+function loggingTime() {
+	var date = new Date();	
+		formatedDate = moment(date, &apos;YYYYMMDDhhmmss&apos;).format(&apos;YYYY/MM/DD hh:mm:ss A&apos;);	
+		return logger.info(formatedDate);	
+	
+}</code>
+  </properties>
+</codeTemplate>
